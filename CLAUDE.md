@@ -21,8 +21,11 @@ See `claude-prompt-happy-anniversary.md` for the full design spec.
 
 ## Key rules
 
+- **Mobile-first always** — design for 390px portrait first, enhance for desktop. See `ROADMAP.md` for the full mobile principles section.
 - No em-dashes anywhere in copy (see `WRITING.md`)
 - No build step — pure vanilla HTML, works offline and on GitHub Pages as-is
 - All content lives in `content.js`; all theme configs live in `themes.js`
+- All theme visual tokens + per-theme particle shapes + motion presets live in `themes.js`
 - Adding real photos: see `PHOTOS.md`
 - Image pipeline: `scripts/process-photos.sh`
+- Improvement roadmap: `ROADMAP.md`
