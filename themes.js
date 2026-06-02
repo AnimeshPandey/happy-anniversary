@@ -4,6 +4,8 @@ var THEMES = [
     name: 'PetalPop Parade',
     tagline: 'Spring-bright, buoyant, blooming',
     icon: '✿',
+    particleStyle: { borderRadius: '60% 40% 60% 40% / 40% 60% 40% 60%' },
+    motion: { duration: '0.55s', ease: 'cubic-bezier(0.34,1.56,0.64,1)', stagger: 80, revealOffset: '20px' },
     tokens: {
       '--bg':             '#FFF5F8',
       '--bg-warm':        '#FFF0F5',
@@ -33,6 +35,8 @@ var THEMES = [
     name: 'Moonlight Mithai',
     tagline: 'Dreamy, luminous, silver-soft',
     icon: '☽',
+    particleStyle: { clipPath: 'polygon(50% 0%,55% 45%,100% 50%,55% 55%,50% 100%,45% 55%,0% 50%,45% 45%)' },
+    motion: { duration: '1.2s', ease: 'cubic-bezier(0.0,0.0,0.2,1)', stagger: 200, revealOffset: '40px' },
     tokens: {
       '--bg':             '#F4F0FF',
       '--bg-warm':        '#EEE8FF',
@@ -62,6 +66,8 @@ var THEMES = [
     name: 'CandyCloud Caravan',
     tagline: 'Pastel-bright, bouncy, sweet',
     icon: '☁',
+    particleStyle: { borderRadius: '50%' },
+    motion: { duration: '0.6s', ease: 'cubic-bezier(0.34,1.56,0.64,1)', stagger: 100, revealOffset: '15px' },
     tokens: {
       '--bg':             '#FFF5FC',
       '--bg-warm':        '#FFF0FA',
@@ -91,6 +97,8 @@ var THEMES = [
     name: 'Gulabo Garden Gala',
     tagline: 'Marigold-bright, festive, radiant',
     icon: '❀',
+    particleStyle: { clipPath: 'polygon(50% 0%,61.8% 35.4%,97.5% 34.5%,68.3% 57.5%,79.4% 90.9%,50% 70.7%,20.6% 90.9%,31.7% 57.5%,2.5% 34.5%,38.2% 35.4%)' },
+    motion: { duration: '0.45s', ease: 'cubic-bezier(0.4,0.0,0.2,1)', stagger: 60, revealOffset: '25px' },
     tokens: {
       '--bg':             '#FFF3EE',
       '--bg-warm':        '#FFEDE4',
@@ -120,6 +128,8 @@ var THEMES = [
     name: 'Starry Snuggle Story',
     tagline: 'Violet-deep, starlit, intimate',
     icon: '✦',
+    particleStyle: { clipPath: 'polygon(50% 0%,60.7% 33.3%,93.3% 25%,75% 50%,93.3% 75%,60.7% 66.7%,50% 100%,39.3% 66.7%,6.7% 75%,25% 50%,6.7% 25%,39.3% 33.3%)' },
+    motion: { duration: '1.0s', ease: 'cubic-bezier(0.0,0.0,0.2,1)', stagger: 180, revealOffset: '30px' },
     tokens: {
       '--bg':             '#F5F3FF',
       '--bg-warm':        '#F0EEFF',
@@ -149,6 +159,8 @@ var THEMES = [
     name: 'ButterflyBlush Bash',
     tagline: 'Mint-fresh, airy, full of flutter',
     icon: '❋',
+    particleStyle: { borderRadius: '50% 0 50% 0', transform: 'rotate(45deg)' },
+    motion: { duration: '0.7s', ease: 'cubic-bezier(0.34,1.4,0.64,1)', stagger: 120, revealOffset: '20px' },
     tokens: {
       '--bg':             '#F5FFF8',
       '--bg-warm':        '#F0FFF5',
@@ -178,6 +190,8 @@ var THEMES = [
     name: 'SangeetSpark Symphony',
     tagline: 'Gold-blazing, festive, electric',
     icon: '✺',
+    particleStyle: { clipPath: 'polygon(50% 0%,100% 50%,50% 100%,0% 50%)', borderRadius: '2px' },
+    motion: { duration: '0.35s', ease: 'cubic-bezier(0.4,0.0,0.2,1)', stagger: 50, revealOffset: '30px' },
     tokens: {
       '--bg':             '#1A0A00',
       '--bg-warm':        '#220D00',
@@ -208,6 +222,8 @@ var THEMES = [
     name: 'VelvetVows Voyage',
     tagline: 'Plum-rich, cinematic, timeless',
     icon: '❖',
+    particleStyle: { clipPath: 'polygon(50% 0%,100% 50%,50% 100%,0% 50%)' },
+    motion: { duration: '1.5s', ease: 'cubic-bezier(0.0,0.0,0.1,1)', stagger: 250, revealOffset: '50px' },
     tokens: {
       '--bg':             '#FDF8FF',
       '--bg-warm':        '#F8F0FF',

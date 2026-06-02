@@ -668,4 +668,340 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   }
   .petal { display: none !important; }
   .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .reveal-child { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .title-word { opacity: 1 !important; transform: none !important; }
+  .typewriter-cursor { display: none !important; }
+}
+
+/* ── Motion custom properties (defaults, overridden per theme) ───── */
+:root {
+  --motion-duration:      0.8s;
+  --motion-ease:          cubic-bezier(0.0, 0.0, 0.2, 1);
+  --motion-stagger:       80ms;
+  --motion-reveal-offset: 30px;
+}
+
+/* ── Reveal — use theme motion properties ────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--motion-reveal-offset));
+  transition:
+    opacity   var(--motion-duration) var(--motion-ease),
+    transform var(--motion-duration) var(--motion-ease);
+}
+.reveal.visible { opacity: 1; transform: none; }
+.reveal-left  { transform: translateX(calc(-1 * var(--motion-reveal-offset))); }
+.reveal-right { transform: translateX(var(--motion-reveal-offset)); }
+.reveal-left.visible, .reveal-right.visible { transform: none; }
+
+/* ── Staggered child reveals ─────────────────────────────────────── */
+.reveal-child {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity   var(--motion-duration) var(--motion-ease),
+    transform var(--motion-duration) var(--motion-ease);
+}
+.chapter-text-wrap.visible .reveal-child:nth-child(1) { opacity: 1; transform: none; transition-delay: 0ms; }
+.chapter-text-wrap.visible .reveal-child:nth-child(2) { opacity: 1; transform: none; transition-delay: var(--motion-stagger); }
+.chapter-text-wrap.visible .reveal-child:nth-child(3) { opacity: 1; transform: none; transition-delay: calc(var(--motion-stagger) * 2); }
+.chapter-text-wrap.visible .reveal-child:nth-child(4) { opacity: 1; transform: none; transition-delay: calc(var(--motion-stagger) * 3); }
+
+/* ── Word-level title animation ──────────────────────────────────── */
+.title-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s var(--motion-ease), transform 0.4s var(--motion-ease);
+}
+.chapter-text-wrap.visible .title-word { opacity: 1; transform: none; }
+
+/* ── Odometer chapter number flip ────────────────────────────────── */
+.chapter-number {
+  display: inline-block;
+  transform-origin: 50% 100%;
+}
+.chapter-number.odometer-flip { animation: odometerFlip var(--motion-duration) var(--motion-ease) both; }
+@keyframes odometerFlip {
+  from { transform: rotateX(-80deg) translateY(-6px); opacity: 0; }
+  to   { transform: none; opacity: 1; }
+}
+
+/* ── Typewriter cursor ───────────────────────────────────────────── */
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  background: var(--rose);
+  vertical-align: text-bottom;
+  margin-left: 2px;
+  animation: cursorBlink 0.75s step-end infinite;
+  border-radius: 1px;
+}
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+/* ── Grain texture overlay ───────────────────────────────────────── */
+#grain-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
+}
+
+/* ── Scroll progress bar ─────────────────────────────────────────── */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 3px;
+  height: 0%;
+  background: linear-gradient(to bottom, var(--rose-light), var(--rose), var(--gold));
+  z-index: 100;
+  pointer-events: none;
+  will-change: height;
+  border-radius: 0 0 2px 2px;
+  transition: background 0.55s ease;
+}
+
+/* ── Image frame ornament ────────────────────────────────────────── */
+.image-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+}
+.image-frame path { transition: stroke 0.55s ease; }
+
+/* ── Chapter image depth + rotation (desktop only) ───────────────── */
+@media (min-width: 481px) {
+  .chapter--left  .chapter-image-wrap .image-placeholder {
+    transform: rotate(0.8deg);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.6s var(--motion-ease), box-shadow 0.55s ease;
+  }
+  .chapter--right .chapter-image-wrap .image-placeholder {
+    transform: rotate(-0.8deg);
+    box-shadow: 0 8px 40px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06);
+    transition: transform 0.6s var(--motion-ease), box-shadow 0.55s ease;
+  }
+}
+
+/* ── Floating section decorations ────────────────────────────────── */
+.section-float {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform;
+  z-index: 0;
+}
+@keyframes floatDrift {
+  0%   { transform: translateY(0) rotate(0deg); }
+  33%  { transform: translateY(-12px) rotate(6deg); }
+  66%  { transform: translateY(6px) rotate(-4deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* ── Burst particles (ceremony + crescendo) ──────────────────────── */
+@keyframes burstOut {
+  from { transform: translate(0,0) scale(1); opacity: 1; }
+  to   { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+@keyframes confettiFall {
+  0%   { transform: translate(0,0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--tx), calc(var(--ty) + 80px)) rotate(var(--rot)); opacity: 0; }
+}
+
+/* ── Heart fill on draw complete ─────────────────────────────────── */
+#heart-path.filled {
+  fill: var(--rose);
+  fill-opacity: 0;
+  animation: heartFill 0.5s var(--ease-spring) 0.2s both;
+}
+@keyframes heartFill {
+  from { fill-opacity: 0; transform: scale(0.95); }
+  to   { fill-opacity: 0.85; transform: scale(1); }
+}
+.heart-wrap {
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.heart-wrap:active .heart-svg { transform: scale(0.9); }
+.heart-svg { transition: transform 0.15s var(--ease-spring); }
+
+/* ── Sound toggle button ─────────────────────────────────────────── */
+#sound-toggle {
+  position: fixed;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  right: 1.25rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid var(--rose-light);
+  color: var(--rose);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+  transform: scale(0.8) translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s var(--ease-spring), background 0.3s ease, color 0.3s ease, border-color 0.55s ease;
+}
+#sound-toggle.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+#sound-toggle:active { transform: scale(0.88); }
+#sound-toggle.playing {
+  background: var(--rose);
+  color: white;
+  border-color: var(--rose);
+}
+
+/* ── Share button ────────────────────────────────────────────────── */
+#share-btn {
+  position: fixed;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  left: 1.25rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid var(--rose-light);
+  color: var(--rose);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+  transform: scale(0.8) translateY(8px);
+  transition: opacity 0.4s ease 0.1s, transform 0.4s var(--ease-spring) 0.1s, border-color 0.55s ease;
+}
+#share-btn.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+#share-btn:active { transform: scale(0.88); }
+#share-btn svg { pointer-events: none; }
+
+/* ── Chapter navigation dots ─────────────────────────────────────── */
+#chapter-nav {
+  position: fixed;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--rose-light);
+  border-radius: 100px;
+  padding: 8px 14px;
+  z-index: 50;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s var(--ease-spring), border-color 0.55s ease;
+}
+#chapter-nav.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.chapter-nav-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--rose-light);
+  border: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  padding: 0;
+  min-width: 7px;
+  transition: background 0.3s ease, width 0.3s var(--ease-spring), border-radius 0.3s ease;
+}
+.chapter-nav-dot.active {
+  background: var(--rose);
+  width: 18px;
+  border-radius: 4px;
+}
+.chapter-nav-dot:focus-visible { outline: 2px solid var(--rose); outline-offset: 2px; }
+
+/* ── Orientation lock overlay ────────────────────────────────────── */
+#orientation-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  text-align: center;
+  padding: 2rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#orientation-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+.orient-icon {
+  font-size: 3rem;
+  animation: rotatePh 1.8s ease-in-out infinite alternate;
+}
+@keyframes rotatePh {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(90deg); }
+}
+#orientation-overlay p {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: rgba(255,255,255,0.88);
+  max-width: 260px;
+  line-height: 1.6;
+}
+
+/* ── Safe area overrides for bottom-padding ──────────────────────── */
+#closing {
+  padding-bottom: calc(var(--pad-section) + env(safe-area-inset-bottom, 0px));
+}
+#ceremony .ceremony-inner {
+  padding-top: calc(2rem + env(safe-area-inset-top, 0px));
+}
+
+/* ── Global touch target + tap delay removal ─────────────────────── */
+button, a, [role="button"] {
+  touch-action: manipulation;
 }

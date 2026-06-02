@@ -2,15 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#C0185F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Happy Anniversary</title>
   <meta property="og:title"       content="Happy Anniversary">
   <meta property="og:description" content="A journey through our first year together.">
   <meta property="og:type"        content="website">
+  <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&display=swap" as="style" onload="this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="style.css">
   <noscript>
     <style>
@@ -21,6 +26,12 @@
   </noscript>
 </head>
 <body>
+
+  <!-- Grain texture overlay -->
+  <div id="grain-layer" aria-hidden="true"></div>
+
+  <!-- Scroll progress bar -->
+  <div id="scroll-progress" aria-hidden="true"></div>
 
   <!-- Falling petals -->
   <div id="petals-layer" aria-hidden="true"></div>
@@ -118,10 +129,11 @@
     </div>
 
     <section id="crescendo" aria-label="Anniversary message">
+      <div id="crescendo-burst" aria-hidden="true"></div>
       <div class="crescendo-inner">
         <div class="crescendo-text reveal">
-          <p class="crescendo-line"                   id="crescendo-line1"></p>
-          <p class="crescendo-line"                   id="crescendo-line2"></p>
+          <p class="crescendo-line"                    id="crescendo-line1"></p>
+          <p class="crescendo-line"                    id="crescendo-line2"></p>
           <p class="crescendo-line crescendo-highlight" id="crescendo-line3"></p>
         </div>
       </div>
@@ -134,8 +146,8 @@
           <p class="closing-message" id="closing-message"></p>
           <p class="closing-signoff" id="closing-signoff"></p>
         </div>
-        <div class="heart-wrap" aria-hidden="true">
-          <svg class="heart-svg" viewBox="0 0 100 92" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div class="heart-wrap" aria-label="Tap to celebrate">
+          <svg class="heart-svg" viewBox="0 0 100 92" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Heart">
             <path id="heart-path"
               d="M50 84 C47 81 8 59 8 34 C8 20 18 10 30 10 C38 10 45 14 50 21 C55 14 62 10 70 10 C82 10 92 20 92 34 C92 59 53 81 50 84 Z"
               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
@@ -145,6 +157,30 @@
     </section>
 
   </main>
+
+  <!-- ── Fixed UI ─────────────────────────────────────────────────── -->
+  <nav id="chapter-nav" aria-label="Chapter navigation" hidden></nav>
+
+  <button id="sound-toggle" type="button" aria-label="Play ambient music" hidden>♪</button>
+
+  <button id="share-btn" type="button" aria-label="Share this experience" hidden>
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+      <polyline points="16 6 12 2 8 6"/>
+      <line x1="12" y1="2" x2="12" y2="15"/>
+    </svg>
+  </button>
+
+  <!-- Orientation lock guidance -->
+  <div id="orientation-overlay" role="alertdialog" aria-modal="true" aria-label="Please rotate your device" hidden>
+    <div class="orient-icon" aria-hidden="true">📱</div>
+    <p>This experience is best in portrait mode. Please rotate your device.</p>
+  </div>
+
+  <!-- Ambient audio (add ambient.mp3 to the project root to enable) -->
+  <audio id="ambient-audio" loop preload="none" aria-hidden="true">
+    <source src="ambient.mp3" type="audio/mpeg">
+  </audio>
 
   <script src="content.js"></script>
   <script src="themes.js"></script>

@@ -11,6 +11,12 @@ var ThemeController = (function () {
     Object.keys(theme.tokens).forEach(function (prop) {
       root.style.setProperty(prop, theme.tokens[prop]);
     });
+    if (theme.motion) {
+      root.style.setProperty('--motion-duration',      theme.motion.duration);
+      root.style.setProperty('--motion-ease',          theme.motion.ease);
+      root.style.setProperty('--motion-stagger',       theme.motion.stagger + 'ms');
+      root.style.setProperty('--motion-reveal-offset', theme.motion.revealOffset);
+    }
   }
 
   /* Fade content out, swap, fade back in */
