@@ -161,8 +161,42 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   transition: color 0.55s ease;
 }
 
+/* Orb area: flanked by minimal nav chevrons */
+.ts-orb-area {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  margin-bottom: 2rem;
+}
+.ts-nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.6);
+  color: var(--rose);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s ease, transform 0.15s ease, color 0.55s ease;
+}
+.ts-nav-btn:hover  { background: rgba(255,255,255,0.65); }
+.ts-nav-btn:active { transform: scale(0.88); }
+.ts-nav-btn:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
+
 /* Animated orb */
-.ts-orb-wrap { margin-bottom: 2rem; }
+.ts-orb-wrap {
+  position: relative;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.ts-orb-wrap:focus-visible { outline: 2px solid var(--rose); outline-offset: 8px; border-radius: 50%; }
 .ts-orb {
   width: min(170px, 44vw);
   height: min(170px, 44vw);
@@ -177,8 +211,15 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   50%       { transform: translateY(-14px) scale(1.04); }
 }
 
-/* Theme name / tagline */
-.ts-content { margin-bottom: 1.75rem; }
+/* Theme name / tagline — fixed height prevents CLS on theme change */
+.ts-content {
+  margin-bottom: 1.75rem;
+  min-height: 7.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 .ts-content--exit {
   opacity: 0;
   transform: translateY(10px);
@@ -210,6 +251,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: var(--rose);
   line-height: 1.2;
   margin-bottom: 0.4rem;
+  min-height: 3.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   transition: color 0.55s ease;
 }
 .ts-tagline {
@@ -247,75 +293,59 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .ts-dot:not(.ts-dot--active):hover { transform: scale(1.4); background: var(--rose-mid); }
 .ts-dot:focus-visible { outline: 2px solid var(--rose); outline-offset: 3px; }
 
-/* Big cycle button */
-.ts-cycle-btn {
+/* Surprise Me — small ✦ icon overlaid on orb */
+.ts-surprise-btn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.8);
+  color: var(--gold);
+  font-size: 0.65rem;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  width: 100%;
-  max-width: 290px;
-  min-height: 58px;
-  border-radius: 100px;
-  background: linear-gradient(135deg, var(--rose), var(--gold));
-  color: white;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  border: none;
   cursor: pointer;
-  box-shadow: 0 8px 32px var(--orb-shadow);
-  transition: transform 0.15s ease, box-shadow 0.4s ease, background 0.55s ease;
-  margin-bottom: 1rem;
-  animation: cyclePulse 2.8s ease 1.2s infinite;
+  padding: 0;
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  transition: transform 0.2s ease, background 0.2s ease;
+  z-index: 2;
 }
-.ts-cycle-btn:hover  { transform: scale(1.04); animation: none; }
-.ts-cycle-btn:active { transform: scale(0.96); animation: none; }
-.ts-cycle-btn:focus-visible { outline: 3px solid white; outline-offset: 2px; }
-@keyframes cyclePulse {
-  0%, 100% { box-shadow: 0 8px 32px var(--orb-shadow); }
-  50%       { box-shadow: 0 10px 52px var(--orb-shadow), 0 0 0 10px rgba(255,255,255,0.06); }
-}
+.ts-surprise-btn:hover  { background: rgba(255,255,255,0.8); }
+.ts-surprise-btn:active { transform: scale(0.85) rotate(90deg); }
+.ts-surprise-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
-.ts-cycle-icon {
-  display: inline-block;
-  font-size: 1.1rem;
-  animation: rotateStar 4s linear infinite;
-  will-change: transform;
-}
-@keyframes rotateStar {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-/* Start journey button */
+/* Begin: minimal downward arrow, no text, bounces to invite interaction */
 .ts-start-btn {
-  font-family: var(--font-body);
-  font-size: 0.8125rem;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-  border: 1.5px solid var(--rose-light);
-  border-radius: 3px;
-  padding: 0.875rem 2rem;
-  min-height: 50px;
-  width: 100%;
-  max-width: 290px;
-  background: var(--ts-start-bg);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: none;
+  color: var(--rose);
+  opacity: 0.6;
   cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  margin-top: 1rem;
+  padding: 0;
+  touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  animation: arrowBounce 2.2s ease infinite;
+  transition: opacity 0.3s ease, color 0.55s ease;
 }
-.ts-start-btn:hover, .ts-start-btn:focus-visible {
-  background: var(--rose);
-  color: white;
-  border-color: var(--rose);
-  outline: none;
+.ts-start-btn:hover, .ts-start-btn:focus-visible { opacity: 1; outline: none; animation: none; }
+.ts-start-btn:active { transform: scale(0.88); animation: none; }
+@keyframes arrowBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(6px); }
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -1137,29 +1167,6 @@ body::after {
   to   { stroke-dashoffset: 0; }
 }
 
-/* ── Surprise Me button ──────────────────────────────────────────── */
-.ts-surprise-btn {
-  font-family: var(--font-body);
-  font-size: 0.75rem;
-  font-weight: 400;
-  letter-spacing: 0.16em;
-  color: var(--text-soft);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
-  touch-action: manipulation;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: color 0.3s ease;
-  opacity: 0.75;
-}
-.ts-surprise-btn:hover, .ts-surprise-btn:focus-visible {
-  color: var(--rose);
-  opacity: 1;
-  outline: none;
-}
 
 /* ── Theme preview bubble ────────────────────────────────────────── */
 #ts-preview-bubble {
@@ -1532,11 +1539,6 @@ body::after {
   letter-spacing: 0;
 }
 
-/* ── content-visibility optimisation ────────────────────────────── */
-.chapter {
-  content-visibility: auto;
-  contain-intrinsic-size: 0 500px;
-}
 
 /* ── Closing signoff typewriter ──────────────────────────────────── */
 .closing-signoff {

@@ -7,10 +7,22 @@
   <meta name="theme-color" content="#C0185F">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>Happy Anniversary</title>
+  <meta name="apple-mobile-web-app-title" content="Anniversary">
+  <title>Happy Anniversary — A Journey Through Our First Year</title>
+  <meta name="description" content="A journey through our first year together — an intimate anniversary experience.">
+  <link rel="canonical" href="https://anmshpndy.com/happy-anniversary/">
+  <!-- Open Graph -->
+  <meta property="og:site_name"   content="Happy Anniversary">
   <meta property="og:title"       content="Happy Anniversary">
   <meta property="og:description" content="A journey through our first year together.">
   <meta property="og:type"        content="website">
+  <meta property="og:url"         content="https://anmshpndy.com/happy-anniversary/">
+  <meta property="og:locale"      content="en_GB">
+  <!-- og:image — add a 1200×630 PNG at og-image.png to enable rich link previews -->
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card"        content="summary">
+  <meta name="twitter:title"       content="Happy Anniversary">
+  <meta name="twitter:description" content="A journey through our first year together.">
   <link rel="manifest" href="manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,8 +67,17 @@
     <div class="ts-inner">
       <p class="ts-label">Choose Our Love Mood</p>
 
-      <div class="ts-orb-wrap" aria-hidden="true">
-        <div class="ts-orb"></div>
+      <div class="ts-orb-area">
+        <button class="ts-nav-btn ts-nav-prev" id="ts-prev-btn" type="button" aria-label="Previous mood">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="ts-orb-wrap" id="ts-orb-wrap" aria-label="Tap or swipe to explore moods">
+          <div class="ts-orb" aria-hidden="true"></div>
+          <button class="ts-surprise-btn" id="ts-surprise-btn" type="button" aria-label="Surprise me with a mood">✦</button>
+        </div>
+        <button class="ts-nav-btn ts-nav-next" id="ts-next-btn" type="button" aria-label="Next mood">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
       </div>
 
       <div class="ts-content">
@@ -67,17 +88,10 @@
 
       <div class="ts-dots" id="ts-dots" role="group" aria-label="Theme options"></div>
 
-      <button class="ts-surprise-btn" id="ts-surprise-btn" type="button">
-        ✦ Surprise Me
-      </button>
-
-      <button class="ts-cycle-btn" id="ts-cycle-btn" type="button" aria-label="Try next mood">
-        <span class="ts-cycle-icon" aria-hidden="true">✦</span>
-        Try Next Mood
-      </button>
-
-      <button class="ts-start-btn" id="ts-start-btn" type="button">
-        Begin Our Journey
+      <button class="ts-start-btn" id="ts-start-btn" type="button" aria-label="Begin our journey">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="12" y1="5" x2="12" y2="19"/><polyline points="6 13 12 19 18 13"/>
+        </svg>
       </button>
     </div>
 

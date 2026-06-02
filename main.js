@@ -152,31 +152,93 @@
 
   /* ── Theme Selector ──────────────────────────────────────────────── */
   function initThemeSelector() {
+    /* Lock scroll while selector/ceremony are showing */
+    document.body.style.overflow = 'hidden';
+
     var savedIdx = loadSavedTheme();
     ThemeController.init();
     if (savedIdx !== 0) ThemeController.set(savedIdx);
 
-    var cycleBtn = document.getElementById('ts-cycle-btn');
     var startBtn = document.getElementById('ts-start-btn');
     var selector = document.getElementById('theme-selector');
+    var prevBtn  = document.getElementById('ts-prev-btn');
+    var nextBtn  = document.getElementById('ts-next-btn');
+    var orbWrap  = document.getElementById('ts-orb-wrap');
 
-    if (cycleBtn) {
-      cycleBtn.addEventListener('click', function () {
-        ThemeController.cycle();
-        reshapePetals();
-        saveTheme(THEMES.indexOf(ThemeController.current()));
-        flashThemeTransition();
+    function getIdx() {
+      return THEMES.indexOf(ThemeController.current());
+    }
+
+    function applyThemeChange(idx) {
+      ThemeController.set(idx);
+      saveTheme(idx);
+      reshapePetals();
+      flashThemeTransition();
+      haptic(20);
+    }
+
+    /* Chevron nav buttons */
+    if (prevBtn) {
+      prevBtn.addEventListener('click', function () {
+        applyThemeChange((getIdx() - 1 + THEMES.length) % THEMES.length);
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', function () {
+        applyThemeChange((getIdx() + 1) % THEMES.length);
       });
     }
 
+    /* Orb: tap = next theme, swipe left/right = prev/next */
+    if (orbWrap) {
+      var swipeStartX = 0;
+      var swipeMoved  = false;
+
+      orbWrap.addEventListener('touchstart', function (e) {
+        swipeStartX = e.touches[0].clientX;
+        swipeMoved  = false;
+      }, { passive: true });
+
+      orbWrap.addEventListener('touchmove', function (e) {
+        if (Math.abs(e.touches[0].clientX - swipeStartX) > 8) swipeMoved = true;
+      }, { passive: true });
+
+      orbWrap.addEventListener('touchend', function (e) {
+        if (!swipeMoved) return;
+        var dx = e.changedTouches[0].clientX - swipeStartX;
+        if (Math.abs(dx) < 20) return;
+        var cur = getIdx();
+        applyThemeChange(dx < 0
+          ? (cur + 1) % THEMES.length
+          : (cur - 1 + THEMES.length) % THEMES.length);
+      }, { passive: true });
+
+      orbWrap.addEventListener('click', function (e) {
+        if (e.target.closest('#ts-surprise-btn')) return;
+        applyThemeChange((getIdx() + 1) % THEMES.length);
+      });
+
+      orbWrap.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+          e.preventDefault();
+          applyThemeChange((getIdx() + 1) % THEMES.length);
+        }
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          applyThemeChange((getIdx() - 1 + THEMES.length) % THEMES.length);
+        }
+      });
+    }
+
+    /* Dots */
     var dotsEl = document.getElementById('ts-dots');
     if (dotsEl) {
       dotsEl.querySelectorAll('.ts-dot').forEach(function (dot, i) {
         dot.addEventListener('click', function () {
-          ThemeController.set(i);
           reshapePetals();
           saveTheme(i);
           flashThemeTransition();
+          haptic(20);
         });
       });
     }
@@ -335,6 +397,9 @@
   }
 
   function showJourneyUI() {
+    /* Restore scrolling now that journey is active */
+    document.body.style.overflow = '';
+
     var soundBtn = document.getElementById('sound-toggle');
     var shareBtn = document.getElementById('share-btn');
     var navEl    = document.getElementById('chapter-nav');
@@ -349,7 +414,9 @@
     }
     if (navEl) navEl.removeAttribute('hidden');
 
-    window.scrollTo(0, 0);
+    /* Use 'instant' to bypass html { scroll-behavior: smooth } so the
+       journey always starts at the very top regardless of prior scroll. */
+    window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
   /* ── Image frame ornament ────────────────────────────────────────── */
@@ -820,7 +887,7 @@
         var dot = entry.target.querySelector('.chapter-ornament-dot');
         fireChapterCompletionPop(dot);
       });
-    }, { threshold: 0.95 });
+    }, { threshold: 0.75 });
 
     ornaments.forEach(function (o) { observer.observe(o); });
   }
@@ -883,15 +950,15 @@
         observer.disconnect();
         path.style.strokeDashoffset = '0';
 
-        path.addEventListener('transitionend', function handler() {
-          path.removeEventListener('transitionend', handler);
+        /* transitionend is unreliable — use setTimeout matching the 1.6s CSS duration */
+        setTimeout(function () {
           if (!heartDone) {
             heartDone = true;
             path.classList.add('filled');
             if (wrap) wrap.classList.add('heart-done');
             haptic(40);
           }
-        });
+        }, 1700);
       });
     }, { threshold: 0.5 });
 
@@ -957,8 +1024,8 @@
     var titleEl = document.getElementById('chapter-header-title');
     if (!header || !window.IntersectionObserver) return;
 
-    var chapters    = document.querySelectorAll('.chapter');
-    var activeChap  = null;
+    var chapters   = document.querySelectorAll('.chapter:not(#chapter-hidden)');
+    var activeChap = null;
 
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -1145,22 +1212,31 @@
     var notes = [523.25, 587.33, 659.25, 698.46, 783.99, 880, 987.77,
                  1046.5, 1174.66, 1318.51, 1396.91, 1567.98];
     var freq  = notes[(chapterIndex || 0) % notes.length];
-    try {
-      var osc  = ctx.createOscillator();
-      var gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, ctx.currentTime);
-      gain.gain.setValueAtTime(0, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.16, ctx.currentTime + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 1.3);
-    } catch (e) {}
+
+    function doPlay() {
+      try {
+        var osc  = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(0, ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0.14, ctx.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 1.3);
+      } catch (e) {}
+    }
+
+    if (ctx.state === 'running') {
+      doPlay();
+    } else {
+      ctx.resume().then(doPlay).catch(function () {});
+    }
   }
 
-  /* ── Sound toggle (ambient audio) ────────────────────────────────── */
+  /* ── Sound toggle (ambient audio + AudioContext unlock) ──────────── */
   function initSound() {
     var btn   = document.getElementById('sound-toggle');
     var audio = document.getElementById('ambient-audio');
@@ -1168,6 +1244,10 @@
     var playing = false;
 
     btn.addEventListener('click', function () {
+      /* Unlock Web Audio on first user gesture so chimes work */
+      var ctx = getAudioCtx();
+      if (ctx && ctx.state === 'suspended') ctx.resume().catch(function () {});
+
       if (!audio) return;
       if (playing) {
         audio.pause();
@@ -1182,7 +1262,9 @@
           btn.classList.add('playing');
           btn.setAttribute('aria-label', 'Pause ambient music');
           btn.textContent = '♫';
-        }).catch(function () {});
+        }).catch(function () {
+          /* No audio file — AudioContext is still unlocked for chimes */
+        });
       }
     });
   }
@@ -1190,7 +1272,8 @@
   /* ── Chapter navigation dots ─────────────────────────────────────── */
   function initChapterNav() {
     var nav      = document.getElementById('chapter-nav');
-    var chapters = document.querySelectorAll('.chapter');
+    /* Exclude hidden easter egg chapter from nav dots */
+    var chapters = document.querySelectorAll('.chapter:not(#chapter-hidden)');
     if (!nav || chapters.length === 0) return;
 
     chapters.forEach(function (ch, i) {
@@ -1206,6 +1289,7 @@
     });
 
     var dots = nav.querySelectorAll('.chapter-nav-dot');
+    var lastChimeIdx = -1;
 
     var chapObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -1214,7 +1298,10 @@
         if (idx === -1) return;
         dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
         nav.classList.add('visible');
-        playChime(idx);
+        if (idx !== lastChimeIdx) {
+          lastChimeIdx = idx;
+          playChime(idx);
+        }
       });
     }, { threshold: 0.4 });
 
@@ -1342,6 +1429,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
       setTimeout(function () {
+        document.body.style.overflow = 'hidden'; /* re-lock scroll for ceremony */
         var ceremony = document.getElementById('ceremony');
         var selector = document.getElementById('theme-selector');
 
