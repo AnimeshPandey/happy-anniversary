@@ -27,14 +27,26 @@
 </head>
 <body>
 
+  <!-- Skip nav -->
+  <a href="#journey" class="skip-link">Skip to story</a>
+
   <!-- Grain texture overlay -->
   <div id="grain-layer" aria-hidden="true"></div>
 
   <!-- Scroll progress bar -->
   <div id="scroll-progress" aria-hidden="true"></div>
 
+  <!-- Portal transition overlay (bloom-to-journey) -->
+  <div id="portal-overlay" aria-hidden="true"></div>
+
   <!-- Falling petals -->
   <div id="petals-layer" aria-hidden="true"></div>
+
+  <!-- Pull-to-restart indicator -->
+  <div id="pull-restart-indicator" aria-hidden="true">
+    <span class="pull-icon">↺</span>
+    <span class="pull-label">Release to restart</span>
+  </div>
 
   <!-- ── Phase 0a: Theme Selector (every page load) ──────────────── -->
   <section id="theme-selector" aria-label="Choose a theme for your journey">
@@ -55,6 +67,10 @@
 
       <div class="ts-dots" id="ts-dots" role="group" aria-label="Theme options"></div>
 
+      <button class="ts-surprise-btn" id="ts-surprise-btn" type="button">
+        ✦ Surprise Me
+      </button>
+
       <button class="ts-cycle-btn" id="ts-cycle-btn" type="button" aria-label="Try next mood">
         <span class="ts-cycle-icon" aria-hidden="true">✦</span>
         Try Next Mood
@@ -63,6 +79,11 @@
       <button class="ts-start-btn" id="ts-start-btn" type="button">
         Begin Our Journey
       </button>
+    </div>
+
+    <!-- Theme preview bubble (shown on dot hover) -->
+    <div id="ts-preview-bubble" aria-hidden="true" hidden>
+      <span id="ts-preview-name"></span>
     </div>
 
     <div class="sr-only" aria-live="polite" aria-atomic="true" id="ts-announce"></div>
@@ -82,11 +103,25 @@
         <div class="bloom-petal" style="--rot:270deg; --delay:0.82s"></div>
         <div class="bloom-petal" style="--rot:315deg; --delay:0.89s"></div>
       </div>
-      <h1 class="ceremony-title" id="ceremony-heading">Happy Anniversary</h1>
-      <p  class="ceremony-date"  id="ceremony-date">One beautiful year</p>
-      <button class="begin-btn" id="begin-btn" aria-label="Begin the journey">Begin</button>
+      <h1 class="ceremony-title"     id="ceremony-heading">Happy Anniversary</h1>
+      <p  class="ceremony-recipient" id="ceremony-recipient"></p>
+      <p  class="ceremony-date"      id="ceremony-date">One beautiful year</p>
+      <p  class="ceremony-days"      id="ceremony-days" aria-live="polite"></p>
+
+      <div class="begin-btn-wrap">
+        <button class="begin-btn" id="begin-btn" aria-label="Begin the journey">Begin</button>
+        <svg class="begin-countdown-ring" viewBox="0 0 64 64" aria-hidden="true">
+          <circle class="countdown-circle" id="countdown-circle" cx="32" cy="32" r="30"/>
+        </svg>
+      </div>
     </div>
   </section>
+
+  <!-- Scroll-direction chapter header -->
+  <header id="chapter-header" aria-label="Current chapter" aria-hidden="true">
+    <span id="chapter-header-num"></span>
+    <span id="chapter-header-title"></span>
+  </header>
 
   <!-- ── Main Journey ────────────────────────────────────────────── -->
   <main id="journey" aria-label="Anniversary journey">
@@ -94,6 +129,10 @@
     <section id="opening" aria-label="Opening">
       <div class="opening-poem reveal">
         <p id="opening-poem-text"></p>
+        <svg class="poem-underline" viewBox="0 0 320 20" aria-hidden="true" preserveAspectRatio="none">
+          <path id="poem-underline-path" d="M10 12 Q80 3 160 12 Q240 21 310 12"
+            fill="none" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
       </div>
       <div id="opening-panels" role="region" aria-label="Opening panels"></div>
     </section>
@@ -132,9 +171,9 @@
       <div id="crescendo-burst" aria-hidden="true"></div>
       <div class="crescendo-inner">
         <div class="crescendo-text reveal">
-          <p class="crescendo-line"                    id="crescendo-line1"></p>
-          <p class="crescendo-line"                    id="crescendo-line2"></p>
-          <p class="crescendo-line crescendo-highlight" id="crescendo-line3"></p>
+          <p class="crescendo-line reveal-child"                    id="crescendo-line1"></p>
+          <p class="crescendo-line reveal-child"                    id="crescendo-line2"></p>
+          <p class="crescendo-line crescendo-highlight reveal-child" id="crescendo-line3"></p>
         </div>
       </div>
     </section>
@@ -153,6 +192,10 @@
               stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
           </svg>
         </div>
+
+        <div id="replay-wrap">
+          <button id="replay-btn" type="button">↺ Replay Opening</button>
+        </div>
       </div>
     </section>
 
@@ -164,20 +207,32 @@
   <button id="sound-toggle" type="button" aria-label="Play ambient music" hidden>♪</button>
 
   <button id="share-btn" type="button" aria-label="Share this experience" hidden>
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
       <polyline points="16 6 12 2 8 6"/>
       <line x1="12" y1="2" x2="12" y2="15"/>
     </svg>
   </button>
 
+  <!-- TOC bottom sheet -->
+  <div id="toc-sheet" hidden>
+    <div id="toc-backdrop"></div>
+    <div id="toc-content" role="dialog" aria-modal="true" aria-label="Table of contents">
+      <div id="toc-handle" aria-hidden="true"></div>
+      <h2 id="toc-heading">Our Story</h2>
+      <ol id="toc-list"></ol>
+    </div>
+  </div>
+
   <!-- Orientation lock guidance -->
-  <div id="orientation-overlay" role="alertdialog" aria-modal="true" aria-label="Please rotate your device" hidden>
+  <div id="orientation-overlay" role="alertdialog" aria-modal="true"
+       aria-label="Please rotate your device" hidden>
     <div class="orient-icon" aria-hidden="true">📱</div>
     <p>This experience is best in portrait mode. Please rotate your device.</p>
   </div>
 
-  <!-- Ambient audio (add ambient.mp3 to the project root to enable) -->
+  <!-- Ambient audio -->
   <audio id="ambient-audio" loop preload="none" aria-hidden="true">
     <source src="ambient.mp3" type="audio/mpeg">
   </audio>
@@ -186,5 +241,10 @@
   <script src="themes.js"></script>
   <script src="theme-controller.js"></script>
   <script src="main.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(function () {});
+    }
+  </script>
 </body>
 </html>
