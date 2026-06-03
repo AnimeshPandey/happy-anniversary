@@ -14,6 +14,24 @@
     if (navigator.vibrate) navigator.vibrate(ms || 30);
   }
 
+  /* ── Scroll lock (iOS-safe body-lock pattern) ───────────────────── */
+  function lockScroll() {
+    document.body.style.position = 'fixed';
+    document.body.style.top      = '0';
+    document.body.style.left     = '0';
+    document.body.style.right    = '0';
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+  }
+  function unlockScroll() {
+    document.body.style.position = '';
+    document.body.style.top      = '';
+    document.body.style.left     = '';
+    document.body.style.right    = '';
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+  }
+
   /* ── Audio context (lazy init on first user gesture) ─────────────── */
   function getAudioCtx() {
     if (!audioCtx) {
@@ -152,8 +170,8 @@
 
   /* ── Theme Selector ──────────────────────────────────────────────── */
   function initThemeSelector() {
-    /* Lock scroll while selector/ceremony are showing */
-    document.body.style.overflow = 'hidden';
+    /* Lock scroll while selector/ceremony are showing (iOS-safe body-lock) */
+    lockScroll();
 
     var savedIdx = loadSavedTheme();
     ThemeController.init();
@@ -172,15 +190,20 @@
     function applyThemeChange(idx) {
       ThemeController.set(idx);
       saveTheme(idx);
-      reshapePetals();
+      requestAnimationFrame(function () { reshapePetals(); });
       flashThemeTransition();
       haptic(20);
+      /* Orb pulse via inline style to avoid conflicting with orbFloat animation */
       var orb = document.querySelector('.ts-orb');
       if (orb) {
-        orb.classList.remove('pulse');
-        void orb.offsetWidth;
-        orb.classList.add('pulse');
-        setTimeout(function () { orb.classList.remove('pulse'); }, 700);
+        orb.style.boxShadow = '0 0 110px 40px var(--orb-shadow)';
+        setTimeout(function () { orb.style.boxShadow = ''; }, 650);
+      }
+      /* Dynamic theme-color meta update */
+      var metaTheme = document.querySelector('meta[name="theme-color"]');
+      var theme = ThemeController.current();
+      if (metaTheme && theme && theme.tokens && theme.tokens['--rose']) {
+        metaTheme.setAttribute('content', theme.tokens['--rose']);
       }
     }
 
@@ -301,6 +324,7 @@
     if (!title) return;
 
     if (recipient) recipient.textContent = SITE.recipientName ? 'For ' + SITE.recipientName : '';
+    if (date) date.textContent = SITE.date || 'One beautiful year';
 
     setTimeout(function () { title.classList.add('visible'); }, 1200);
     setTimeout(function () { if (recipient) recipient.classList.add('visible'); }, 1900);
@@ -310,6 +334,8 @@
     }, 3200);
     setTimeout(function () {
       if (btn) btn.classList.add('visible');
+      var hint = document.getElementById('begin-hint');
+      if (hint) setTimeout(function () { hint.classList.add('visible'); }, 600);
       if (!reducedMotion) fireCeremonyBurst();
       initCountdownRing();
     }, 4300);
@@ -383,15 +409,15 @@
         overlay.style.setProperty('--pcy', cy + 'px');
         overlay.classList.add('expanding');
 
-        /* Use setTimeout matching CSS durations (0.38s expand, 0.44s collapse) */
+        /* Use setTimeout matching CSS durations (0.28s expand, 0.34s collapse) */
         setTimeout(function () {
           overlay.classList.remove('expanding');
           overlay.classList.add('collapsing');
           setTimeout(function () {
             overlay.classList.remove('collapsing');
             showJourneyUI();
-          }, 460);
-        }, 400);
+          }, 340);
+        }, 280);
       } else {
         showJourneyUI();
       }
@@ -404,8 +430,29 @@
   }
 
   function showJourneyUI() {
-    /* Restore scrolling now that journey is active */
-    document.body.style.overflow = '';
+    /* Visibility gate: hide journey before unlocking scroll to prevent
+       any flash of content at wrong scroll position on iOS */
+    var journey = document.getElementById('journey');
+    if (journey) journey.style.visibility = 'hidden';
+
+    /* Unlock scroll (iOS-safe), then hard-snap to top */
+    unlockScroll();
+    window.scrollTo(0, 0);
+
+    /* Restore journey after two rAFs so browser has settled at scroll=0 */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        if (journey) {
+          journey.style.visibility = '';
+          journey.style.opacity    = '0';
+          journey.style.transition = 'opacity 0.4s ease';
+          requestAnimationFrame(function () {
+            journey.style.opacity = '';
+            setTimeout(function () { journey.style.transition = ''; }, 450);
+          });
+        }
+      });
+    });
 
     var soundBtn = document.getElementById('sound-toggle');
     var shareBtn = document.getElementById('share-btn');
@@ -420,10 +467,6 @@
       setTimeout(function () { shareBtn.classList.add('visible'); }, 500);
     }
     if (navEl) navEl.removeAttribute('hidden');
-
-    /* Use 'instant' to bypass any smooth-scroll so the
-       journey always starts at the very top regardless of prior scroll. */
-    window.scrollTo({ top: 0, behavior: 'instant' });
 
     /* One-time TOC discovery hint */
     try {
@@ -440,6 +483,24 @@
             setTimeout(function () { hint.remove(); }, 450);
           }, 4000);
         }, 3500);
+      }
+    } catch (e) {}
+
+    /* One-time sound hint toast */
+    try {
+      if (!localStorage.getItem('sound-hint-shown')) {
+        localStorage.setItem('sound-hint-shown', '1');
+        setTimeout(function () {
+          var toast = document.createElement('div');
+          toast.className = 'sound-hint-toast';
+          toast.textContent = 'tap the note for music';
+          document.body.appendChild(toast);
+          setTimeout(function () { toast.classList.add('visible'); }, 100);
+          setTimeout(function () {
+            toast.classList.remove('visible');
+            setTimeout(function () { toast.remove(); }, 450);
+          }, 3500);
+        }, 2000);
       }
     } catch (e) {}
   }
@@ -675,6 +736,13 @@
     var sign = document.getElementById('closing-signoff');
     if (msg)  msg.textContent  = SITE.closing.message;
     if (sign) sign.textContent = SITE.closing.signoff;
+    /* Author name below signoff */
+    if (sign && SITE.closing.author) {
+      var author = document.createElement('p');
+      author.className = 'closing-author';
+      author.textContent = SITE.closing.author;
+      sign.parentNode.insertBefore(author, sign.nextSibling);
+    }
   }
 
   /* ── Poem underline SVG draw ─────────────────────────────────────── */
@@ -948,6 +1016,35 @@
     }, { passive: false });
   }
 
+  /* ── Post-heart slow petal cascade ──────────────────────────────── */
+  function fireSlowCascade() {
+    if (reducedMotion) return;
+    var container = document.getElementById('petals-layer');
+    if (!container) return;
+    var colors = [
+      'var(--rose)', 'var(--gold)', 'var(--rose-light)',
+      'var(--gold-light)', 'var(--petal-1)', 'var(--petal-3)',
+      'var(--petal-5)', 'var(--rose-mid)'
+    ];
+    for (var i = 0; i < 8; i++) {
+      (function (idx) {
+        var p    = document.createElement('div');
+        p.className = 'petal';
+        p.style.background        = colors[idx % colors.length];
+        p.style.left              = (8 + Math.random() * 84) + '%';
+        var size = 7 + Math.random() * 9;
+        p.style.width             = size + 'px';
+        p.style.height            = (size * 1.45).toFixed(1) + 'px';
+        p.style.animationDuration = (5.5 + Math.random() * 2.5).toFixed(1) + 's';
+        p.style.animationDelay    = (idx * 0.55).toFixed(2) + 's';
+        p.style.setProperty('--drift',      ((Math.random() - 0.5) * 90).toFixed(0) + 'px');
+        p.style.setProperty('--end-rotate', (240 + Math.random() * 240).toFixed(0) + 'deg');
+        container.appendChild(p);
+        setTimeout(function () { p.remove(); }, 9500);
+      })(i);
+    }
+  }
+
   /* ── SVG heart draw + fill + confetti ───────────────────────────── */
   function initHeart() {
     var path = document.getElementById('heart-path');
@@ -978,6 +1075,19 @@
             path.classList.add('filled');
             if (wrap) wrap.classList.add('heart-done');
             haptic(40);
+
+            /* Anniversary dedication reveal + slow cascade */
+            setTimeout(function () {
+              var closingInner = document.querySelector('.closing-inner');
+              if (closingInner && !document.querySelector('.anniversary-dedication')) {
+                var dedication = document.createElement('p');
+                dedication.className = 'anniversary-dedication';
+                dedication.textContent = 'Happy first anniversary, Divya.';
+                closingInner.appendChild(dedication);
+                raf2(function () { dedication.classList.add('visible'); });
+                fireSlowCascade();
+              }
+            }, 2500);
           }
         }, 1700);
       });
@@ -1081,7 +1191,7 @@
 
   /* ── Page title per chapter ──────────────────────────────────────── */
   function updatePageTitle(chapterTitle) {
-    document.title = chapterTitle ? chapterTitle + ' — Happy Anniversary' : 'Happy Anniversary';
+    document.title = chapterTitle ? chapterTitle + ' - Happy Anniversary' : 'Happy Anniversary';
   }
 
   /* ── TOC bottom sheet (long-press nav to open) ───────────────────── */
@@ -1455,7 +1565,7 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
       setTimeout(function () {
-        document.body.style.overflow = 'hidden'; /* re-lock scroll for ceremony */
+        lockScroll(); /* re-lock scroll for ceremony (iOS-safe) */
         var ceremony = document.getElementById('ceremony');
         var selector = document.getElementById('theme-selector');
 

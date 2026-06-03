@@ -5,16 +5,16 @@ var SITE = {
   recipientName: 'Divya',
 
   opening: {
-    poem: 'Every love story is beautiful,\nbut ours is my favourite.',
+    poem: 'Every love story is beautiful,\nBut Divya, ours is my favourite.',
     panels: [
       {
         id: 'panel-1',
-        text: 'A year ago, something started that I will spend the rest of my life being grateful for.',
+        text: 'A year ago, you walked into my life, Divya, and I have spent every day since being grateful for that one ordinary beginning.',
         imageId: 'hero-main'
       },
       {
         id: 'panel-2',
-        text: 'It did not look like much from the outside. Just two people, one ordinary day, and an ordinary beginning to something extraordinary.',
+        text: 'From the outside it looked unremarkable: two people, one quiet start. But something was already different. I already knew.',
         imageId: 'ceremony-bg'
       }
     ]
@@ -24,7 +24,7 @@ var SITE = {
     {
       number: '01',
       title:  'How it started',
-      body:   'Every great love story has a beginning. Ours started quietly, unexpectedly: the kind of beginning you only recognise as a beginning once you are deep inside the middle of something wonderful. I remember noticing you and thinking: this is different. This one matters.',
+      body:   'Ours began the way the best things do, without announcement. I remember the exact moment I noticed you, Divya: something in me went quiet and certain at once. I thought: this is the one. That thought has not changed once in a year.',
       imageId: 'ch1-main',
       layout:  'left',
       mood:    '🌱'
@@ -32,7 +32,7 @@ var SITE = {
     {
       number: '02',
       title:  'The first yes',
-      body:   'You said yes. Three words that I have replayed more times than I can count. From that moment, the world arranged itself differently. Everything that came before became part of the before, and everything after was painted in a warmer light.',
+      body:   'When you said yes, the world rearranged itself. Everything before became the before. Everything after was gentler, brighter, fuller. Three words, and I have been living inside them ever since.',
       imageId: 'ch2-main',
       layout:  'right',
       mood:    '💫'
@@ -40,7 +40,7 @@ var SITE = {
     {
       number: '03',
       title:  'When I knew',
-      body:   'There was a specific moment. Not dramatic, not announced. Maybe it was something you said, or the way you laughed, or a quiet afternoon when I looked at you and felt something settle into place. I knew. I absolutely knew. And I have known every day since.',
+      body:   'There was a specific moment, nothing dramatic, nothing announced. You said something ordinary, or laughed at something small, and I felt it settle into certainty. I knew. Completely. And I have known it every single day since.',
       imageId: 'ch3-main',
       layout:  'left',
       mood:    '🌙'
@@ -48,7 +48,7 @@ var SITE = {
     {
       number: '04',
       title:  'Our first adventure',
-      body:   'The best adventures are the ones you almost do not take. We said yes with equal parts excitement and nerves, and what came back from it was not just photographs. It was a version of us that had learned how to be us together in new places. I want more of those.',
+      body:   'The best adventures are the ones you almost do not take. We said yes with nervousness and full hearts, and what we brought back was not just photographs. It was a version of us that had learned how to be us somewhere new. I want more of those moments, Divya. Many more.',
       imageId: 'ch4-main',
       layout:  'right',
       mood:    '🗺️'
@@ -56,15 +56,15 @@ var SITE = {
     {
       number: '05',
       title:  'The little things',
-      body:   'Love is not the grand gestures (though those are wonderful). Love is the cup of tea before you asked for it. The way you remember what I mentioned once, weeks ago. The message that arrives exactly when I need it. The little things are, quietly, the whole thing.',
+      body:   'Love is not only the grand gestures. Love is remembering what I mentioned once, weeks ago. The message that arrives exactly when I need it. The quiet cup of tea before I asked for it. With you, the little things are not little at all. They are the whole thing.',
       imageId: 'ch5-main',
       layout:  'left',
-      mood:    '🫂'
+      mood:    '🪴'
     },
     {
       number: '06',
       title:  'When you made everything better',
-      body:   'There were days when everything felt hard. And then there was you: not always with solutions, not always with the right words, but always there. You have an extraordinary ability to make difficult things feel survivable. That is an extraordinary kind of love.',
+      body:   'There were hard days. And then there was you, not always with the perfect words, not always with answers, but always there. You have a rare gift, Divya: you make difficult things feel survivable. That is an extraordinary way to be loved.',
       imageId: 'ch6-main',
       layout:  'right',
       mood:    '🌊'
@@ -72,7 +72,7 @@ var SITE = {
     {
       number: '07',
       title:  'The quiet moments',
-      body:   'Not every memory is a highlight. Some of the best ones are Tuesday evenings, unhurried mornings, the easy silence of two people who do not need to fill every space with words. Those quiet moments are the architecture of something lasting, and I treasure every single one.',
+      body:   'Not every memory needs to be a highlight. Some of the ones I hold closest are Tuesday evenings, unhurried mornings, the easy silence of two people who do not need to fill every moment with words. Those quiet moments are the architecture of something lasting.',
       imageId: 'ch7-main',
       layout:  'left',
       mood:    '🕊️'
@@ -80,7 +80,7 @@ var SITE = {
     {
       number: '08',
       title:  'How you changed me',
-      body:   'I am different because of you. Better, I think: more patient, more open, more willing to feel things fully. You did not try to change me. You just made space for me to grow into a version of myself I like more. That might be the most loving thing a person can do.',
+      body:   'I am a different person because of you. More patient, more open, more willing to feel things fully. You did not try to change me. You simply made space for me to grow into a version of myself I like more. That might be the most loving thing one person can do for another.',
       imageId: 'ch8-main',
       layout:  'right',
       mood:    '🌺'
@@ -88,7 +88,7 @@ var SITE = {
     {
       number: '09',
       title:  'Every ordinary day',
-      body:   'Ordinary days with you are not ordinary at all. They are full of small beauties: the way the light falls in the morning, the routines that have become rituals, the conversations that are really just love, worn smooth and comfortable by repetition. I would choose them endlessly.',
+      body:   'Ordinary days with you are not ordinary. They are full of small, unrepeatable beauties: the way light falls in the morning, the routines that have quietly become rituals, the conversations that are really just love wearing comfortable clothes. I would choose them endlessly.',
       imageId: 'ch9-main',
       layout:  'left',
       mood:    '☀️'
@@ -96,7 +96,7 @@ var SITE = {
     {
       number: '10',
       title:  'What I never want to forget',
-      body:   'I want to remember all of it. Not just the perfect days but the imperfect ones, the laughter that made no sense, the plans that changed, the moments we did not know were becoming memories until they already were. I want to hold all of it. Every bit.',
+      body:   'I want to remember all of it: not only the beautiful days but the imperfect ones, the laughter that made no sense, the plans that changed. The moments we did not know were becoming memories until they already had. I want to hold every single bit of it.',
       imageId: 'ch10-main',
       layout:  'right',
       mood:    '📸'
@@ -104,7 +104,7 @@ var SITE = {
     {
       number: '11',
       title:  'Where we are going',
-      body:   'A year in, and I find myself genuinely excited about everything still ahead. New places, new ordinary days, new versions of us. Whatever comes next, I know I want to face it with you beside me. That certainty is its own kind of quiet, steady joy.',
+      body:   'A year in, and I find myself genuinely excited about everything still ahead. New places, new ordinary days, new versions of us. Whatever comes next, Divya, I know exactly who I want beside me. That certainty is its own kind of quiet, steady joy.',
       imageId: 'ch11-main',
       layout:  'left',
       mood:    '✨'
@@ -112,7 +112,7 @@ var SITE = {
     {
       number: '12',
       title:  'Everything, always',
-      body:   'One year. Three hundred and sixty-five days. And somewhere in all of that, you became my favourite part of being alive. Not just on the good days. On all of them. Thank you for choosing me, and for everything that choosing has meant. I love you. Everything, always.',
+      body:   'One year. Three hundred and sixty-five days. And somewhere inside all of that, you became my favourite part of being alive, not just on the good days, but on all of them. Thank you for choosing me. I love you, Divya. Everything, always.',
       imageId: 'ch12-main',
       layout:  'right',
       mood:    '❤️'
@@ -122,20 +122,21 @@ var SITE = {
   hiddenChapter: {
     number: '∞',
     title:  'Wait, one more thing',
-    body:   'There are no words big enough for what this year has meant to me. But I keep trying anyway, because you deserve all the words: the big ones and the small ones and every quiet one in between. I never want to stop trying to find them. So here is the truest thing I know: I am the luckiest person in the world. Not because of anything I did, but because you exist, and somehow I get to love you. That is not a small thing to say. That is everything.',
+    body:   'There are no words big enough for this year. But I keep reaching for them because you deserve every one, the large words and the small, and every quiet one in between. Here is the truest thing I know: I am the luckiest person alive. Not because of anything I did, but because you exist, and somehow I get to love you. That is not a small thing. That is everything there is.',
     imageId: 'hidden-ch',
     layout:  'left'
   },
 
   crescendo: {
-    line1: 'You are the best thing',
+    line1: 'Divya, you are the best thing',
     line2: 'that has ever happened to me.',
     line3: 'Happy first anniversary.'
   },
 
   closing: {
-    message: 'With all of my love, always and without reservation. Today and every day that comes after this one.',
-    signoff: 'Yours,',
+    message: 'With all of my love, always and without reservation. Today, and every day that comes after this one.',
+    signoff: 'Yours, always',
+    author:  'Animesh',
     imageId: 'closing-hero'
   }
 };
