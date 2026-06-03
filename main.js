@@ -177,6 +177,15 @@
     ThemeController.init();
     if (savedIdx !== 0) ThemeController.set(savedIdx);
 
+    /* Sync meta[name="theme-color"] with the active theme on every load */
+    (function () {
+      var metaInit = document.querySelector('meta[name="theme-color"]');
+      var t = ThemeController.current();
+      if (metaInit && t && t.tokens && t.tokens['--rose']) {
+        metaInit.setAttribute('content', t.tokens['--rose']);
+      }
+    })();
+
     var startBtn = document.getElementById('ts-start-btn');
     var selector = document.getElementById('theme-selector');
     var prevBtn  = document.getElementById('ts-prev-btn');
@@ -269,6 +278,12 @@
           saveTheme(i);
           flashThemeTransition();
           haptic(20);
+          /* Keep meta[name="theme-color"] in sync when a dot is tapped */
+          var metaTheme = document.querySelector('meta[name="theme-color"]');
+          var theme = ThemeController.current();
+          if (metaTheme && theme && theme.tokens && theme.tokens['--rose']) {
+            metaTheme.setAttribute('content', theme.tokens['--rose']);
+          }
         });
       });
     }
