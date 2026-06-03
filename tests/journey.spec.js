@@ -147,10 +147,10 @@ test.describe('Journey structure', () => {
     await expect(page.locator('#replay-btn')).toBeAttached();
   });
 
-  test('replay button textContent contains "Begin Again"', async ({ page }) => {
-    // Use textContent (not innerText) to avoid CSS text-transform uppercase
-    const text = await page.locator('#replay-btn').evaluate(el => el.textContent);
-    expect(text).toContain('Begin Again');
+  test('replay button has aria-label "Begin Again"', async ({ page }) => {
+    // Button now uses SVG icon + aria-label; text has been replaced by graphical element
+    const label = await page.locator('#replay-btn').getAttribute('aria-label');
+    expect(label).toContain('Begin Again');
   });
 
   // ── Fixed UI ──────────────────────────────────────────────────────────────

@@ -28,9 +28,9 @@ test.describe('Replay', () => {
   });
 
   test('replay button label is "Begin Again"', async ({ page }) => {
-    // Use textContent (not innerText) to avoid CSS text-transform uppercase
-    const text = await page.locator('#replay-btn').evaluate(el => el.textContent);
-    expect(text).toContain('Begin Again');
+    // Button uses SVG icon + aria-label (no visible text); check aria-label
+    const label = await page.locator('#replay-btn').getAttribute('aria-label');
+    expect(label).toContain('Begin Again');
   });
 
   test('clicking Begin Again re-locks scroll and restores ceremony', async ({ page }) => {

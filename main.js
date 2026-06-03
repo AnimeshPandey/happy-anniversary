@@ -202,6 +202,7 @@
       requestAnimationFrame(function () { reshapePetals(); });
       flashThemeTransition();
       haptic(20);
+      playThemeSelect();
       /* Orb pulse via inline style to avoid conflicting with orbFloat animation */
       var orb = document.querySelector('.ts-orb');
       if (orb) {
@@ -278,6 +279,7 @@
           saveTheme(i);
           flashThemeTransition();
           haptic(20);
+          playThemeSelect();
           /* Keep meta[name="theme-color"] in sync when a dot is tapped */
           var metaTheme = document.querySelector('meta[name="theme-color"]');
           var theme = ThemeController.current();
@@ -415,6 +417,7 @@
 
     function dismiss() {
       haptic(40);
+      playPortalEntry();
       ceremony.style.display = 'none';
 
       if (overlay && !reducedMotion) {
@@ -1357,34 +1360,81 @@
   }
 
   /* ── Web Audio synthesised chime ─────────────────────────────────── */
-  function playChime(chapterIndex) {
+  /* ── Generic one-shot tone ─────────────────────────────────────────── */
+  function playToneShort(freq, waveform, gainPeak, attackTime, decayTime) {
     var ctx = getAudioCtx();
     if (!ctx) return;
-    var notes = [523.25, 587.33, 659.25, 698.46, 783.99, 880, 987.77,
-                 1046.5, 1174.66, 1318.51, 1396.91, 1567.98];
-    var freq  = notes[(chapterIndex || 0) % notes.length];
-
+    var dt = decayTime || 1.0;
     function doPlay() {
       try {
         var osc  = ctx.createOscillator();
         var gain = ctx.createGain();
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.type = 'sine';
+        osc.type = waveform || 'sine';
         osc.frequency.setValueAtTime(freq, ctx.currentTime);
         gain.gain.setValueAtTime(0, ctx.currentTime);
-        gain.gain.linearRampToValueAtTime(0.14, ctx.currentTime + 0.02);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+        gain.gain.linearRampToValueAtTime(gainPeak || 0.10, ctx.currentTime + (attackTime || 0.02));
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dt);
         osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + 1.3);
+        osc.stop(ctx.currentTime + dt + 0.05);
       } catch (e) {}
     }
+    if (ctx.state === 'running') doPlay();
+    else ctx.resume().then(doPlay).catch(function () {});
+  }
 
-    if (ctx.state === 'running') {
-      doPlay();
-    } else {
-      ctx.resume().then(doPlay).catch(function () {});
-    }
+  /* ── Get active theme's sound profile (safe fallback) ──────────────── */
+  function getThemeSound() {
+    var theme = (typeof ThemeController !== 'undefined') ? ThemeController.current() : null;
+    return (theme && theme.sound) ? theme.sound : {
+      waveform: 'sine', pitchShift: 1.0, gainPeak: 0.14, attackTime: 0.02, decayTime: 1.2
+    };
+  }
+
+  /* ── Single muted note on theme selection ───────────────────────────── */
+  function playThemeSelect() {
+    var s = getThemeSound();
+    playToneShort(
+      523.25 * s.pitchShift,
+      s.waveform,
+      s.gainPeak * 0.65,
+      s.attackTime,
+      s.decayTime * 0.55
+    );
+  }
+
+  /* ── 3-note ascending shimmer on Begin (portal entry) ──────────────── */
+  function playPortalEntry() {
+    var s = getThemeSound();
+    var shift = s.pitchShift;
+    var notes = [523.25 * shift, 659.25 * shift, 783.99 * shift];
+    notes.forEach(function (freq, i) {
+      setTimeout(function () {
+        playToneShort(freq, s.waveform, s.gainPeak * 0.70, s.attackTime, s.decayTime * 0.45);
+      }, i * 130);
+    });
+  }
+
+  /* ── 2-note descending tone on Begin Again (replay) ────────────────── */
+  function playReplayStart() {
+    var s = getThemeSound();
+    var shift = s.pitchShift;
+    var notes = [659.25 * shift, 523.25 * shift];
+    notes.forEach(function (freq, i) {
+      setTimeout(function () {
+        playToneShort(freq, s.waveform, s.gainPeak * 0.55, s.attackTime, s.decayTime * 0.40);
+      }, i * 170);
+    });
+  }
+
+  /* ── Chapter chime — uses active theme's sound profile ─────────────── */
+  function playChime(chapterIndex) {
+    var s = getThemeSound();
+    var notes = [523.25, 587.33, 659.25, 698.46, 783.99, 880, 987.77,
+                 1046.5, 1174.66, 1318.51, 1396.91, 1567.98];
+    var freq = notes[(chapterIndex || 0) % notes.length] * s.pitchShift;
+    playToneShort(freq, s.waveform, s.gainPeak, s.attackTime, s.decayTime);
   }
 
   /* ── Sound toggle (ambient audio + AudioContext unlock) ──────────── */
@@ -1405,14 +1455,12 @@
         playing = false;
         btn.classList.remove('playing');
         btn.setAttribute('aria-label', 'Play ambient music');
-        btn.textContent = '♪';
       } else {
         audio.volume = 0.28;
         audio.play().then(function () {
           playing = true;
           btn.classList.add('playing');
           btn.setAttribute('aria-label', 'Pause ambient music');
-          btn.textContent = '♫';
         }).catch(function () {
           /* No audio file — AudioContext is still unlocked for chimes */
         });
@@ -1577,6 +1625,7 @@
 
     btn.addEventListener('click', function () {
       haptic(30);
+      playReplayStart();
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
       setTimeout(function () {

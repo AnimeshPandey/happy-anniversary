@@ -4,6 +4,8 @@ var THEMES = [
     name: 'PetalPop Parade',
     tagline: 'Spring-bright, buoyant, blooming',
     icon: '✿',
+    /* Bright, playful — triangle wave, pitched up, short decay */
+    sound: { waveform: 'triangle', pitchShift: 1.20, gainPeak: 0.12, attackTime: 0.01, decayTime: 0.85 },
     particleStyle: { borderRadius: '60% 40% 60% 40% / 40% 60% 40% 60%' },
     motion: { duration: '0.55s', ease: 'cubic-bezier(0.34,1.56,0.64,1)', stagger: 80, revealOffset: '20px' },
     tokens: {
@@ -35,6 +37,8 @@ var THEMES = [
     name: 'Moonlight Mithai',
     tagline: 'Dreamy, luminous, silver-soft',
     icon: '☽',
+    /* Soft, dreamy — sine wave, pitched down, long lingering decay */
+    sound: { waveform: 'sine', pitchShift: 0.80, gainPeak: 0.11, attackTime: 0.05, decayTime: 1.80 },
     particleStyle: { clipPath: 'polygon(50% 0%,55% 45%,100% 50%,55% 55%,50% 100%,45% 55%,0% 50%,45% 45%)' },
     motion: { duration: '1.2s', ease: 'cubic-bezier(0.0,0.0,0.2,1)', stagger: 200, revealOffset: '40px' },
     tokens: {
@@ -66,6 +70,8 @@ var THEMES = [
     name: 'CandyCloud Caravan',
     tagline: 'Pastel-bright, bouncy, sweet',
     icon: '☁',
+    /* Bubbly, airy — sine wave, slight pitch up, medium decay */
+    sound: { waveform: 'sine', pitchShift: 1.10, gainPeak: 0.11, attackTime: 0.02, decayTime: 1.00 },
     particleStyle: { borderRadius: '50%' },
     motion: { duration: '0.6s', ease: 'cubic-bezier(0.34,1.56,0.64,1)', stagger: 100, revealOffset: '15px' },
     tokens: {
@@ -97,6 +103,8 @@ var THEMES = [
     name: 'Gulabo Garden Gala',
     tagline: 'Marigold-bright, festive, radiant',
     icon: '❀',
+    /* Floral, gentle — sine wave, near-standard pitch, warm decay */
+    sound: { waveform: 'sine', pitchShift: 0.95, gainPeak: 0.12, attackTime: 0.03, decayTime: 1.30 },
     particleStyle: { clipPath: 'polygon(50% 0%,61.8% 35.4%,97.5% 34.5%,68.3% 57.5%,79.4% 90.9%,50% 70.7%,20.6% 90.9%,31.7% 57.5%,2.5% 34.5%,38.2% 35.4%)' },
     motion: { duration: '0.45s', ease: 'cubic-bezier(0.4,0.0,0.2,1)', stagger: 60, revealOffset: '25px' },
     tokens: {
@@ -128,6 +136,8 @@ var THEMES = [
     name: 'Starry Snuggle Story',
     tagline: 'Violet-deep, starlit, intimate',
     icon: '✦',
+    /* Sparkly, intimate — triangle wave, high pitch, very short crisp decay */
+    sound: { waveform: 'triangle', pitchShift: 1.40, gainPeak: 0.09, attackTime: 0.01, decayTime: 0.70 },
     particleStyle: { clipPath: 'polygon(50% 0%,60.7% 33.3%,93.3% 25%,75% 50%,93.3% 75%,60.7% 66.7%,50% 100%,39.3% 66.7%,6.7% 75%,25% 50%,6.7% 25%,39.3% 33.3%)' },
     motion: { duration: '1.0s', ease: 'cubic-bezier(0.0,0.0,0.2,1)', stagger: 180, revealOffset: '30px' },
     tokens: {
@@ -159,6 +169,8 @@ var THEMES = [
     name: 'ButterflyBlush Bash',
     tagline: 'Mint-fresh, airy, full of flutter',
     icon: '❋',
+    /* Delicate, fluttery — sine wave, slight pitch up, short-medium decay */
+    sound: { waveform: 'sine', pitchShift: 1.15, gainPeak: 0.10, attackTime: 0.02, decayTime: 0.95 },
     particleStyle: { borderRadius: '50% 0 50% 0', transform: 'rotate(45deg)' },
     motion: { duration: '0.7s', ease: 'cubic-bezier(0.34,1.4,0.64,1)', stagger: 120, revealOffset: '20px' },
     tokens: {
@@ -190,6 +202,8 @@ var THEMES = [
     name: 'SangeetSpark Symphony',
     tagline: 'Gold-blazing, festive, electric',
     icon: '✺',
+    /* Festive, warm — triangle wave, pitched down slightly, medium decay */
+    sound: { waveform: 'triangle', pitchShift: 0.85, gainPeak: 0.15, attackTime: 0.02, decayTime: 1.20 },
     particleStyle: { clipPath: 'polygon(50% 0%,100% 50%,50% 100%,0% 50%)', borderRadius: '2px' },
     motion: { duration: '0.35s', ease: 'cubic-bezier(0.4,0.0,0.2,1)', stagger: 50, revealOffset: '30px' },
     tokens: {
@@ -222,6 +236,8 @@ var THEMES = [
     name: 'VelvetVows Voyage',
     tagline: 'Plum-rich, cinematic, timeless',
     icon: '❖',
+    /* Deep, romantic — sine wave, low pitch, very long resonant decay */
+    sound: { waveform: 'sine', pitchShift: 0.65, gainPeak: 0.18, attackTime: 0.06, decayTime: 2.20 },
     particleStyle: { clipPath: 'polygon(50% 0%,100% 50%,50% 100%,0% 50%)' },
     motion: { duration: '1.5s', ease: 'cubic-bezier(0.0,0.0,0.1,1)', stagger: 250, revealOffset: '50px' },
     tokens: {

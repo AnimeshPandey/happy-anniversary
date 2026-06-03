@@ -1,4 +1,4 @@
-var CACHE = 'anniversary-v7';
+var CACHE = 'anniversary-v8';
 var ASSETS = [
   './',
   './index.html',
@@ -34,6 +34,23 @@ self.addEventListener('activate', function (e) {
 
 self.addEventListener('fetch', function (e) {
   if (e.request.method !== 'GET') return;
+
+  /* Navigation requests (HTML): network-first so hard-reload always gets
+     the latest page. Falls back to cache only when truly offline.         */
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request).then(function (resp) {
+        var clone = resp.clone();
+        caches.open(CACHE).then(function (cache) { cache.put(e.request, clone); });
+        return resp;
+      }).catch(function () {
+        return caches.match(e.request);
+      })
+    );
+    return;
+  }
+
+  /* Static assets: cache-first for instant loads; update cache on miss.  */
   e.respondWith(
     caches.match(e.request).then(function (cached) {
       if (cached) return cached;
