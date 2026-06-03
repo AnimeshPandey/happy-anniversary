@@ -70,7 +70,7 @@ once even if both fire simultaneously.
 | Heart dedication | 2.5s after heart enters view, `.anniversary-dedication` element ("Happy first anniversary, Divya.") fades in below. |
 | Slow petal cascade | `fireSlowCascade()` spawns 8 themed petals as a final celebratory rain after the dedication appears. |
 | Signoff underline | SVG path draws under the closing signoff when it enters view at 70% threshold. `initClosingSignoff()`. |
-| Chapter chimes | Web Audio sine wave note on each new chapter entering view. `playChime(idx)`. Deduplicated per chapter. AudioContext unlocked on first user gesture. |
+| Chapter chimes | Web Audio two-note arpeggio (theme's pentatonic scale) on each new chapter entering view. `playChime(idx)`. Deduplicated per chapter. AudioContext unlocked on first user gesture. |
 
 ---
 
@@ -84,7 +84,7 @@ once even if both fire simultaneously.
 | Pull to restart | Pull down from top (>= 90px, mobile only) | Reloads page. Indicator appears during pull. `initPullToRestart()`. |
 | Shake | Shake device (accelerometer delta > 25) | Confetti burst at top-centre. Throttled to once per 1.5s. `initShakeDetection()`. iOS 13+ requires permission — silently skipped if not granted. |
 | Long-press nav bar | Hold chapter nav bar (>= 500ms) | Opens TOC bottom sheet. `initTOCSheet()`. |
-| Replay | Tap `Begin Again` button | Smooth scroll to top, restores theme selector and ceremony after 700ms. `_journeyStarted` reset to `false`. |
+| Replay | Tap `Begin Again` button | Clears ambient effects and stops ambient audio, smooth scroll to top, restores theme selector and ceremony after 700ms. `_journeyStarted` reset to `false`. |
 
 ---
 
@@ -92,7 +92,7 @@ once even if both fire simultaneously.
 
 | Element | Visibility | Behaviour |
 |---------|-----------|-----------|
-| Sound toggle (`note` symbol) | Appears after Begin, bottom-right | Plays/pauses `ambient.mp3`. Also unlocks AudioContext for chimes. |
+| Sound toggle (`note` symbol) | Appears after Begin, bottom-right | Starts/stops synthesised Web Audio ambient (two sine oscillators, per-theme pitch + gain). Also unlocks AudioContext for chimes. |
 | Share button | Appears after Begin if `navigator.share` available | Calls Web Share API. |
 | Chapter nav dots | Visible while scrolling through chapters | Tap to jump to chapter. Long-press to open TOC. Hides when outside chapters section. |
 | Chapter header | Visible while scrolling down through chapters | Shows `chapter number + title`. Hides on scroll-up or outside chapters. |
@@ -100,6 +100,28 @@ once even if both fire simultaneously.
 | Orientation overlay | Auto-shown in landscape on small screens (< 500px height) | Asks user to rotate. |
 | Pull-to-restart indicator | Shown during downward pull at top of page | Shows `Release to restart`. |
 | Sound hint toast | Appears once, 2s after journey starts | Bottom-right overlay reading "tap the note for music". Shown only once per device (keyed by `localStorage('sound-hint-shown')`). Auto-dismisses after 3.5s. |
+
+---
+
+## Per-Theme Ambient Effects
+
+1.8s after `showJourneyUI()`, `initThemeAmbientEffects()` reads `ThemeController.current().ambientEffects` (an array of module names) and activates each module. All effects render into `#theme-effects-layer` (a fixed, pointer-events-none div above the page). Some effects (firework sparks) append directly to `<body>` and are tracked for cleanup.
+
+| Theme | Active effects |
+|-------|----------------|
+| PetalPop Parade | `cherry-gusts`, `fireflies` |
+| Moonlight Mithai | `moon-glow`, `fireflies`, `shooting-stars` |
+| CandyCloud Caravan | `drifting-clouds`, `sprinkles` |
+| Gulabo Garden Gala | `cherry-gusts`, `diyas` |
+| Starry Snuggle Story | `constellations`, `shooting-stars` |
+| ButterflyBlush Bash | `butterfly-flutter`, `cherry-gusts` |
+| SangeetSpark Symphony | `firework-bursts`, `diyas` |
+| VelvetVows Voyage | `candle-flicker`, `gold-leaf-dust`, `peacock` |
+| Purrfect Pair | `kitty-paws`, `yarn-ball`, `floating-whiskers`, `cat-cameo` |
+
+**Cat cameo (Purrfect Pair only)**: the `cat-cameo` module performs a full sequence every 45–90s. Either Mishri (white cat, pink nose, sapphire eyes) or Mochi (cream cat, black nose, periwinkle eyes) enters from the screen edge, blinks twice, pops a heart bubble, and exits. The SVG illustrations are inline path strings (`MISHRI_SVG`, `MOCHI_SVG`) rendered at runtime.
+
+**Cleanup**: when the theme changes or replay fires, `clearThemeEffects()` runs all stored cleanup functions, clears the `#theme-effects-layer`, and removes any `<body>`-appended sparks. `crossfadeAmbient()` handles the audio side of a theme switch simultaneously.
 
 ---
 
@@ -127,23 +149,24 @@ After all chapters, the closing section shows:
 
 ## AudioContext Notes
 
-Web Audio (`OscillatorNode`) is used for chimes. iOS and some browsers suspend the AudioContext
-until a user gesture. The context is created lazily on first use, and resumed:
+Web Audio (`OscillatorNode`) is used for both chimes and ambient. iOS and some browsers suspend the AudioContext until a user gesture. The context is created lazily on first use, and resumed:
 
 - Automatically when `playChime()` is called and `ctx.state !== 'running'`
-- Explicitly on sound-toggle button click (also unlocks ambient audio)
+- Explicitly on sound-toggle button click (also enables ambient)
 
-If chimes are silent on first scroll: tap the sound button once to unlock.
+The ambient system uses a separate gain-ramp approach: oscillators are never abruptly stopped; they always fade smoothly to prevent clicks and pops.
 
 ---
 
 ## Replay Flow
 
 Tapping "Begin Again":
-1. Smooth scroll to `scrollY === 0`
-2. After 700ms: `lockScroll()` re-applied, `_journeyStarted = false`, ceremony fades in, theme selector fades in
-3. The days counter re-animates; the countdown ring resets
-4. All deferred inits (reveals, heart, typewriter) were already run — they re-trigger naturally on scroll
+1. `clearThemeEffects()` and `stopAmbient()` fire immediately
+2. Smooth scroll to `scrollY === 0`
+3. After 700ms: `lockScroll()` re-applied, `_journeyStarted = false`, ceremony fades in, theme selector fades in
+4. The days counter re-animates; the countdown ring resets
+5. All deferred inits (reveals, heart, typewriter) were already run — they re-trigger naturally on scroll
+6. `initThemeAmbientEffects()` will re-fire 1.8s after the next `showJourneyUI()` call
 
 ---
 
@@ -157,3 +180,4 @@ When `prefers-reduced-motion: reduce` is set:
 - `initTypewriter()`, `animateTitleWords()`, `fireCrescendoBurst()`, `fireChapterCompletionPop()`, `fireConfetti()`, `flashThemeTransition()` all exit early
 - Days counter shows final value instantly (no count-up)
 - Slow petal cascade is skipped
+- All 18 ambient effect modules check `reducedMotion` as their first line and return an empty cleanup function immediately — no elements are created

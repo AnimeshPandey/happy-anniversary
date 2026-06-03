@@ -244,11 +244,15 @@ from the top of the screen. iOS 13+ requires DeviceMotionEvent.requestPermission
 which is chained to the sound-toggle click. Android fires immediately. "Shake the
 phone to celebrate" is a joyful interaction.
 
-### 8.4 Per-theme ambient audio (planned)
-Each theme has its own ambient .mp3 loop: petalpop → wind chimes, moonlight → piano,
-candy-cloud → ukulele, gulabo-garden → tabla, starry-snuggle → ambient pads,
-butterfly-blush → acoustic guitar, sangeetspark → sitar, velvet-vows → strings.
-Files at `audio/[theme-id].mp3`. Toggle crossfades between them via Web Audio.
+### 8.4 Per-theme ambient audio
+**Status: DONE (synthesised Web Audio, no audio files needed)**
+
+Each theme has a unique ambient drone: two detuned sine oscillators (root + fifth from `theme.ambientNote`),
+filtered through a lowpass BiquadFilter at 820 Hz, gain peak 0.035. Crossfades smoothly on theme switch
+via `crossfadeAmbient()` with 0.6s linear ramp. No .mp3 assets required.
+
+Per-theme pentatonic/modal scales (12 notes each) power the chapter chimes via `playChime()`, which
+picks two notes from `theme.scale` as an arpeggio.
 
 ---
 
@@ -369,6 +373,24 @@ text in large bold type, heart in outline form.
 
 ---
 
+## Phase 14 — Per-Theme Ambient Effects System
+**Status: DONE**
+
+### 14.1 18-module effect dispatch table
+`EFFECT_MODULES` maps effect name strings to init functions. Each module creates elements in `#theme-effects-layer` (a fixed, pointer-events-none div). Every module returns a cleanup function; `clearThemeEffects()` runs all of them on theme change or replay.
+
+All 18 modules: `fireflies`, `shooting-stars`, `moon-glow`, `cherry-gusts`, `butterfly-flutter`, `drifting-clouds`, `diyas`, `firework-bursts`, `candle-flicker`, `gold-leaf-dust`, `peacock`, `ladybird`, `constellations`, `sprinkles`, `kitty-paws`, `yarn-ball`, `floating-whiskers`, `cat-cameo`.
+
+### 14.2 Purrfect Pair theme (9th theme)
+Two Persian cat characters: Mishri (white, pink nose, sapphire eyes) and Mochi (cream, black nose, periwinkle eyes). Inline SVG path illustrations rendered at runtime. Cat cameo module performs a full enter/blink/heart-pop/exit sequence every 45–90s. Four ambient effects active: `kitty-paws`, `yarn-ball`, `floating-whiskers`, `cat-cameo`.
+
+Tokens: lavender/lilac palette (`--bg: #FAF8FF`), blue-grey gold accents (`--gold: #9BB4DC`), deep indigo text.
+
+### 14.3 Per-theme pentatonic scales
+Each theme has a 12-note `scale` array. `playChime()` picks root + chord notes from the array by chapter index, producing a unique harmonic vocabulary per theme.
+
+---
+
 ## Future upgrades (original extension menu)
 
 - SurpriseMe mode: random theme on load ✅ Done
@@ -379,7 +401,7 @@ text in large bold type, heart in outline form.
 - Season-specific limited-edition theme slot
 - Shareable private link variants
 - PWA / Service Worker offline support ✅ Done
-- Per-theme ambient audio loops
+- Per-theme ambient audio loops ✅ Done (synthesised Web Audio)
 - Konami code easter egg
 - 3D card tilt on chapter images (desktop)
 - Magnetic cursor attraction (desktop)
@@ -406,9 +428,13 @@ text in large bold type, heart in outline form.
 | ✅ Done | Heart expand-to-fill | M | Single best "wow" interaction |
 | ✅ Done | TOC slide-up sheet | M | Navigation at 12 chapters |
 | ✅ Done | Pull-to-restart | M | Native mobile feel |
-| 🟡 Next | Per-theme audio loops | L | Needs .mp3 assets |
+| ✅ Done | Per-theme ambient audio | M | Synthesised Web Audio, no files needed |
+| ✅ Done | Per-theme visual effects | L | 18 effect modules, all 9 themes wired |
+| ✅ Done | Purrfect Pair theme | M | 9th theme with cat cameo + ambient |
+| 🟡 Next | Real photos | L | Must be provided by user |
 | 🟡 Next | Blur-up photo loading | M | Needs real photos first |
 | 🟡 Next | Ken Burns on images | M | Needs real photos to shine |
+| 🟡 Next | Copy personalisation | M | Final chapter bodies + crescendo lines |
 | 🟢 Later | 3D card tilt | S | Desktop only, lower reach |
 | 🟢 Later | Konami code | S | Fun but not essential |
 | 🟢 Later | Memory quiz | L | Needs content design |

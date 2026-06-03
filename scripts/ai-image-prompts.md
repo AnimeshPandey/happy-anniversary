@@ -53,6 +53,9 @@ Dramatic portrait of a couple in jewel-toned outfits, golden fireworks behind th
 **VelvetVows Voyage**
 Luxurious portrait of two people in a velvet-curtained room with deep plum and ruby tones, champagne gold accents, cinematic lighting, tall portrait
 
+**Purrfect Pair**
+Soft portrait of two people cozy together in a lavender-toned room, white and cream fluffy Persian cats in the scene, dreamy diffused light, pale lilac and rose accents, tender and warm, tall portrait format
+
 ---
 
 ## ch1-main (4:3 landscape) — How it started
@@ -101,6 +104,9 @@ A jubilant portrait of two people celebrating, gold confetti falling, jewel-tone
 **VelvetVows Voyage**
 The most elegant portrait, deep plum and champagne tones, a single perfect moment of connection, cinematic lighting, timeless, 3:4
 
+**Purrfect Pair**
+The softest, most tender portrait: two people together in gentle lavender light, a white Persian cat and a cream Persian cat curled nearby, dreamy and cozy, pale lilac tones, love and warmth, 3:4
+
 ---
 
 ## AI image transformation pipeline
@@ -125,6 +131,9 @@ To convert a REAL photo into a stylised version matching a theme:
 
 **VelvetVows img2img prompt:**
 `couple portrait, deep plum and burgundy, champagne gold, luxury cinematic lighting, editorial photography`
+
+**Purrfect Pair img2img prompt:**
+`couple portrait, soft lavender and lilac tones, dreamy diffused light, cozy interior, persian cats, gentle and warm, pastel`
 
 ### Using DALL-E 3 with image upload (GPT-4V)
 

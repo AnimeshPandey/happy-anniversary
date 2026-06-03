@@ -10,6 +10,7 @@ How themes work, how to add one, and what every property does.
 2. On load, `ThemeController.init()` applies `THEMES[0]` and builds the dot indicators.
 3. `ThemeController.set(index)` applies a theme: all CSS variables are set on `:root` via `style.setProperty`, then the selector UI text cross-fades.
 4. The selected index is persisted to `localStorage('anniversary-theme-idx')` and restored on the next page load.
+5. When the journey is active and the theme changes, `crossfadeAmbient(newTheme)` and `clearThemeEffects()` + `initThemeAmbientEffects()` swap the audio and ambient effects.
 
 ---
 
@@ -21,6 +22,31 @@ How themes work, how to add one, and what every property does.
   name:     'Theme Display Name', // shown in theme selector
   tagline:  'Short poetic description',
   icon:     '✿',                  // emoji, shown above the name
+
+  // --- Sound profile (Web Audio synthesis, no files needed) ---
+  sound: {
+    waveform:   'sine',           // OscillatorNode type: 'sine', 'triangle', 'sawtooth'
+    pitchShift: 1.0,              // multiplier applied to ambientNote frequencies for chime
+    gainPeak:   0.08,             // peak gain for chime envelope (0.0 – 1.0)
+    attackTime: 0.02,             // seconds for gain ramp-up
+    decayTime:  1.4,              // seconds for gain ramp-down
+  },
+
+  // --- Pentatonic / modal scale for chapter chimes ---
+  scale: [261.63, 293.66, ...],   // 12-element Hz array; playChime() uses index modulo length
+
+  // --- Ambient oscillator root note pair ---
+  ambientNote: {
+    root:  261.63,                // Hz — first sine oscillator frequency
+    fifth: 392.00,                // Hz — second sine oscillator (detuned 5th or other interval)
+  },
+
+  // --- Ambient effect modules active in the journey ---
+  ambientEffects: ['fireflies', 'cherry-gusts'],
+  // Available modules: fireflies, shooting-stars, moon-glow, cherry-gusts,
+  // butterfly-flutter, drifting-clouds, diyas, firework-bursts, candle-flicker,
+  // gold-leaf-dust, peacock, ladybird, constellations, sprinkles,
+  // kitty-paws, yarn-ball, floating-whiskers, cat-cameo
 
   particleStyle: {                // shapes applied to falling petals
     borderRadius: '50%',          // CSS border-radius (optional)
@@ -62,7 +88,7 @@ How themes work, how to add one, and what every property does.
     // --- Theme selector ---
     '--orb-shadow':     'rgba(192,24,95,0.35)', // box-shadow glow colour for orb
     '--selector-bg-a':  'var(--bg)',  // background colour of selector screen
-    '--ts-start-bg':    'rgba(255,255,255,0.65)', // begin button background (now unused — arrow btn has no bg)
+    '--ts-start-bg':    'rgba(255,255,255,0.65)', // begin button background
 
     // --- Image placeholders ---
     '--ph-bg-start':    '#FBE8F0',   // placeholder gradient start
@@ -87,23 +113,28 @@ How themes work, how to add one, and what every property does.
 2. Add a new object to the `THEMES` array.
 3. Pick an unused `id` (kebab-case, no spaces).
 4. Fill in all required token keys (copy an existing theme as template).
-5. Choose a `particleStyle` — three options work well:
+5. Choose `ambientEffects` from the available module list — start with 2–3 modules.
+6. Set `scale` to a 12-note pentatonic or modal array that matches the mood.
+7. Set `ambientNote` root + fifth (any pleasing interval works).
+8. Choose a `particleStyle` — three options work well:
    - **Circles**: `{ borderRadius: '50%' }`
    - **Petals**: `{ borderRadius: '60% 40% 60% 40% / 40% 60% 40% 60%' }`
    - **Stars**: `{ clipPath: 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)' }`
    - **Diamonds**: `{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)', borderRadius: '2px' }`
-6. Choose a `motion` preset:
+9. Choose a `motion` preset:
    - **Snappy**: `{ duration: '0.35s', ease: 'cubic-bezier(0.4,0,0.2,1)', stagger: 50, revealOffset: '20px' }`
    - **Springy**: `{ duration: '0.55s', ease: 'cubic-bezier(0.34,1.56,0.64,1)', stagger: 80, revealOffset: '20px' }`
    - **Cinematic**: `{ duration: '1.5s', ease: 'cubic-bezier(0.0,0.0,0.1,1)', stagger: 250, revealOffset: '50px' }`
+10. Update `tests/theme-selector.spec.js` — change `toHaveCount(9)` to `toHaveCount(N)` for the new count.
+11. Update the theme index table in this file.
 
-The new theme will automatically appear as a dot in the selector without any HTML or JS changes needed.
+The new theme will automatically appear as a dot in the selector without any HTML changes needed.
 
 ---
 
 ## Dark Themes
 
-For dark themes (like `SangeetSpark`), set `--bg` and `--cream` to dark values. The selector background (`--selector-bg-a`) and placeholder gradient (`--ph-bg-start`, `--ph-bg-end`) should also be dark. Set `--ts-start-bg` to `rgba(255,255,255,0.12)` for the glass-effect button (now unused but kept for fallback).
+For dark themes (like `SangeetSpark`), set `--bg` and `--cream` to dark values. The selector background (`--selector-bg-a`) and placeholder gradient (`--ph-bg-start`, `--ph-bg-end`) should also be dark. Set `--ts-start-bg` to `rgba(255,255,255,0.12)` for the glass-effect button.
 
 Dark themes need `--text` and `--text-soft` to be light colours for contrast.
 
@@ -118,6 +149,18 @@ If a specific theme needs CSS rules beyond token changes, add them in `style.css
   text-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
 }
 ```
+
+Current per-theme CSS overrides:
+
+| Theme | Selector | Override |
+|-------|----------|----------|
+| `sangeetspark` | `#scroll-progress` | Gold gradient |
+| `moonlight-mithai` | `.chapter-body` | `font-style: italic` |
+| `velvet-vows` | `.chapter-title` | `letter-spacing: 0.04em` |
+| `purrfect-pair` | `.chapter-body` | `line-height: 1.88` |
+| `purrfect-pair` | `.chapter-title` | `font-style: italic; letter-spacing: 0.015em` |
+| `purrfect-pair` | `#scroll-progress` | Rose gradient |
+| `purrfect-pair` | `.chapter-ornament-dot` | Gold with glow |
 
 ---
 
@@ -152,3 +195,4 @@ The `revealOffset` sets `--motion-reveal-offset` which is the starting `translat
 | 5 | `butterfly-blush` | ButterflyBlush Bash |
 | 6 | `sangeetspark` | SangeetSpark Symphony |
 | 7 | `velvet-vows` | VelvetVows Voyage |
+| 8 | `purrfect-pair` | Purrfect Pair |

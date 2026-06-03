@@ -21,7 +21,7 @@ Run this before every deploy. Check off items as you go.
 - [ ] "for Divya, with love" dedication line appears above "Choose Our Love Mood"
 - [ ] Orb renders with correct gradient for default theme (PetalPop Parade)
 - [ ] Theme name, tagline, and icon display correctly
-- [ ] All 8 theme dots render below the orb
+- [ ] All 9 theme dots render below the orb
 - [ ] `<` and `>` chevron buttons are visible and tappable
 
 ### Interactions
@@ -37,8 +37,9 @@ Run this before every deploy. Check off items as you go.
 - [ ] Rapid-fire clicking does not break theme state (second click blocked during 600ms guard)
 
 ### Theme visuals
-- [ ] Switch through all 8 themes; orb gradient, name, tagline all match each theme
+- [ ] Switch through all 9 themes; orb gradient, name, tagline all match each theme
 - [ ] SangeetSpark Symphony (index 6) shows dark background in selector
+- [ ] Purrfect Pair (index 8) shows lavender/lilac background with paw emoji icon
 - [ ] Petal colours change noticeably between themes on the falling petals
 - [ ] `<meta name="theme-color">` updates to match the new theme's rose colour (check in DevTools Elements)
 
@@ -93,6 +94,7 @@ Run this before every deploy. Check off items as you go.
 - [ ] Sound hint toast appears 2 seconds after journey starts ("tap the note for music")
 - [ ] Sound hint toast auto-dismisses after 3.5s
 - [ ] Sound hint toast does NOT appear on second visit (check `localStorage.getItem('sound-hint-shown')`)
+- [ ] Per-theme ambient effects begin approximately 1.8s after journey starts (e.g. fireflies for PetalPop, cat paw prints for Purrfect Pair)
 
 ---
 
@@ -138,7 +140,7 @@ Run this before every deploy. Check off items as you go.
 - [ ] Bar reaches ~100% at bottom of page
 
 ### Chapter Chimes
-- [ ] A soft chime plays when each chapter enters view (after AudioContext is unlocked)
+- [ ] A soft two-note chime plays when each chapter enters view (after AudioContext is unlocked)
 - [ ] Same chapter does not re-chime on scroll back
 - [ ] No errors in console related to AudioContext
 
@@ -198,13 +200,23 @@ Run this before every deploy. Check off items as you go.
 
 ---
 
-## Sound
+## Sound and Ambient
 
-- [ ] Tapping sound button plays `ambient.mp3`
-- [ ] Button icon changes to indicate playing state
-- [ ] Tapping again pauses
+### Sound toggle
+- [ ] Tapping sound button starts synthesised ambient (two sine oscillators, per-theme pitch)
+- [ ] Button icon changes to indicate playing state (crossed-out note when off)
+- [ ] Tapping again stops ambient with a smooth fade-out
 - [ ] Chapter chimes play after sound button has been tapped (AudioContext unlocked)
 - [ ] Sound does not auto-play without user interaction
+- [ ] Switching theme while ambient is playing crossfades to new theme's ambient frequencies smoothly
+
+### Per-theme ambient effects
+- [ ] PetalPop Parade — fireflies and cherry petal gusts visible in journey
+- [ ] Purrfect Pair — kitty paw prints, yarn ball, floating whiskers visible; cat cameo appears within ~90s
+- [ ] SangeetSpark Symphony — firework bursts and diyas visible
+- [ ] VelvetVows Voyage — candle flicker, gold leaf dust, peacock visible
+- [ ] Switching theme clears previous effects and starts new ones
+- [ ] Replay clears all effects and stops ambient
 
 ---
 
@@ -218,10 +230,12 @@ Run this before every deploy. Check off items as you go.
 ## Replay
 
 - [ ] Tapping "Begin Again" smooth-scrolls to top of page
+- [ ] Ambient effects clear and ambient audio stops immediately on tap
 - [ ] After 700ms: ceremony and theme selector reappear
 - [ ] Days counter re-animates
 - [ ] Countdown ring resets
 - [ ] Journey can be entered again (portal fires correctly)
+- [ ] Per-theme effects re-initialise 1.8s after re-entering the journey
 - [ ] Reveals re-trigger on scroll (reveal items already visible stay visible)
 
 ---
@@ -257,6 +271,7 @@ Run this before every deploy. Check off items as you go.
 - [ ] Typewriter effect skips (poem appears all at once)
 - [ ] Particle bursts do not fire
 - [ ] Days counter shows final number immediately
+- [ ] All ambient effect modules produce no elements (modules return empty cleanup immediately)
 
 ---
 
@@ -289,9 +304,10 @@ Run this before every deploy. Check off items as you go.
 
 ## Pre-Deploy Checklist
 
-- [ ] `CACHE` version bumped in `sw.js` (e.g. `anniversary-v7`)
+- [ ] `CACHE` version bumped in `sw.js` (currently `anniversary-v10`, bump to v11 on next deploy)
 - [ ] `git config user.name` returns `AnimeshPandey` before committing
-- [ ] All 8 themes verified visually in theme selector
+- [ ] All 9 themes verified visually in theme selector
 - [ ] No console errors in Chrome, Safari, Firefox
 - [ ] Lighthouse accessibility score >= 90
 - [ ] Deploy pushed to `gh-pages` branch or `main` (per hosting setup)
+- [ ] Run `npx playwright test` — all 150 tests should pass
