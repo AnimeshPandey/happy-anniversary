@@ -429,30 +429,30 @@
     });
   }
 
+  var _journeyStarted = false;
+
   function showJourneyUI() {
-    /* Visibility gate: hide journey before unlocking scroll to prevent
-       any flash of content at wrong scroll position on iOS */
-    var journey = document.getElementById('journey');
-    if (journey) journey.style.visibility = 'hidden';
+    /* Guard: tolerate accidental double-calls (e.g. countdown ring auto-click
+       firing after manual Begin press before it was cleared) */
+    if (_journeyStarted) return;
+    _journeyStarted = true;
 
-    /* Unlock scroll (iOS-safe), then hard-snap to top */
+    /* Unlock scroll (iOS-safe) — body was position:fixed at top:0, so
+       unlocking always restores scroll=0 with no flash. Then fade journey in. */
     unlockScroll();
-    window.scrollTo(0, 0);
 
-    /* Restore journey after two rAFs so browser has settled at scroll=0 */
-    requestAnimationFrame(function () {
-      requestAnimationFrame(function () {
-        if (journey) {
-          journey.style.visibility = '';
-          journey.style.opacity    = '0';
-          journey.style.transition = 'opacity 0.4s ease';
-          requestAnimationFrame(function () {
-            journey.style.opacity = '';
-            setTimeout(function () { journey.style.transition = ''; }, 450);
-          });
-        }
-      });
-    });
+    var journey = document.getElementById('journey');
+    if (journey && !reducedMotion) {
+      journey.style.opacity    = '0';
+      journey.style.transition = 'opacity 0.5s ease';
+      setTimeout(function () {
+        journey.style.opacity = '1';
+        setTimeout(function () {
+          journey.style.opacity     = '';
+          journey.style.transition  = '';
+        }, 520);
+      }, 50);
+    }
 
     var soundBtn = document.getElementById('sound-toggle');
     var shareBtn = document.getElementById('share-btn');
@@ -1566,6 +1566,7 @@
 
       setTimeout(function () {
         lockScroll(); /* re-lock scroll for ceremony (iOS-safe) */
+        _journeyStarted = false; /* allow showJourneyUI to run again after replay */
         var ceremony = document.getElementById('ceremony');
         var selector = document.getElementById('theme-selector');
 
