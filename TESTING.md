@@ -90,7 +90,10 @@ Run this before every deploy. Check off items as you go.
 - [ ] Scroll starts at position 0 (no flash or jump)
 - [ ] Sound toggle button appears (bottom-right), hidden attribute removed
 - [ ] Share button appears if `navigator.share` is available (bottom-right)
-- [ ] Chapter nav dots appear (12 dots, hidden until in chapter section)
+- [ ] Chapter nav dots appear (20 dots, hidden until in chapter section)
+- [ ] Image mode toggle button appears (bottom-right, above sound toggle) — shows 📷 in AI mode, 🎨 in real mode
+- [ ] Tapping image mode toggle switches all chapter images between illustrated and real photos
+- [ ] Image mode persists across page refreshes (check `localStorage.getItem('image-mode')`)
 - [ ] Sound hint toast appears 2 seconds after journey starts ("tap the note for music")
 - [ ] Sound hint toast auto-dismisses after 3.5s
 - [ ] Sound hint toast does NOT appear on second visit (check `localStorage.getItem('sound-hint-shown')`)
@@ -107,11 +110,11 @@ Run this before every deploy. Check off items as you go.
 
 ---
 
-## Chapter Sections (1-12)
+## Chapter Sections (1-20)
 
-### Per-chapter checks (spot-check chapters 1, 6, 12)
+### Per-chapter checks (spot-check chapters 1, 10, 20)
 - [ ] Chapter number appears with odometer-flip animation on entry
-- [ ] Chapter breadcrumb (e.g. "01 / 12") appears below number in gold
+- [ ] Chapter breadcrumb (e.g. "01 / 20") appears below number in gold
 - [ ] Chapter title words stagger in individually (word-level animation)
 - [ ] Chapter body text fades/slides in (reveal animation)
 - [ ] Mood tag pill renders below ornament
@@ -128,7 +131,7 @@ Run this before every deploy. Check off items as you go.
 - [ ] Long-pressing nav bar for >= 500ms opens TOC bottom sheet
 
 ### TOC Sheet
-- [ ] All 12 chapters listed with mood emoji
+- [ ] All 20 chapters listed with mood emoji
 - [ ] Active chapter is highlighted in TOC
 - [ ] Tapping a TOC item scrolls to that chapter and closes the sheet
 - [ ] Tapping the backdrop closes the sheet
@@ -183,8 +186,8 @@ Run this before every deploy. Check off items as you go.
 - [ ] Tapping the SVG heart fires a confetti burst
 - [ ] Haptic feedback fires (`navigator.vibrate`) if supported
 
-### Triple-tap ch12 ornament
-- [ ] Three taps within 650ms on chapter 12 ornament reveals hidden chapter "infinity"
+### Triple-tap ch20 ornament
+- [ ] Three taps within 650ms on chapter 20 ornament reveals hidden chapter "infinity"
 - [ ] Hidden chapter slides in / appears with dark background
 - [ ] Confetti fires on reveal
 - [ ] Page scrolls to hidden chapter

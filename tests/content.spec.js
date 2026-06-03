@@ -67,9 +67,9 @@ test.describe('Content validation', () => {
     await expect(page.locator('#closing-signoff')).toContainText('Yours');
   });
 
-  test('SITE has 12 chapters defined', async ({ page }) => {
+  test('SITE has 20 chapters defined', async ({ page }) => {
     await goToJourney(page);
     const count = await page.evaluate(() => (window.SITE && window.SITE.chapters) ? window.SITE.chapters.length : 0);
-    expect(count).toBe(12);
+    expect(count).toBe(20);
   });
 });

@@ -187,12 +187,12 @@ The `revealOffset` sets `--motion-reveal-offset` which is the starting `translat
 
 | Index | ID | Name |
 |-------|----|------|
-| 0 | `petalpop` | PetalPop Parade |
-| 1 | `moonlight-mithai` | Moonlight Mithai |
-| 2 | `candy-cloud` | CandyCloud Caravan |
-| 3 | `gulabo-garden` | Gulabo Garden Gala |
-| 4 | `starry-snuggle` | Starry Snuggle Story |
-| 5 | `butterfly-blush` | ButterflyBlush Bash |
-| 6 | `sangeetspark` | SangeetSpark Symphony |
-| 7 | `velvet-vows` | VelvetVows Voyage |
-| 8 | `purrfect-pair` | Purrfect Pair |
+| 0 | `purrfect-pair` | Purrfect Pair (default) |
+| 1 | `petalpop` | PetalPop Parade |
+| 2 | `moonlight-mithai` | Moonlight Mithai |
+| 3 | `candy-cloud` | CandyCloud Caravan |
+| 4 | `gulabo-garden` | Gulabo Garden Gala |
+| 5 | `starry-snuggle` | Starry Snuggle Story |
+| 6 | `butterfly-blush` | ButterflyBlush Bash |
+| 7 | `sangeetspark` | SangeetSpark Symphony |
+| 8 | `velvet-vows` | VelvetVows Voyage |

@@ -449,6 +449,49 @@
 
   var _journeyStarted = false;
 
+  /* ── Image mode (ai = illustrated default, real = actual photos) ─── */
+  var _imageMode;
+  try { _imageMode = localStorage.getItem('image-mode') || 'ai'; } catch (e) { _imageMode = 'ai'; }
+
+  function getSlotSrc(imageId) {
+    var slot = IMAGE_SLOTS[imageId];
+    if (!slot) return '';
+    if (_imageMode === 'real') return slot.src || '';
+    /* AI mode: prefer aiSrc, fall back to real src */
+    return slot.aiSrc || slot.src || '';
+  }
+
+  function refreshAllImages() {
+    document.querySelectorAll('.image-placeholder[data-image-id]').forEach(function (fig) {
+      var imageId = fig.getAttribute('data-image-id');
+      var slot = IMAGE_SLOTS[imageId];
+      if (!slot) return;
+      var newSrc = getSlotSrc(imageId);
+      var existing = fig.querySelector('img.ph-photo');
+      if (newSrc) {
+        fig.classList.add('image-placeholder--loaded');
+        if (existing) {
+          existing.src = newSrc;
+        } else {
+          /* Replace placeholder icon/text with real image */
+          var phIcon = fig.querySelector('.ph-icon');
+          var phText = fig.querySelector('.ph-text');
+          if (phIcon) phIcon.remove();
+          if (phText) phText.remove();
+          var img = document.createElement('img');
+          img.src    = newSrc;
+          img.alt    = slot.placeholder;
+          img.className = 'ph-photo';
+          img.loading   = 'lazy';
+          fig.insertBefore(img, fig.firstChild);
+        }
+      } else {
+        fig.classList.remove('image-placeholder--loaded');
+        if (existing) existing.src = '';
+      }
+    });
+  }
+
   function showJourneyUI() {
     /* Guard: tolerate accidental double-calls (e.g. countdown ring auto-click
        firing after manual Begin press before it was cleared) */
@@ -485,6 +528,34 @@
       setTimeout(function () { shareBtn.classList.add('visible'); }, 500);
     }
     if (navEl) navEl.removeAttribute('hidden');
+
+    /* Image mode toggle button */
+    (function () {
+      var modeBtn = document.createElement('button');
+      modeBtn.id = 'image-mode-btn';
+      modeBtn.className = 'image-mode-btn';
+      function updateModeBtn() {
+        if (_imageMode === 'ai') {
+          modeBtn.textContent = '📷';
+          modeBtn.setAttribute('aria-label', 'Switch to real photos');
+          modeBtn.title = 'Showing illustrated images. Tap for real photos.';
+        } else {
+          modeBtn.textContent = '🎨';
+          modeBtn.setAttribute('aria-label', 'Switch to illustrated mode');
+          modeBtn.title = 'Showing real photos. Tap for illustrated mode.';
+        }
+      }
+      updateModeBtn();
+      document.body.appendChild(modeBtn);
+      setTimeout(function () { modeBtn.classList.add('visible'); }, 600);
+      modeBtn.addEventListener('click', function () {
+        _imageMode = _imageMode === 'ai' ? 'real' : 'ai';
+        try { localStorage.setItem('image-mode', _imageMode); } catch (e) {}
+        updateModeBtn();
+        refreshAllImages();
+        haptic(20);
+      });
+    }());
 
     /* One-time TOC discovery hint */
     try {
@@ -557,32 +628,45 @@
     fig.style.setProperty('--aspect', slot.aspectRatio);
     fig.setAttribute('role', 'img');
     fig.setAttribute('aria-label', slot.placeholder);
+    fig.setAttribute('data-image-id', imageId);
 
-    var ns  = 'http://www.w3.org/2000/svg';
-    var svg = document.createElementNS(ns, 'svg');
-    svg.setAttribute('class', 'ph-icon');
-    svg.setAttribute('viewBox', '0 0 32 32');
-    svg.setAttribute('fill', 'none');
-    svg.setAttribute('aria-hidden', 'true');
-    svg.setAttribute('stroke', 'currentColor');
-    svg.setAttribute('stroke-width', '1.5');
-    svg.setAttribute('stroke-linecap', 'round');
-    svg.setAttribute('stroke-linejoin', 'round');
-    var rect = document.createElementNS(ns, 'rect');
-    rect.setAttribute('x','2'); rect.setAttribute('y','2');
-    rect.setAttribute('width','28'); rect.setAttribute('height','28'); rect.setAttribute('rx','2');
-    var circ = document.createElementNS(ns, 'circle');
-    circ.setAttribute('cx','11'); circ.setAttribute('cy','12'); circ.setAttribute('r','3');
-    var pathEl = document.createElementNS(ns, 'path');
-    pathEl.setAttribute('d', 'M2 24 l8-8 5 5 5-5 12 10');
-    svg.appendChild(rect); svg.appendChild(circ); svg.appendChild(pathEl);
+    var imgSrc = getSlotSrc(imageId);
+    if (imgSrc) {
+      fig.classList.add('image-placeholder--loaded');
+      var img = document.createElement('img');
+      img.src       = imgSrc;
+      img.alt       = slot.placeholder;
+      img.className = 'ph-photo';
+      img.loading   = 'lazy';
+      fig.appendChild(img);
+    } else {
+      var ns  = 'http://www.w3.org/2000/svg';
+      var svg = document.createElementNS(ns, 'svg');
+      svg.setAttribute('class', 'ph-icon');
+      svg.setAttribute('viewBox', '0 0 32 32');
+      svg.setAttribute('fill', 'none');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('stroke', 'currentColor');
+      svg.setAttribute('stroke-width', '1.5');
+      svg.setAttribute('stroke-linecap', 'round');
+      svg.setAttribute('stroke-linejoin', 'round');
+      var rect = document.createElementNS(ns, 'rect');
+      rect.setAttribute('x','2'); rect.setAttribute('y','2');
+      rect.setAttribute('width','28'); rect.setAttribute('height','28'); rect.setAttribute('rx','2');
+      var circ = document.createElementNS(ns, 'circle');
+      circ.setAttribute('cx','11'); circ.setAttribute('cy','12'); circ.setAttribute('r','3');
+      var pathEl = document.createElementNS(ns, 'path');
+      pathEl.setAttribute('d', 'M2 24 l8-8 5 5 5-5 12 10');
+      svg.appendChild(rect); svg.appendChild(circ); svg.appendChild(pathEl);
 
-    var text = document.createElement('p');
-    text.className = 'ph-text';
-    text.textContent = slot.placeholder;
+      var text = document.createElement('p');
+      text.className = 'ph-text';
+      text.textContent = slot.placeholder;
 
-    fig.appendChild(svg);
-    fig.appendChild(text);
+      fig.appendChild(svg);
+      fig.appendChild(text);
+    }
+
     fig.appendChild(buildImageFrame());
 
     /* Curtain reveal: .image-placeholder already has position:relative; overflow:hidden */
@@ -1002,9 +1086,9 @@
     ornaments.forEach(function (o) { observer.observe(o); });
   }
 
-  /* ── Hidden chapter easter egg (triple-tap ch12 ornament) ────────── */
+  /* ── Hidden chapter easter egg (triple-tap ch20 ornament) ────────── */
   function initHiddenChapter() {
-    var ch12 = document.getElementById('chapter-12');
+    var ch12 = document.getElementById('chapter-20');
     if (!ch12) return;
     var ornament = ch12.querySelector('.chapter-ornament');
     if (!ornament) return;

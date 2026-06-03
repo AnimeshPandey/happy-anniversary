@@ -16,8 +16,8 @@ test.describe('Journey structure', () => {
 
   // ── Navigation ────────────────────────────────────────────────────────────
 
-  test('chapter nav renders 12 dot buttons', async ({ page }) => {
-    await expect(page.locator('#chapter-nav button')).toHaveCount(12);
+  test('chapter nav renders 20 dot buttons', async ({ page }) => {
+    await expect(page.locator('#chapter-nav button')).toHaveCount(20);
   });
 
   test('chapter nav has hidden attribute removed', async ({ page }) => {
@@ -84,24 +84,24 @@ test.describe('Journey structure', () => {
   // ── Chapters ──────────────────────────────────────────────────────────────
 
   // The hidden easter-egg chapter (id="chapter-hidden") is also appended to
-  // #chapters-container by buildChapters(), so the total is 13, not 12.
-  test('13 chapter articles in #chapters-container (12 main + 1 hidden)', async ({ page }) => {
-    await expect(page.locator('#chapters-container .chapter')).toHaveCount(13);
+  // #chapters-container by buildChapters(), so the total is 21, not 20.
+  test('21 chapter articles in #chapters-container (20 main + 1 hidden)', async ({ page }) => {
+    await expect(page.locator('#chapters-container .chapter')).toHaveCount(21);
   });
 
-  test('12 main chapters (excluding hidden easter egg)', async ({ page }) => {
+  test('20 main chapters (excluding hidden easter egg)', async ({ page }) => {
     await expect(
       page.locator('#chapters-container .chapter:not(#chapter-hidden)')
-    ).toHaveCount(12);
+    ).toHaveCount(20);
   });
 
-  test('13 chapter-title elements total (12 main + 1 hidden)', async ({ page }) => {
-    await expect(page.locator('.chapter-title')).toHaveCount(13);
+  test('21 chapter-title elements total (20 main + 1 hidden)', async ({ page }) => {
+    await expect(page.locator('.chapter-title')).toHaveCount(21);
   });
 
-  test('chapter IDs use zero-padded format (chapter-01 through chapter-12)', async ({ page }) => {
+  test('chapter IDs use zero-padded format (chapter-01 through chapter-20)', async ({ page }) => {
     await expect(page.locator('#chapter-01')).toBeAttached();
-    await expect(page.locator('#chapter-12')).toBeAttached();
+    await expect(page.locator('#chapter-20')).toBeAttached();
   });
 
   test('hidden chapter element is in the DOM', async ({ page }) => {
@@ -160,8 +160,8 @@ test.describe('Journey structure', () => {
     expect(hidden).toBeNull();
   });
 
-  test('TOC sheet has 12 list items', async ({ page }) => {
-    await expect(page.locator('#toc-list li')).toHaveCount(12);
+  test('TOC sheet has 20 list items', async ({ page }) => {
+    await expect(page.locator('#toc-list li')).toHaveCount(20);
   });
 
   // ── Scroll reveal ─────────────────────────────────────────────────────────

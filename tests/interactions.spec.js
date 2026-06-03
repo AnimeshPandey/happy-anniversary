@@ -172,8 +172,8 @@ test.describe('TOC sheet', () => {
     expect(isHidden).toBeNull();
   });
 
-  test('TOC sheet has 12 items', async ({ page }) => {
-    await expect(page.locator('#toc-list li')).toHaveCount(12);
+  test('TOC sheet has 20 items', async ({ page }) => {
+    await expect(page.locator('#toc-list li')).toHaveCount(20);
   });
 
   test('tapping TOC backdrop closes the sheet', async ({ page }) => {

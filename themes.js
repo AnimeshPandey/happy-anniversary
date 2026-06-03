@@ -1,5 +1,41 @@
 var THEMES = [
   {
+    id: 'purrfect-pair',
+    name: 'Purrfect Pair',
+    tagline: 'Soft, whiskery, cozy-warm',
+    icon: '🐾',
+    sound: { waveform: 'sine', pitchShift: 0.92, gainPeak: 0.10, attackTime: 0.04, decayTime: 1.60 },
+    /* F major pentatonic — warm, gentle, domestic */
+    scale: [174.61, 196.00, 220.00, 261.63, 293.66, 349.23, 392.00, 440.00, 523.25, 587.33, 698.46, 783.99],
+    ambientNote: { root: 174.61, fifth: 261.63 },
+    ambientEffects: ['kitty-paws', 'yarn-ball', 'floating-whiskers', 'cat-cameo'],
+    particleStyle: { borderRadius: '50% 45% 50% 45% / 45% 50% 45% 50%' },
+    motion: { duration: '0.85s', ease: 'cubic-bezier(0.25,0.46,0.45,0.94)', stagger: 100, revealOffset: '30px' },
+    tokens: {
+      '--bg':             '#FAF8FF',
+      '--bg-warm':        '#F5F2FF',
+      '--cream':          '#FFF9F5',
+      '--rose':           '#D994B8',
+      '--rose-light':     '#F2C8DC',
+      '--rose-mid':       '#C87EA8',
+      '--rose-dark':      '#9C5080',
+      '--gold':           '#9BB4DC',
+      '--gold-light':     '#C8DCF5',
+      '--text':           '#2A2445',
+      '--text-soft':      '#5C4E78',
+      '--crescendo-dark': '#0D0820',
+      '--crescendo-mid':  '#3A2860',
+      '--orb-shadow':     'rgba(155,180,220,0.50)',
+      '--selector-bg-a':  '#E8E0FF',
+      '--ph-bg-start':    '#EEE8FF',
+      '--ph-bg-end':      '#D8C8F0',
+      '--ts-start-bg':    'rgba(255,255,255,0.70)',
+      '--petal-1': '#F2C8DC', '--petal-2': '#C8DCF5',
+      '--petal-3': '#E8E0FF', '--petal-4': '#C8C0D8',
+      '--petal-5': '#F0E0F8', '--petal-6': '#D4C4E8'
+    }
+  },
+  {
     id: 'petalpop',
     name: 'PetalPop Parade',
     tagline: 'Spring-bright, buoyant, blooming',
@@ -286,42 +322,6 @@ var THEMES = [
       '--petal-1': '#C869A0', '--petal-2': '#A03570',
       '--petal-3': '#E8C8A0', '--petal-4': '#D4A0C0',
       '--petal-5': '#F0D0E0', '--petal-6': '#C890B0'
-    }
-  },
-  {
-    id: 'purrfect-pair',
-    name: 'Purrfect Pair',
-    tagline: 'Soft, whiskery, cozy-warm',
-    icon: '🐾',
-    sound: { waveform: 'sine', pitchShift: 0.92, gainPeak: 0.10, attackTime: 0.04, decayTime: 1.60 },
-    /* F major pentatonic — warm, gentle, domestic */
-    scale: [174.61, 196.00, 220.00, 261.63, 293.66, 349.23, 392.00, 440.00, 523.25, 587.33, 698.46, 783.99],
-    ambientNote: { root: 174.61, fifth: 261.63 },
-    ambientEffects: ['kitty-paws', 'yarn-ball', 'floating-whiskers', 'cat-cameo'],
-    particleStyle: { borderRadius: '50% 45% 50% 45% / 45% 50% 45% 50%' },
-    motion: { duration: '0.85s', ease: 'cubic-bezier(0.25,0.46,0.45,0.94)', stagger: 100, revealOffset: '30px' },
-    tokens: {
-      '--bg':             '#FAF8FF',
-      '--bg-warm':        '#F5F2FF',
-      '--cream':          '#FFF9F5',
-      '--rose':           '#D994B8',
-      '--rose-light':     '#F2C8DC',
-      '--rose-mid':       '#C87EA8',
-      '--rose-dark':      '#9C5080',
-      '--gold':           '#9BB4DC',
-      '--gold-light':     '#C8DCF5',
-      '--text':           '#2A2445',
-      '--text-soft':      '#5C4E78',
-      '--crescendo-dark': '#0D0820',
-      '--crescendo-mid':  '#3A2860',
-      '--orb-shadow':     'rgba(155,180,220,0.50)',
-      '--selector-bg-a':  '#E8E0FF',
-      '--ph-bg-start':    '#EEE8FF',
-      '--ph-bg-end':      '#D8C8F0',
-      '--ts-start-bg':    'rgba(255,255,255,0.70)',
-      '--petal-1': '#F2C8DC', '--petal-2': '#C8DCF5',
-      '--petal-3': '#E8E0FF', '--petal-4': '#C8C0D8',
-      '--petal-5': '#F0E0F8', '--petal-6': '#D4C4E8'
     }
   }
 ];
