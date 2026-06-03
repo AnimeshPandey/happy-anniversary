@@ -1,4 +1,4 @@
-var CACHE = 'anniversary-v9';
+var CACHE = 'anniversary-v10';
 var ASSETS = [
   './',
   './index.html',

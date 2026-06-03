@@ -591,6 +591,489 @@ Total estimated: ~7 hours of implementation.
 
 ---
 
+## 9. New Theme — Purrfect Pair (Two Persian Cats)
+
+### Overview
+
+A ninth theme built entirely around two specific persian cats that appear throughout the experience as hand-crafted SVG illustrations. The palette is pulled directly from their fur, eyes, and noses. The mood is soft, cozy, whiskery-warm — like an afternoon nap on a cushion with two fluffy cats purring in your lap.
+
+---
+
+### The Two Cats
+
+**Cat 1 — "Mishri"** (the pink-nosed one)
+- Pure snow-white fur, long and fluffy
+- Sapphire-blue eyes (deep, vivid blue)
+- Soft pink nose (the most distinctive feature)
+- Pink-lined inner ears, barely visible through the white fur
+- Round flat Persian face, slightly squished snout
+- Curly fluffy tail
+- Smaller and rounder of the two
+
+**Cat 2 — "Mochi"** (the darker-faced one)
+- Cream/ivory body fur with a slightly darker shading on the face (classic Persian "shaded" coloring — the face muzzle area is a warm beige/chamois, while the forehead is lighter)
+- Lighter periwinkle-blue eyes (slightly greyer/softer blue than Mishri)
+- Jet-black nose
+- Grey-lilac ears (inner ear dusky grey-purple, outer ear grey)
+- Slightly more rectangular face shape
+- Longer, fluffier tail
+- Slightly bigger and calmer-looking
+
+---
+
+### Theme Identity
+
+| Property | Value |
+|---|---|
+| **ID** | `purrfect-pair` |
+| **Name** | Purrfect Pair |
+| **Tagline** | Soft, whiskery, cozy-warm |
+| **Icon** | `🐾` |
+| **Waveform** | sine |
+| **pitchShift** | 0.92 |
+| **Motion duration** | 0.85s |
+| **Motion ease** | `cubic-bezier(0.25, 0.46, 0.45, 0.94)` (gentle ease-out) |
+| **Stagger** | 100ms |
+| **revealOffset** | 30px |
+
+---
+
+### Color Palette
+
+All colors derived from the cats' physical features:
+
+| Token | Value | Derivation |
+|---|---|---|
+| `--bg` | `#FAF8FF` | White fur in soft lamplight — barely-lavender white |
+| `--bg-warm` | `#F5F2FF` | Slightly deeper lavender undertone |
+| `--cream` | `#FFF9F5` | Mishri's pure white coat under warm light |
+| `--rose` | `#D994B8` | Mishri's pink nose — dusty rose, not harsh pink |
+| `--rose-light` | `#F2C8DC` | Pink inner ear highlight |
+| `--rose-mid` | `#C87EA8` | Deeper nose-pink |
+| `--rose-dark` | `#9C5080` | Shadow under chin, deep velvet rose |
+| `--gold` | `#9BB4DC` | Mishri's sapphire-blue eyes, slightly desaturated |
+| `--gold-light` | `#C8DCF5` | Mochi's periwinkle eyes |
+| `--text` | `#2A2445` | Deep blue-purple (like staring into their eyes) |
+| `--text-soft` | `#5C4E78` | Soft purple-grey for body text |
+| `--crescendo-dark` | `#0D0820` | Very deep blue-black |
+| `--crescendo-mid` | `#3A2860` | Dark indigo-violet |
+| `--orb-shadow` | `rgba(155,180,220,0.50)` | Blue-eye glow |
+| `--selector-bg-a` | `#E8E0FF` | Pale lavender for theme selector bg |
+| `--ph-bg-start` | `#EEE8FF` | Placeholder start — lavender |
+| `--ph-bg-end` | `#D8C8F0` | Placeholder end — deeper lavender |
+| `--ts-start-bg` | `rgba(255,255,255,0.70)` | Start button backdrop |
+| `--petal-1` | `#F2C8DC` | Pale pink (Mishri's ears) |
+| `--petal-2` | `#C8DCF5` | Soft blue (Mochi's eye) |
+| `--petal-3` | `#E8E0FF` | Lavender white (fur) |
+| `--petal-4` | `#C8C0D8` | Grey (Mochi's ear) |
+| `--petal-5` | `#F0E0F8` | Blush lavender |
+| `--petal-6` | `#D4C4E8` | Dusty purple |
+
+---
+
+### Sound Profile
+
+```js
+sound: { waveform: 'sine', pitchShift: 0.92, gainPeak: 0.10, attackTime: 0.04, decayTime: 1.60 }
+```
+
+**Scale — F major pentatonic (gentle, warm, domestic):**
+`F3, G3, A3, C4, D4, F4, G4, A4, C5, D5, F5, G5`
+In Hz: `174.61, 196.00, 220.00, 261.63, 293.66, 349.23, 392.00, 440.00, 523.25, 587.33, 698.46, 783.99`
+
+F major pentatonic has no dissonant intervals — every note sounds warm and agreeable, like a contented purr.
+
+**Ambient note:**
+```js
+ambientNote: { root: 174.61, fifth: 261.63 }
+```
+F3 and C4 — very gentle low hum, like cats purring on a lap.
+
+**Special sound — `playPurrSound()`:**
+A very short, low-frequency rumble (55–90 Hz) filtered noise burst, lasting 400ms, gain 0.04 — mimics a purr vibration. Triggered when the user first opens the theme selector.
+
+---
+
+### Particle Style
+
+```js
+particleStyle: { borderRadius: '50% 45% 50% 45% / 45% 50% 45% 50%' }
+```
+Rounded organic shapes — like soft paw pads or fur tufts. Mix of pale pink and soft blue particles.
+
+---
+
+### Ambient Effects — Full List
+
+```js
+ambientEffects: ['kitty-paws', 'yarn-ball', 'floating-whiskers', 'cat-cameo']
+```
+
+#### Effect 1 — `initKittyPaws()`
+
+Soft paw print marks fade in and out across the screen surface, as though invisible cats are padding around.
+
+**Visual:**
+- Each paw print: 1 large oval pad (12×10px) + 4 small toe-bean ovals (5×4px each), arranged in the classic paw pattern
+- Color: alternates between `#F2C8DC` (Mishri — pink) and `#C8C0D8` (Mochi — grey)
+- Opacity 0 → 0.55 → 0 over 4–6s
+- Size: 22px total width
+- Occasional "walk sequence": 4 paws appear in a diagonal pattern (left-front, right-front, left-back, right-back) with 300ms stagger — looks like a cat walked across the screen
+
+**CSS animation: `pawAppear`**
+```css
+@keyframes pawAppear {
+  0%   { opacity: 0; transform: scale(0.6) rotate(-8deg); }
+  20%  { opacity: 0.55; transform: scale(1.0) rotate(0deg); }
+  75%  { opacity: 0.45; }
+  100% { opacity: 0; transform: scale(0.85); }
+}
+```
+
+**JS: `initKittyPaws()`**
+- Spawns a paw (or walk sequence) every 3–7 seconds
+- Position: random across full viewport
+- Walk sequences biased toward bottom half (more realistic)
+- Maximum 8 paw prints in DOM at once
+- Mobile: single paws only (no walk sequences), max 4
+
+---
+
+#### Effect 2 — `initYarnBall()`
+
+A yarn ball rolls and bounces across the bottom of the screen periodically.
+
+**Visual:**
+- CSS circle, 28px, with a `conic-gradient` or diagonal `repeating-linear-gradient` to suggest wound yarn
+- Colors: alternates between the two cats' primary colors (`--rose` for Mishri's pink, `--gold` for the blue)
+- Has a very slight squish on "bounce" (scaleY 1.0 → 0.85 → 1.0 on floor contact)
+- Leaves a tiny "trail" of 3 yarn loop dots (3px circles) that fade behind it
+- Triggers every 25s on desktop, 40s on mobile
+
+**CSS animations:**
+```css
+@keyframes yarnRoll {
+  0%   { transform: translateX(-40px)  translateY(0)     rotate(0deg); }
+  15%  { transform: translateX(15vw)   translateY(-22px) rotate(108deg); }
+  30%  { transform: translateX(30vw)   translateY(0)     rotate(216deg); }
+  45%  { transform: translateX(45vw)   translateY(-18px) rotate(324deg); }
+  60%  { transform: translateX(60vw)   translateY(0)     rotate(432deg); }
+  75%  { transform: translateX(75vw)   translateY(-14px) rotate(540deg); }
+  100% { transform: translateX(115vw)  translateY(0)     rotate(720deg); }
+}
+@keyframes yarnSquish {
+  0%, 100% { transform: scaleX(1.0) scaleY(1.0); }
+  50%       { transform: scaleX(1.2) scaleY(0.82); }
+}
+```
+
+---
+
+#### Effect 3 — `initFloatingWhiskers()`
+
+Delicate SVG whisker lines slowly drift upward and fade, as if stray whiskers are floating off two sleepy cats.
+
+**Visual:**
+- Each whisker: a thin SVG `<line>` element, 36–48px long, 1px stroke
+- Color: `rgba(200,192,216,0.35)` (very muted grey-lavender)
+- Slight random rotation (-15° to +15°)
+- Float straight up over 5–8s, fade in at 0 and out at top
+- 3–5 whiskers visible at once
+
+**CSS animation: `whiskerFloat`**
+```css
+@keyframes whiskerFloat {
+  0%   { transform: translateY(0)    rotate(var(--whr, 5deg)); opacity: 0;    }
+  15%  { opacity: 0.30; }
+  85%  { opacity: 0.20; }
+  100% { transform: translateY(-90px) rotate(var(--whr, 5deg)); opacity: 0; }
+}
+```
+
+**Implementation:**
+- Spawn every 2.5–5s at random position
+- Maximum 5 in DOM
+- Mobile: max 3
+
+---
+
+#### Effect 4 — `initCatCameo()`
+
+The star feature: on desktop, both cats appear together as a composite SVG illustration at the bottom of the screen. They "sit" for 10 seconds (with blinking animations), then one walks off-screen and the other follows. Repeats every 70s.
+
+**Cat SVG Design — Mishri (white, pink nose, pink ears):**
+
+Full SVG at 100×100 viewBox, intended to display at 80px tall:
+
+```svg
+<!-- Mishri: white persian, pink nose, pink ears -->
+<g id="mishri">
+  <!-- Fluffy body -->
+  <ellipse cx="50" cy="68" rx="34" ry="26" fill="#FFFFFF" stroke="#EDD8E0" stroke-width="0.6" opacity="0.95"/>
+  <!-- Chest floof -->
+  <ellipse cx="50" cy="60" rx="20" ry="18" fill="#FFFFFF"/>
+  <!-- Head -->
+  <circle cx="50" cy="35" r="26" fill="#FFFFFF" stroke="#EDD8E0" stroke-width="0.6"/>
+  <!-- Head fur tufts (subtle bumps) -->
+  <path d="M24 28 Q28 22 32 28" fill="#FFFFFF" stroke="#EDD8E0" stroke-width="0.5"/>
+  <path d="M68 28 Q72 22 76 28" fill="#FFFFFF" stroke="#EDD8E0" stroke-width="0.5"/>
+  <!-- Left ear outer -->
+  <path d="M26 18 L18 2 L38 14Z" fill="#FFFFFF" stroke="#EDD8E0" stroke-width="0.6"/>
+  <!-- Left ear inner (pink) -->
+  <path d="M27 16 L22 5 L36 13Z" fill="#F4A8C0" opacity="0.80"/>
+  <!-- Right ear outer -->
+  <path d="M74 18 L82 2 L62 14Z" fill="#FFFFFF" stroke="#EDD8E0" stroke-width="0.6"/>
+  <!-- Right ear inner (pink) -->
+  <path d="M73 16 L78 5 L64 13Z" fill="#F4A8C0" opacity="0.80"/>
+  <!-- Left eye (sapphire blue) -->
+  <ellipse cx="40" cy="33" rx="6" ry="6.5" fill="#4A90D9"/>
+  <ellipse cx="40" cy="33" rx="3" ry="5.5" fill="#1C2A50" class="cat-pupil"/>
+  <circle  cx="38" cy="31" r="1.5" fill="white" opacity="0.9"/>
+  <!-- Right eye (sapphire blue) -->
+  <ellipse cx="60" cy="33" rx="6" ry="6.5" fill="#4A90D9"/>
+  <ellipse cx="60" cy="33" rx="3" ry="5.5" fill="#1C2A50" class="cat-pupil"/>
+  <circle  cx="58" cy="31" r="1.5" fill="white" opacity="0.9"/>
+  <!-- Eye highlights: top sheen -->
+  <path d="M36 29 Q40 27 44 29" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+  <path d="M56 29 Q60 27 64 29" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+  <!-- Pink nose (heart-shaped hint) -->
+  <path d="M46 41 Q50 38 54 41 Q50 44 46 41Z" fill="#F490B4"/>
+  <!-- Mouth -->
+  <path d="M47 44 Q50 47 53 44" fill="none" stroke="#D4A0B8" stroke-width="0.9" stroke-linecap="round"/>
+  <!-- Whiskers left -->
+  <line x1="22" y1="39" x2="43" y2="41" stroke="#C8B8C8" stroke-width="0.7" opacity="0.65"/>
+  <line x1="22" y1="43" x2="43" y2="43" stroke="#C8B8C8" stroke-width="0.7" opacity="0.55"/>
+  <line x1="24" y1="47" x2="43" y2="45" stroke="#C8B8C8" stroke-width="0.7" opacity="0.45"/>
+  <!-- Whiskers right -->
+  <line x1="78" y1="39" x2="57" y2="41" stroke="#C8B8C8" stroke-width="0.7" opacity="0.65"/>
+  <line x1="78" y1="43" x2="57" y2="43" stroke="#C8B8C8" stroke-width="0.7" opacity="0.55"/>
+  <line x1="76" y1="47" x2="57" y2="45" stroke="#C8B8C8" stroke-width="0.7" opacity="0.45"/>
+  <!-- Paws -->
+  <ellipse cx="33" cy="90" rx="10" ry="7" fill="#FFFFFF" stroke="#EDD8E0" stroke-width="0.5"/>
+  <ellipse cx="67" cy="90" rx="10" ry="7" fill="#FFFFFF" stroke="#EDD8E0" stroke-width="0.5"/>
+  <!-- Paw toe beans (Mishri's are pink) -->
+  <circle cx="28" cy="91" r="2.2" fill="#F4B8CC" opacity="0.7"/>
+  <circle cx="33" cy="93" r="2.5" fill="#F4B8CC" opacity="0.7"/>
+  <circle cx="38" cy="91" r="2.2" fill="#F4B8CC" opacity="0.7"/>
+  <circle cx="62" cy="91" r="2.2" fill="#F4B8CC" opacity="0.7"/>
+  <circle cx="67" cy="93" r="2.5" fill="#F4B8CC" opacity="0.7"/>
+  <circle cx="72" cy="91" r="2.2" fill="#F4B8CC" opacity="0.7"/>
+  <!-- Curly tail -->
+  <path d="M84 65 Q100 55 96 42 Q92 30 84 40 Q82 50 88 60" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"/>
+  <path d="M84 65 Q100 55 96 42 Q92 30 84 40 Q82 50 88 60" fill="none" stroke="#F0E8F0" stroke-width="8" stroke-linecap="round"/>
+</g>
+```
+
+**Cat SVG Design — Mochi (cream, black nose, grey ears):**
+
+```svg
+<!-- Mochi: cream persian, black nose, grey ears -->
+<g id="mochi">
+  <!-- Fluffy body -->
+  <ellipse cx="50" cy="68" rx="36" ry="28" fill="#F5EEE0" stroke="#D8CEC0" stroke-width="0.6"/>
+  <!-- Face shading (darker muzzle area -- Persian coloring) -->
+  <ellipse cx="50" cy="44" rx="16" ry="12" fill="#E8DCC8" opacity="0.55"/>
+  <!-- Chest floof -->
+  <ellipse cx="50" cy="60" rx="22" ry="18" fill="#FBF5EC"/>
+  <!-- Head -->
+  <circle cx="50" cy="35" r="27" fill="#F5EEE0" stroke="#D8CEC0" stroke-width="0.6"/>
+  <!-- Forehead lighter than muzzle -->
+  <ellipse cx="50" cy="26" rx="18" ry="12" fill="#FBF5EC" opacity="0.5"/>
+  <!-- Left ear outer (grey) -->
+  <path d="M25 17 L17 1 L37 13Z" fill="#B8B2C8" stroke="#A0A0B8" stroke-width="0.5"/>
+  <!-- Left ear inner (dusky grey-purple) -->
+  <path d="M26 15 L20 4 L35 12Z" fill="#8C88A8" opacity="0.75"/>
+  <!-- Right ear outer (grey) -->
+  <path d="M75 17 L83 1 L63 13Z" fill="#B8B2C8" stroke="#A0A0B8" stroke-width="0.5"/>
+  <!-- Right ear inner -->
+  <path d="M74 15 L80 4 L65 12Z" fill="#8C88A8" opacity="0.75"/>
+  <!-- Left eye (periwinkle blue, slightly greyer) -->
+  <ellipse cx="40" cy="33" rx="6" ry="6.5" fill="#7090C4"/>
+  <ellipse cx="40" cy="33" rx="3" ry="5.5" fill="#1C2040" class="cat-pupil"/>
+  <circle  cx="38" cy="31" r="1.5" fill="white" opacity="0.9"/>
+  <!-- Right eye -->
+  <ellipse cx="60" cy="33" rx="6" ry="6.5" fill="#7090C4"/>
+  <ellipse cx="60" cy="33" rx="3" ry="5.5" fill="#1C2040" class="cat-pupil"/>
+  <circle  cx="58" cy="31" r="1.5" fill="white" opacity="0.9"/>
+  <!-- Eye sheen -->
+  <path d="M36 29 Q40 27 44 29" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
+  <path d="M56 29 Q60 27 64 29" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
+  <!-- Black nose -->
+  <path d="M46 41 Q50 38 54 41 Q50 44 46 41Z" fill="#2A2438"/>
+  <!-- Nose highlight -->
+  <circle cx="49" cy="40" r="0.8" fill="rgba(255,255,255,0.35)"/>
+  <!-- Mouth -->
+  <path d="M47 44 Q50 47 53 44" fill="none" stroke="#8A7A8A" stroke-width="0.9" stroke-linecap="round"/>
+  <!-- Whiskers left -->
+  <line x1="21" y1="39" x2="43" y2="41" stroke="#C0B4B0" stroke-width="0.7" opacity="0.55"/>
+  <line x1="21" y1="43" x2="43" y2="43" stroke="#C0B4B0" stroke-width="0.7" opacity="0.50"/>
+  <line x1="23" y1="47" x2="43" y2="45" stroke="#C0B4B0" stroke-width="0.7" opacity="0.40"/>
+  <!-- Whiskers right -->
+  <line x1="79" y1="39" x2="57" y2="41" stroke="#C0B4B0" stroke-width="0.7" opacity="0.55"/>
+  <line x1="79" y1="43" x2="57" y2="43" stroke="#C0B4B0" stroke-width="0.7" opacity="0.50"/>
+  <line x1="77" y1="47" x2="57" y2="45" stroke="#C0B4B0" stroke-width="0.7" opacity="0.40"/>
+  <!-- Paws -->
+  <ellipse cx="33" cy="91" rx="11" ry="7" fill="#F5EEE0" stroke="#D8CEC0" stroke-width="0.5"/>
+  <ellipse cx="67" cy="91" rx="11" ry="7" fill="#F5EEE0" stroke="#D8CEC0" stroke-width="0.5"/>
+  <!-- Paw toe beans (Mochi's are grey) -->
+  <circle cx="28" cy="92" r="2.2" fill="#C0B8C8" opacity="0.65"/>
+  <circle cx="33" cy="94" r="2.5" fill="#C0B8C8" opacity="0.65"/>
+  <circle cx="38" cy="92" r="2.2" fill="#C0B8C8" opacity="0.65"/>
+  <circle cx="62" cy="92" r="2.2" fill="#C0B8C8" opacity="0.65"/>
+  <circle cx="67" cy="94" r="2.5" fill="#C0B8C8" opacity="0.65"/>
+  <circle cx="72" cy="92" r="2.2" fill="#C0B8C8" opacity="0.65"/>
+  <!-- Long fluffy tail -->
+  <path d="M16 65 Q0 55 4 40 Q8 26 18 36 Q22 46 16 58" fill="none" stroke="#F5EEE0" stroke-width="13" stroke-linecap="round"/>
+  <path d="M16 65 Q0 55 4 40 Q8 26 18 36 Q22 46 16 58" fill="none" stroke="#EDE4D4" stroke-width="9" stroke-linecap="round"/>
+</g>
+```
+
+**Cat Cameo Behavior:**
+1. Both cats appear from below the bottom edge, sliding up over 0.8s (`catEnter` animation)
+2. They sit side by side for 8–12 seconds
+3. Eyes blink every 3–5s (`catBlink` animation: scaleY 1 → 0.08 → 1 over 0.2s)
+4. After 3s, a tiny ♡ speech bubble appears between them (fades in, holds 2s, fades out)
+5. Mochi turns to walk left (flip via scaleX(-1)), walks off in 2s
+6. Mishri watches for 1s, then follows
+7. The whole sequence repeats every 70s
+
+**CSS animations required:**
+```css
+@keyframes catEnter {
+  from { transform: translateY(120px); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+@keyframes catExit {
+  from { transform: translateX(0); opacity: 1; }
+  to   { transform: translateX(120px); opacity: 0; }
+}
+@keyframes catBlink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  96%           { transform: scaleY(0.06); }
+}
+@keyframes pawAppear {
+  0%   { opacity: 0; transform: scale(0.6) rotate(-8deg); }
+  20%  { opacity: 0.55; transform: scale(1.0) rotate(0deg); }
+  75%  { opacity: 0.40; }
+  100% { opacity: 0;   transform: scale(0.85); }
+}
+@keyframes whiskerFloat {
+  0%   { transform: translateY(0)    rotate(var(--whr, 5deg)); opacity: 0; }
+  15%  { opacity: 0.28; }
+  85%  { opacity: 0.18; }
+  100% { transform: translateY(-90px) rotate(var(--whr, 5deg)); opacity: 0; }
+}
+@keyframes yarnRoll {
+  0%   { transform: translateX(-50px) translateY(0)     rotate(0deg); }
+  14%  { transform: translateX(14vw)  translateY(-26px) rotate(100deg); }
+  28%  { transform: translateX(28vw)  translateY(0)     rotate(200deg); }
+  42%  { transform: translateX(42vw)  translateY(-20px) rotate(302deg); }
+  57%  { transform: translateX(57vw)  translateY(0)     rotate(405deg); }
+  71%  { transform: translateX(71vw)  translateY(-16px) rotate(508deg); }
+  85%  { transform: translateX(85vw)  translateY(0)     rotate(610deg); }
+  100% { transform: translateX(115vw) translateY(0)     rotate(720deg); }
+}
+```
+
+**JS — `initCatCameo()` structure:**
+```js
+function initCatCameo() {
+  if (isMobile || reducedMotion) return function () {};
+  // Build SVG element with both cats side by side
+  // Position: fixed, bottom: 0, left: 50%, transform: translateX(-50%)
+  // Run sequence: enter → blink loop → heart → mochi exits → mishri follows
+  // Cleanup: remove element when both exit
+  // Schedule: setTimeout(spawnCameo, 8000) first, then repeat every 70s
+}
+```
+
+---
+
+### Themes.js Entry
+
+```js
+{
+  id: 'purrfect-pair',
+  name: 'Purrfect Pair',
+  tagline: 'Soft, whiskery, cozy-warm',
+  icon: '🐾',
+  sound: { waveform: 'sine', pitchShift: 0.92, gainPeak: 0.10, attackTime: 0.04, decayTime: 1.60 },
+  /* F major pentatonic — warm, gentle, domestic */
+  scale: [174.61, 196.00, 220.00, 261.63, 293.66, 349.23, 392.00, 440.00, 523.25, 587.33, 698.46, 783.99],
+  ambientNote: { root: 174.61, fifth: 261.63 },
+  ambientEffects: ['kitty-paws', 'yarn-ball', 'floating-whiskers', 'cat-cameo'],
+  particleStyle: { borderRadius: '50% 45% 50% 45% / 45% 50% 45% 50%' },
+  motion: { duration: '0.85s', ease: 'cubic-bezier(0.25,0.46,0.45,0.94)', stagger: 100, revealOffset: '30px' },
+  tokens: {
+    '--bg':             '#FAF8FF',
+    '--bg-warm':        '#F5F2FF',
+    '--cream':          '#FFF9F5',
+    '--rose':           '#D994B8',
+    '--rose-light':     '#F2C8DC',
+    '--rose-mid':       '#C87EA8',
+    '--rose-dark':      '#9C5080',
+    '--gold':           '#9BB4DC',
+    '--gold-light':     '#C8DCF5',
+    '--text':           '#2A2445',
+    '--text-soft':      '#5C4E78',
+    '--crescendo-dark': '#0D0820',
+    '--crescendo-mid':  '#3A2860',
+    '--orb-shadow':     'rgba(155,180,220,0.50)',
+    '--selector-bg-a':  '#E8E0FF',
+    '--ph-bg-start':    '#EEE8FF',
+    '--ph-bg-end':      '#D8C8F0',
+    '--ts-start-bg':    'rgba(255,255,255,0.70)',
+    '--petal-1': '#F2C8DC', '--petal-2': '#C8DCF5',
+    '--petal-3': '#E8E0FF', '--petal-4': '#C8C0D8',
+    '--petal-5': '#F0E0F8', '--petal-6': '#D4C4E8'
+  }
+}
+```
+
+---
+
+### Per-Theme CSS Overrides for Purrfect Pair
+
+```css
+/* Airy line height — like a lazy cat stretching */
+[data-theme="purrfect-pair"] .chapter-body {
+  line-height: 1.88;
+}
+
+/* Italic titles — everything feels softly playful */
+[data-theme="purrfect-pair"] .chapter-title {
+  font-style: italic;
+  letter-spacing: 0.015em;
+}
+
+/* Soft scroll bar in theme rose color */
+[data-theme="purrfect-pair"] #scroll-progress {
+  background: linear-gradient(to bottom, var(--rose-light), var(--rose));
+}
+
+/* Cat-themed chapter ornament dots */
+[data-theme="purrfect-pair"] .chapter-ornament-dot {
+  background: var(--gold);
+  box-shadow: 0 0 8px 2px var(--gold-light);
+}
+```
+
+---
+
+### Performance Notes for Cat Effects
+
+| Effect | Desktop | Mobile |
+|---|---|---|
+| `initKittyPaws` | max 8 paw prints, walk sequences | max 4, single paws only |
+| `initYarnBall` | enabled, 25s interval | enabled, 40s interval |
+| `initFloatingWhiskers` | max 5 | max 3 |
+| `initCatCameo` | enabled, 70s interval | DISABLED (complex SVG) |
+
+All effects check `if (reducedMotion) return function () {};` as first line.
+Cat cameo SVG is pre-built as a string constant and inserted as `innerHTML` — no DOM thrash.
+
+---
+
 ## 8. Image Guide — How to Share Your Photos
 
 ### 15 slots, one per chapter

@@ -23,8 +23,8 @@ test.describe('Theme selector', () => {
     await expect(page.locator('.ts-dedication')).toContainText('Divya');
   });
 
-  test('exactly 8 theme dots are rendered', async ({ page }) => {
-    await expect(page.locator('#ts-dots .ts-dot')).toHaveCount(8);
+  test('exactly 9 theme dots are rendered', async ({ page }) => {
+    await expect(page.locator('#ts-dots .ts-dot')).toHaveCount(9);
   });
 
   test('theme name and tagline are non-empty on load', async ({ page }) => {
