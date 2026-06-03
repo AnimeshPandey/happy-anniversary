@@ -1,6 +1,8 @@
 # Next Steps — Happy Anniversary
 
-A record of what was planned and executed in this session, plus what still requires your photos before it can run.
+A record of everything built, and the one remaining item that needs your photos.
+
+**All items except image processing are complete and live on `anmshpndy.com/happy-anniversary`.**
 
 ---
 
@@ -142,31 +144,47 @@ Service worker bumped to `anniversary-v8` to invalidate caches after all JS/HTML
 
 ---
 
-## Pending — Needs Your Photos
+### 7. Theme selector CLS fix (`style.css`)
 
-### 7. Image processing
+**Problem:** Switching between themes with long names ("SangeetSpark Symphony") and short names caused a ~24px layout shift — the dots and start button visibly jumped because `.ts-name` grew when text wrapped to 2 lines.
+
+**Fix:** Changed `.ts-name` from `min-height: 3.9rem` to a fixed `height: 6.5rem`. This locks the name box to a height that holds 2 lines at the maximum font size (2.5rem × 1.2 line-height × 2 lines + buffer). Text is vertically centered via `display: flex; align-items: center`. Measured shift after fix: **0px**.
+
+---
+
+### 8. OG social preview image (`assets/og-image.jpg`) ✓
+
+Generated a 1200×630 JPEG using Playwright headless render:
+- Pink gradient background with decorative depth circles
+- "Happy Anniversary" in large italic Playfair Display
+- "Twelve chapters. One beautiful year." tagline
+- "A DIGITAL LOVE LETTER" label, heart divider, URL at bottom
+- Saved to `assets/og-image.jpg` (55KB)
+- The `og:image` meta tag in `index.html` already points to it
+
+Script available at `scripts/generate-og-image.js` — run `node scripts/generate-og-image.js` to regenerate (e.g. after adding real photos).
+
+---
+
+## One Remaining Item — Needs Your Photos
+
+### Image processing
 
 Once you provide the 15 photos (see Image Guide above):
 
-1. Run `./scripts/process-photos.sh /path/to/photos`
-   - Originals will be copied to `assets/images/originals/`
+1. Drop all 15 files (named per the table) into a folder
+2. Share the folder path — I will run `./scripts/process-photos.sh /path/to/photos`
+   - Originals copied to `assets/images/originals/` (untouched)
    - Processed versions (cropped, resized, optimised) go to `assets/images/`
-2. For each slot, I will update `content.js` to add the `src` field
-3. The `buildPlaceholder()` function in `main.js` already handles `src` presence — it will render a real `<img>` element automatically
+3. I will update `content.js` with `src` fields for each slot
 4. Commit and push
 
-### 8. OG social preview image
-
-After photos are ready, a 1200x630 social preview image should be created:
-- Option A: A collage of 3-4 of the best photos with a rose/pink gradient overlay
-- Option B: A standalone design with the anniversary title and a key photo
-- Save as `assets/og-image.jpg`
-- The `og:image` meta tag already points to it
+The `buildPlaceholder()` function in `main.js` already handles `src` presence — it renders a real `<img>` element automatically when a photo is provided.
 
 ---
 
 ## Notes
 
-- The `process-photos.sh` script requires macOS (`sips`) — run it locally before pushing
+- The `process-photos.sh` script requires macOS (`sips`) — run it locally, not in CI
 - All sound features require a user gesture to unlock (browser policy) — chimes work because they wait for the first click/tap
-- The portfolio easter egg is in `/Users/animeshpandey/Documents/Codebases/AnimeshPandey.github.io/index.html` — commit and push that repo separately
+- The portfolio easter egg is live at `anmshpndy.com` — hidden `❤` in footer, revealed on hover

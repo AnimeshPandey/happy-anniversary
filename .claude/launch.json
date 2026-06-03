@@ -2,10 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "anniversary",
+      "name": "happy-anniversary",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "-l", "8787", "."],
-      "port": 8787
+      "runtimeArgs": ["serve", ".", "-p", "4321"],
+      "port": 4321
     }
   ]
 }

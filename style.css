@@ -210,10 +210,9 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   50%       { transform: translateY(-14px) translateX(5px) scale(1.04); }
 }
 
-/* Theme name / tagline — fixed height prevents CLS on theme change */
+/* Theme name / tagline — ts-name has a fixed height so the whole block is CLS-free */
 .ts-content {
   margin-bottom: 1.75rem;
-  min-height: 7.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -250,7 +249,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: var(--rose);
   line-height: 1.2;
   margin-bottom: 0.4rem;
-  min-height: 3.9rem;
+  /* Fixed height = 2 lines at max font (2.5rem × 1.2 LH × 2) + buffer.
+     Prevents CLS when names wrap differently across themes. */
+  height: 6.5rem;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1614,17 +1616,6 @@ body::after {
 }
 
 /* ── Chapter breadcrumb ──────────────────────────────────────────── */
-.chapter-breadcrumb {
-  font-family: var(--font-body);
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--gold);
-  opacity: 0.55;
-  margin-bottom: 0.5rem;
-  transition: color 0.55s ease;
-}
 
 /* ── Hidden easter egg chapter ───────────────────────────────────── */
 #chapter-hidden {
