@@ -1,6 +1,6 @@
 /* ── Reset ───────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; }
 body {
   background: var(--bg);
   color: var(--text);
@@ -81,7 +81,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   border-radius: 50% 0 50% 0;
   opacity: 0;
   pointer-events: none;
-  will-change: transform, opacity;
   animation: driftDown linear infinite;
 }
 .petal-color-1 { background: var(--petal-1); }
@@ -144,7 +143,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   z-index: 1;
   width: 100%;
   max-width: 460px;
-  padding: 2rem var(--pad-x);
+  padding: clamp(1.5rem, 6dvh, 4rem) var(--pad-x);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -207,8 +206,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   transition: background 0.55s ease, box-shadow 0.55s ease;
 }
 @keyframes orbFloat {
-  0%, 100% { transform: translateY(0) scale(1); }
-  50%       { transform: translateY(-14px) scale(1.04); }
+  0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+  50%       { transform: translateY(-14px) translateX(5px) scale(1.04); }
 }
 
 /* Theme name / tagline — fixed height prevents CLS on theme change */
@@ -256,6 +255,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   align-items: center;
   justify-content: center;
   text-align: center;
+  text-wrap: balance;
   transition: color 0.55s ease;
 }
 .ts-tagline {
@@ -365,7 +365,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 #ceremony.dismissed { opacity: 0; visibility: hidden; pointer-events: none; }
 
 .ceremony-inner {
-  padding: 2rem var(--pad-x);
+  padding: clamp(2rem, 8dvh, 5rem) var(--pad-x);
   max-width: 520px;
   width: 100%;
 }
@@ -413,6 +413,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-size: clamp(2.5rem, 9vw, 5rem);
   color: var(--rose);
   line-height: 1.15;
+  text-wrap: balance;
   opacity: 0;
   transform: translateY(18px);
   transition: opacity 1s ease, transform 1s ease, color 0.55s ease;
@@ -527,10 +528,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 .chapter-title {
   font-family: var(--font-display);
-  font-size: clamp(1.625rem, 4.5vw, 2.625rem);
+  font-size: clamp(1.75rem, 5vw, 2.875rem);
   color: var(--rose);
   line-height: 1.2;
   margin-bottom: 1.1rem;
+  text-wrap: balance;
   transition: color 0.55s ease;
 }
 .chapter-body {
@@ -631,6 +633,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: rgba(255,255,255,0.92);
   line-height: 1.25;
   margin-bottom: 0.25rem;
+  text-wrap: balance;
 }
 .crescendo-highlight {
   display: block;
@@ -657,11 +660,29 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-style: italic;
   font-size: clamp(1.0625rem, 2.8vw, 1.4375rem);
   color: var(--text);
-  line-height: 1.85;
+  line-height: 2.1;
   margin-bottom: 1.5rem;
   transition: color 0.55s ease;
 }
-.closing-signoff { font-family: var(--font-display); font-style: italic; font-size: 1.3125rem; color: var(--rose); transition: color 0.55s ease; }
+.closing-signoff {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.375rem, 3.5vw, 1.75rem);
+  color: var(--rose);
+  position: relative;
+  padding-top: 1.5rem;
+  transition: color 0.55s ease;
+}
+.closing-signoff::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--rose-light), transparent);
+}
 
 /* SVG heart */
 .heart-wrap { width: clamp(70px, 18vw, 110px); margin: 3.5rem auto 0; }
@@ -678,15 +699,47 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   .opening-panel.opening-panel--right .panel-image { order: 2; }
   .opening-panel.opening-panel--right .panel-text  { order: 1; }
 
+  /* Image gets 45fr, text gets 55fr — applied per layout direction */
   .chapter {
-    grid-template-columns: 1fr 1fr;
+    position: relative;
+    grid-template-columns: 55fr 45fr; /* --right: text(order:1) → 55fr, image(order:2) → 45fr */
     gap: clamp(2rem, 5vw, 4.5rem);
+  }
+  .chapter--left {
+    grid-template-columns: 45fr 55fr; /* image → 45fr, text → 55fr */
   }
   .chapter.chapter--right .chapter-image-wrap { order: 2; }
   .chapter.chapter--right .chapter-text-wrap  { order: 1; }
 
   .chapter--left  .chapter-text-wrap.reveal  { transition-delay: 120ms; }
   .chapter--right .chapter-image-wrap.reveal { transition-delay: 120ms; }
+
+  /* Ghost chapter number */
+  .chapter::before {
+    content: attr(data-num);
+    position: absolute;
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 12vw, 12rem);
+    color: var(--rose);
+    opacity: 0.04;
+    right: -0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    line-height: 1;
+    z-index: 0;
+    transition: color 0.55s ease;
+  }
+
+  /* Image hover lift */
+  .chapter--left  .chapter-image-wrap:hover .image-placeholder {
+    transform: rotate(0.8deg) scale(1.018);
+    transition: transform 0.5s var(--ease-spring);
+  }
+  .chapter--right .chapter-image-wrap:hover .image-placeholder {
+    transform: rotate(-0.8deg) scale(1.018);
+    transition: transform 0.5s var(--ease-spring);
+  }
 }
 
 /* ── Reduced motion ──────────────────────────────────────────────── */
@@ -1440,7 +1493,7 @@ body::after {
   transform: scaleX(1);
   z-index: 4;
   border-radius: 4px;
-  transition: transform 0.85s var(--motion-ease), background 0.55s ease;
+  transition: transform 0.85s cubic-bezier(0.4,0,0.8,0), background 0.55s ease;
   pointer-events: none;
 }
 .chapter-image-wrap.visible .image-curtain,
@@ -1573,4 +1626,115 @@ body::after {
   background: var(--rose);
   opacity: 0;
   transition: opacity 0.15s ease;
+}
+
+/* ── Floral divider — CSS var overrides (SVG presentation attrs have lower specificity) */
+.fd-line        { stroke: var(--gold); }
+.fd-petal       { fill: var(--rose-light); }
+.fd-center      { fill: var(--rose); }
+.fd-center-dot  { fill: var(--gold); }
+.fd-accent      { fill: var(--gold); }
+
+/* ── Orb pulse on theme change ───────────────────────────────────── */
+@keyframes orbPulse {
+  0%   { box-shadow: 0 0 70px 18px var(--orb-shadow); }
+  50%  { box-shadow: 0 0 110px 40px var(--orb-shadow); }
+  100% { box-shadow: 0 0 70px 18px var(--orb-shadow); }
+}
+.ts-orb.pulse {
+  animation: orbFloat 4s ease-in-out infinite, orbPulse 0.65s ease both;
+}
+
+/* ── Image placeholder shimmer ───────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.image-placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.18) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.8s ease-in-out infinite;
+  z-index: 1;
+  border-radius: 4px;
+  pointer-events: none;
+}
+.ph-icon { z-index: 2; }
+.ph-text  { z-index: 2; }
+
+/* ── TOC active item accent ──────────────────────────────────────── */
+.toc-item.active {
+  background: rgba(192,24,95,0.05);
+  border-radius: 4px;
+  margin: 0 -0.5rem;
+  padding: 0.875rem 0.5rem;
+}
+
+/* ── Chapter nav — desktop vertical side rail ────────────────────── */
+@media (min-width: 1024px) {
+  #chapter-nav {
+    left: 1.5rem;
+    bottom: 50%;
+    transform: translateY(50%) translateX(-12px);
+    flex-direction: column;
+    padding: 14px 8px;
+    gap: 5px;
+  }
+  #chapter-nav.visible {
+    transform: translateY(50%) translateX(0);
+  }
+  .chapter-nav-dot.active {
+    width: 7px;
+    height: 18px;
+    border-radius: 4px;
+  }
+}
+
+/* ── Desktop — wider max-width ───────────────────────────────────── */
+@media (min-width: 1280px) {
+  :root {
+    --max-w:       1100px;
+    --pad-section: 8rem;
+  }
+}
+
+/* ── TOC discovery hint ──────────────────────────────────────────── */
+.chapter-nav-hint {
+  position: fixed;
+  bottom: calc(3.5rem + env(safe-area-inset-bottom, 0px) + 40px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30,15,20,0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: rgba(255,255,255,0.9);
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.chapter-nav-hint.visible { opacity: 1; }
+.chapter-nav-hint::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(30,15,20,0.78);
+  border-bottom: none;
 }

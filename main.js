@@ -175,6 +175,13 @@
       reshapePetals();
       flashThemeTransition();
       haptic(20);
+      var orb = document.querySelector('.ts-orb');
+      if (orb) {
+        orb.classList.remove('pulse');
+        void orb.offsetWidth;
+        orb.classList.add('pulse');
+        setTimeout(function () { orb.classList.remove('pulse'); }, 700);
+      }
     }
 
     /* Chevron nav buttons */
@@ -414,9 +421,27 @@
     }
     if (navEl) navEl.removeAttribute('hidden');
 
-    /* Use 'instant' to bypass html { scroll-behavior: smooth } so the
+    /* Use 'instant' to bypass any smooth-scroll so the
        journey always starts at the very top regardless of prior scroll. */
     window.scrollTo({ top: 0, behavior: 'instant' });
+
+    /* One-time TOC discovery hint */
+    try {
+      if (!localStorage.getItem('toc-hint-shown')) {
+        localStorage.setItem('toc-hint-shown', '1');
+        setTimeout(function () {
+          var hint = document.createElement('div');
+          hint.className = 'chapter-nav-hint';
+          hint.textContent = 'hold to see all chapters';
+          document.body.appendChild(hint);
+          setTimeout(function () { hint.classList.add('visible'); }, 100);
+          setTimeout(function () {
+            hint.classList.remove('visible');
+            setTimeout(function () { hint.remove(); }, 450);
+          }, 4000);
+        }, 3500);
+      }
+    } catch (e) {}
   }
 
   /* ── Image frame ornament ────────────────────────────────────────── */
@@ -524,6 +549,7 @@
       var article = document.createElement('article');
       article.className = 'chapter chapter--' + ch.layout;
       article.id = 'chapter-' + ch.number;
+      article.setAttribute('data-num', ch.number);
 
       var imgWrap = document.createElement('div');
       imgWrap.className = 'chapter-image-wrap reveal ' +
@@ -533,10 +559,6 @@
       var textWrap = document.createElement('div');
       textWrap.className = 'chapter-text-wrap reveal ' +
         (ch.layout === 'left' ? 'reveal-right' : 'reveal-left');
-
-      var breadcrumb = document.createElement('p');
-      breadcrumb.className = 'chapter-breadcrumb';
-      breadcrumb.textContent = 'Chapter ' + ch.number;
 
       var num = document.createElement('div');
       num.className = 'chapter-number reveal-child';
@@ -566,7 +588,6 @@
         ornament.appendChild(mood);
       }
 
-      textWrap.appendChild(breadcrumb);
       textWrap.appendChild(num);
       textWrap.appendChild(titleEl);
       textWrap.appendChild(body);
@@ -626,12 +647,12 @@
     svg.setAttribute('height', '30');
     svg.setAttribute('fill', 'none');
     svg.innerHTML =
-      '<circle cx="60" cy="15" r="5" fill="#C0185F" opacity="0.55"/>' +
-      '<circle cx="60" cy="15" r="2.5" fill="#D4A017" opacity="0.9"/>' +
-      '<circle cx="44" cy="15" r="3" fill="#F4A0B0" opacity="0.6"/>' +
-      '<circle cx="76" cy="15" r="3" fill="#F4A0B0" opacity="0.6"/>' +
-      '<circle cx="32" cy="15" r="1.8" fill="#D4A017" opacity="0.45"/>' +
-      '<circle cx="88" cy="15" r="1.8" fill="#D4A017" opacity="0.45"/>';
+      '<circle cx="60" cy="15" r="5" class="fd-center" fill="#C0185F" opacity="0.55"/>' +
+      '<circle cx="60" cy="15" r="2.5" class="fd-center-dot" fill="#D4A017" opacity="0.9"/>' +
+      '<circle cx="44" cy="15" r="3" class="fd-petal" fill="#F4A0B0" opacity="0.6"/>' +
+      '<circle cx="76" cy="15" r="3" class="fd-petal" fill="#F4A0B0" opacity="0.6"/>' +
+      '<circle cx="32" cy="15" r="1.8" class="fd-accent" fill="#D4A017" opacity="0.45"/>' +
+      '<circle cx="88" cy="15" r="1.8" class="fd-accent" fill="#D4A017" opacity="0.45"/>';
     div.appendChild(svg);
     return div;
   }
@@ -981,14 +1002,19 @@
 
   /* ── Double-tap images → floating love heart ─────────────────────── */
   function spawnLoveHeart(x, y) {
-    var el = document.createElement('div');
-    el.className = 'love-heart-popup';
-    el.setAttribute('aria-hidden', 'true');
-    el.textContent = '♥';
-    el.style.left = x + 'px';
-    el.style.top  = y + 'px';
-    document.body.appendChild(el);
-    setTimeout(function () { el.remove(); }, 900);
+    var offsets = [0, -22, 22];
+    offsets.forEach(function (xOff, i) {
+      setTimeout(function () {
+        var el = document.createElement('div');
+        el.className = 'love-heart-popup';
+        el.setAttribute('aria-hidden', 'true');
+        el.textContent = '♥';
+        el.style.left = (x + xOff) + 'px';
+        el.style.top  = y + 'px';
+        document.body.appendChild(el);
+        setTimeout(function () { el.remove(); }, 900);
+      }, i * 80);
+    });
     haptic(15);
   }
 
