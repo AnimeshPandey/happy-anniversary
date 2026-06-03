@@ -1,6 +1,6 @@
 # Anniversary Experience — Improvement Roadmap
 
-Saved and updated: 2026-06-02.
+Saved and updated: 2026-06-03.
 
 ---
 
@@ -116,8 +116,8 @@ and technical foundations like offline support and performance optimisations.
 When Begin is pressed, an expanding circle clip-path (anchored to the bloom center)
 floods rose colour across the screen, briefly filling it completely, then collapses
 inward into the journey. The "zoom into the flower" moment. Uses `clip-path: circle()`
-animated from 0px to 200vmax then back to 0px. Two-phase: expand 350ms, collapse
-350ms. Reveal occurs between the two phases.
+animated from 0px to 200vmax then back to 0px. Two-phase: expand 280ms, collapse
+340ms = 620ms total. Reveal occurs between the two phases.
 
 ### 4.2 Days-together counter `S` `High`
 Calculate `Math.floor((Date.now() - anniversaryStartDate) / 86400000)` and count
@@ -293,9 +293,10 @@ scroll-down (translate up out of view), revealed on scroll-up. Updates chapter t
 as chapters scroll into view. Hides entirely when not in the chapters section.
 
 ### 10.2 Replay opening button `S` `Med`
-At the very bottom of the page, below the heart, a small "↺ Replay Opening" text link.
+At the very bottom of the page, below the heart, a "Begin Again" button.
 Scrolls to top and re-runs the ceremony sequence without reloading the page. Restores
-all ceremony elements and re-fires the animation timeline.
+all ceremony elements and re-fires the animation timeline. The `_journeyStarted` guard
+is reset so `showJourneyUI()` can fire again.
 
 ### 10.3 Pull-to-restart `M` `High`
 When at `scrollY === 0` and the user pulls down beyond 80px, a "↺" indicator slides
