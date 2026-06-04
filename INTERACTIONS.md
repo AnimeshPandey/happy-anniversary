@@ -119,7 +119,7 @@ once even if both fire simultaneously.
 | VelvetVows Voyage | `candle-flicker`, `gold-leaf-dust`, `peacock` |
 | Purrfect Pair | `kitty-paws`, `yarn-ball`, `floating-whiskers`, `cat-cameo` |
 
-**Cat cameo (Purrfect Pair only)**: the `cat-cameo` module performs a full sequence every 45–90s. Either Mishri (white cat, pink nose, sapphire eyes) or Mochi (cream cat, black nose, periwinkle eyes) enters from the screen edge, blinks twice, pops a heart bubble, and exits. The SVG illustrations are inline path strings (`MISHRI_SVG`, `MOCHI_SVG`) rendered at runtime.
+**Cat cameo (Purrfect Pair only)**: the `cat-cameo` module performs a full sequence every 45–90s. Either Mishti (white cat, pink nose, sapphire eyes) or Barfi (cream cat, black nose, periwinkle eyes) enters from the screen edge, blinks twice, pops a heart bubble, and exits. The SVG illustrations are inline path strings (`MISHTI_SVG`, `BARFI_SVG`) rendered at runtime.
 
 **Cleanup**: when the theme changes or replay fires, `clearThemeEffects()` runs all stored cleanup functions, clears the `#theme-effects-layer`, and removes any `<body>`-appended sparks. `crossfadeAmbient()` handles the audio side of a theme switch simultaneously.
 

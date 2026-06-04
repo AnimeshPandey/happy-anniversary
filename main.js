@@ -309,7 +309,7 @@
     var el = document.getElementById('ceremony-days');
     if (!el) return;
 
-    var start = new Date('2025-06-01');
+    var start = new Date('2025-06-05');
     var now   = new Date();
     var diff  = Math.max(0, Math.floor((now - start) / 86400000));
 
@@ -2353,8 +2353,8 @@
     return function () { running = false; timers.forEach(function (t) { clearTimeout(t); }); };
   }
 
-  /* ── Cat SVG strings (Mishri + Mochi) ───────────────────────────── */
-  var MISHRI_SVG =
+  /* ── Cat SVG strings (Mishti + Barfi) ───────────────────────────── */
+  var MISHTI_SVG =
     '<ellipse cx="50" cy="68" rx="34" ry="26" fill="#FFFFFF" stroke="#EDD8E0" stroke-width="0.6"/>' +
     '<ellipse cx="50" cy="60" rx="20" ry="18" fill="#FFFFFF"/>' +
     '<circle cx="50" cy="35" r="26" fill="#FFFFFF" stroke="#EDD8E0" stroke-width="0.6"/>' +
@@ -2385,7 +2385,7 @@
     '<path d="M84 65 Q100 55 96 42 Q92 30 84 40 Q82 50 88 60" fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linecap="round"/>' +
     '<path d="M84 65 Q100 55 96 42 Q92 30 84 40 Q82 50 88 60" fill="none" stroke="#F0E8F0" stroke-width="7" stroke-linecap="round"/>';
 
-  var MOCHI_SVG =
+  var BARFI_SVG =
     '<ellipse cx="50" cy="68" rx="36" ry="28" fill="#F5EEE0" stroke="#D8CEC0" stroke-width="0.6"/>' +
     '<ellipse cx="50" cy="44" rx="16" ry="12" fill="#E8DCC8" opacity="0.5"/>' +
     '<ellipse cx="50" cy="60" rx="22" ry="18" fill="#FBF5EC"/>' +
@@ -2571,7 +2571,7 @@
     return function () { running = false; timers.forEach(function (t) { clearTimeout(t); }); };
   }
 
-  /* ── Cat cameo — Mishri + Mochi appear together (desktop only) ────── */
+  /* ── Cat cameo — Mishti + Barfi appear together (desktop only) ────── */
   function initCatCameo() {
     if (isMobile || reducedMotion) return function () {};
     var timers = [];
@@ -2583,8 +2583,8 @@
       var wrap = document.createElement('div');
       wrap.className = 'cat-cameo-wrap';
       wrap.innerHTML =
-        makeCatSVG(MOCHI_SVG, 78) +
-        makeCatSVG(MISHRI_SVG, 74);
+        makeCatSVG(BARFI_SVG, 78) +
+        makeCatSVG(MISHTI_SVG, 74);
       document.body.appendChild(wrap);
 
       /* Blink animation interval for pupils */
@@ -2607,25 +2607,25 @@
         setTimeout(function () { if (heart.parentNode) heart.remove(); }, 2600);
       }, 3200);
 
-      /* Exit sequence: Mochi walks off first at 10s, Mishri at 12s */
+      /* Exit sequence: Barfi walks off first at 10s, Mishti at 12s */
       var exitTimer1 = setTimeout(function () {
         if (!wrap.parentNode) return;
         clearInterval(blinkTimer);
-        var mochi = wrap.querySelector('.cat-svg:first-child');
-        if (mochi) {
-          mochi.style.transition = 'transform 1.8s ease-in, opacity 1.8s ease';
-          mochi.style.transform  = 'translateX(-140px) scaleX(-1)';
-          mochi.style.opacity    = '0';
+        var barfi = wrap.querySelector('.cat-svg:first-child');
+        if (barfi) {
+          barfi.style.transition = 'transform 1.8s ease-in, opacity 1.8s ease';
+          barfi.style.transform  = 'translateX(-140px) scaleX(-1)';
+          barfi.style.opacity    = '0';
         }
       }, 10000);
 
       var exitTimer2 = setTimeout(function () {
         if (!wrap.parentNode) return;
-        var mishri = wrap.querySelector('.cat-svg:last-child');
-        if (mishri) {
-          mishri.style.transition = 'transform 1.6s ease-in, opacity 1.6s ease';
-          mishri.style.transform  = 'translateX(-120px)';
-          mishri.style.opacity    = '0';
+        var mishti = wrap.querySelector('.cat-svg:last-child');
+        if (mishti) {
+          mishti.style.transition = 'transform 1.6s ease-in, opacity 1.6s ease';
+          mishti.style.transform  = 'translateX(-120px)';
+          mishti.style.opacity    = '0';
         }
         setTimeout(function () { if (wrap.parentNode) wrap.remove(); }, 2000);
       }, 12000);

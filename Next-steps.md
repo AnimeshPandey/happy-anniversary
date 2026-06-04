@@ -155,7 +155,7 @@ Expand from 12 to 20 chapters. Each is tied to a specific photo and has tailored
 | 09 | The Elephant | P28 — Elephant bath | A15 | ch9-main | 4:3 | left |
 | 10 | Above the Clouds | P25 — Hilltop, crochet jacket | Generate | ch10-main | 4:3 | right |
 | 11 | At the Temple | P19 — Temple, holding hand | A08 | ch11-main | 4:3 | left |
-| 12 | Mishri and Mochi | P07 — Cat garden walk | Generate | ch12-main | 3:4 | right |
+| 12 | Mishti and Barfi | P07 — Cat garden walk | Generate | ch12-main | 3:4 | right |
 | 13 | The Evening in Maroon | P11 — Poolside party | A11 | ch13-main | 3:4 | left |
 | 14 | In Our Kitchen | P31 — Cooking selfie | A10 | ch14-main | 4:3 | right |
 | 15 | Puja Mornings | P23 — Post-puja tilak | Generate | ch15-main | 4:3 | left |
@@ -234,9 +234,9 @@ Ch 11 — At the Temple
 the sense of something larger than yourselves. You take it seriously without being 
 solemn about it. You find the sacred and the funny in the same breath. I love that."
 
-Ch 12 — Mishri and Mochi
+Ch 12 — Mishti and Barfi
 "The day you both dressed in pink to match the cats. The garden path, the 
-arch of green above you, each of you holding one of them. Mishri and Mochi, 
+arch of green above us, each of us holding one of them. Mishti and Barfi, 
 completely unimpressed. You two, completely delighted. This photograph is my 
 favourite thing in the world."
 

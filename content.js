@@ -1,7 +1,7 @@
 var SITE = {
   title:         'Happy Anniversary',
   subtitle:      'One beautiful year',
-  date:          'June 2025 to June 2026',
+  date:          'Since 5th June 2025',
   recipientName: 'Divya',
 
   opening: {
@@ -104,15 +104,15 @@ var SITE = {
     {
       number: '11',
       title:  'At the Temple',
-      body:   'There is something about arriving at a temple together. The quiet, the incense, the sense of something larger than yourselves. You take it seriously without being solemn about it. You find the sacred and the funny in the same breath. I love that.',
+      body:   'There is something about arriving at a temple together. The quiet, the incense, the sense of something larger than ourselves. You take it seriously without being solemn about it. You find the sacred and the funny in the same breath. I love that.',
       imageId: 'ch11-main',
       layout:  'left',
       mood:    '🛕'
     },
     {
       number: '12',
-      title:  'Mishri and Mochi',
-      body:   'The day you both dressed in pink to match the cats. The garden path, the arch of green above you, each of you holding one of them. Mishri and Mochi, completely unimpressed. You two, completely delighted. This photograph is my favourite thing in the world.',
+      title:  'Mishti and Barfi',
+      body:   'The day we both dressed in pink to match the cats. The garden path, the arch of green above us, each of us holding one of them. Mishti and Barfi, completely unimpressed. The two of us, completely delighted. This photograph is my favourite thing in the world.',
       imageId: 'ch12-main',
       layout:  'right',
       mood:    '🐱'
@@ -176,7 +176,7 @@ var SITE = {
     {
       number: '20',
       title:  'One Year',
-      body:   'This photograph. The way you look at each other in it. Not performing for the camera, not posing. Just seeing each other, smiling because you cannot help it. That is the whole year, right there. Three hundred and sixty-five days of exactly that look.',
+      body:   'This photograph. The way we look at each other in it. Not performing for the camera, not posing. Just seeing each other, smiling because we cannot help it. That is the whole year, right there. Three hundred and sixty-five days of exactly that look.',
       imageId: 'ch20-main',
       layout:  'right',
       mood:    '🌟'
@@ -296,7 +296,7 @@ var IMAGE_SLOTS = {
   },
   'ch12-main': {
     aspectRatio: '3/4',
-    placeholder: 'Mishri and Mochi, the cat photoshoot',
+    placeholder: 'Mishti and Barfi, the cat photoshoot',
     src:    'assets/images/real/ch12-main.jpg',
     aiSrc:  'assets/images/ai/ch12-main.jpg'
   },
@@ -350,7 +350,7 @@ var IMAGE_SLOTS = {
   },
   'closing-hero': {
     aspectRatio: '3/4',
-    placeholder: 'Walking toward the camera with Mishri and Mochi',
+    placeholder: 'Walking toward the camera with Mishti and Barfi',
     src:    'assets/images/real/closing-hero.jpg',
     aiSrc:  ''
   },

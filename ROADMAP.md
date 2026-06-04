@@ -382,7 +382,7 @@ text in large bold type, heart in outline form.
 All 18 modules: `fireflies`, `shooting-stars`, `moon-glow`, `cherry-gusts`, `butterfly-flutter`, `drifting-clouds`, `diyas`, `firework-bursts`, `candle-flicker`, `gold-leaf-dust`, `peacock`, `ladybird`, `constellations`, `sprinkles`, `kitty-paws`, `yarn-ball`, `floating-whiskers`, `cat-cameo`.
 
 ### 14.2 Purrfect Pair theme (9th theme)
-Two Persian cat characters: Mishri (white, pink nose, sapphire eyes) and Mochi (cream, black nose, periwinkle eyes). Inline SVG path illustrations rendered at runtime. Cat cameo module performs a full enter/blink/heart-pop/exit sequence every 45–90s. Four ambient effects active: `kitty-paws`, `yarn-ball`, `floating-whiskers`, `cat-cameo`.
+Two Persian cat characters: Mishti (white, pink nose, sapphire eyes) and Barfi (cream, black nose, periwinkle eyes). Inline SVG path illustrations rendered at runtime. Cat cameo module performs a full enter/blink/heart-pop/exit sequence every 45–90s. Four ambient effects active: `kitty-paws`, `yarn-ball`, `floating-whiskers`, `cat-cameo`.
 
 Tokens: lavender/lilac palette (`--bg: #FAF8FF`), blue-grey gold accents (`--gold: #9BB4DC`), deep indigo text.
 

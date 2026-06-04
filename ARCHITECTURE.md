@@ -178,7 +178,7 @@ Effect modules registered in `EFFECT_MODULES` dispatch table (18 modules):
 | `kitty-paws` | SVG paw prints, sequential walk sequences (desktop) |
 | `yarn-ball` | `.yarn-ball` with `yarnRoll` every 22–40s |
 | `floating-whiskers` | SVG `<line>` elements with `whiskerFloat` |
-| `cat-cameo` | Full sequence: Mishri or Mochi SVG enters, blinks, pops a heart, exits |
+| `cat-cameo` | Full sequence: Mishti or Barfi SVG enters, blinks, pops a heart, exits |
 
 All modules follow the signature `function initX(layer) { if (reducedMotion) return function(){}; ... return function cleanup() {}; }`.
 
