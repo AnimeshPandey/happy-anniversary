@@ -813,6 +813,8 @@
       var num = document.createElement('div');
       num.className = 'chapter-number reveal-child';
       num.textContent = ch.number;
+      /* Breadcrumb "01 of 20" visible via CSS ::after on data-breadcrumb */
+      num.setAttribute('data-breadcrumb', ch.number + ' of ' + String(SITE.chapters.length).padStart(2, '0'));
 
       var titleEl = document.createElement('h2');
       titleEl.className = 'chapter-title reveal-child';
@@ -892,17 +894,35 @@
     div.setAttribute('aria-hidden', 'true');
     var ns  = 'http://www.w3.org/2000/svg';
     var svg = document.createElementNS(ns, 'svg');
-    svg.setAttribute('viewBox', '0 0 120 30');
-    svg.setAttribute('width', '120');
-    svg.setAttribute('height', '30');
+    svg.setAttribute('viewBox', '0 0 240 40');
+    svg.setAttribute('width', '240');
+    svg.setAttribute('height', '40');
     svg.setAttribute('fill', 'none');
     svg.innerHTML =
-      '<circle cx="60" cy="15" r="5" class="fd-center" fill="#C0185F" opacity="0.55"/>' +
-      '<circle cx="60" cy="15" r="2.5" class="fd-center-dot" fill="#D4A017" opacity="0.9"/>' +
-      '<circle cx="44" cy="15" r="3" class="fd-petal" fill="#F4A0B0" opacity="0.6"/>' +
-      '<circle cx="76" cy="15" r="3" class="fd-petal" fill="#F4A0B0" opacity="0.6"/>' +
-      '<circle cx="32" cy="15" r="1.8" class="fd-accent" fill="#D4A017" opacity="0.45"/>' +
-      '<circle cx="88" cy="15" r="1.8" class="fd-accent" fill="#D4A017" opacity="0.45"/>';
+      /* Outer rules with diamond terminators */
+      '<line x1="0" y1="20" x2="70" y2="20" class="fd-line" stroke="#D4A017" stroke-width="0.7" stroke-dasharray="2 5" opacity="0.38"/>' +
+      '<polygon points="72,17 76,20 72,23 68,20" class="fd-accent" fill="#D4A017" opacity="0.32"/>' +
+      /* Inner left satellite dots */
+      '<circle cx="84" cy="20" r="1.8" class="fd-accent" fill="#D4A017" opacity="0.42"/>' +
+      '<circle cx="94" cy="20" r="2.4" class="fd-accent" fill="#D4A017" opacity="0.48"/>' +
+      /* Left flanking petals */
+      '<ellipse cx="104" cy="20" rx="7.5" ry="4" class="fd-petal" fill="#F4A0B0" opacity="0.55" transform="rotate(-35 104 20)"/>' +
+      '<ellipse cx="112" cy="15" rx="5" ry="3" class="fd-petal" fill="#F4A0B0" opacity="0.40" transform="rotate(-55 112 15)"/>' +
+      /* Centre bloom — three-petal cross + core */
+      '<ellipse cx="122" cy="20" rx="10" ry="5.5" class="fd-petal" fill="#F4A0B0" opacity="0.55" transform="rotate(-15 122 20)"/>' +
+      '<ellipse cx="118" cy="20" rx="10" ry="5.5" class="fd-petal" fill="#F4A0B0" opacity="0.55" transform="rotate(15 118 20)"/>' +
+      '<ellipse cx="120" cy="11" rx="4.5" ry="8" class="fd-petal" fill="#F4A0B0" opacity="0.48"/>' +
+      '<circle cx="120" cy="20" r="7.2" class="fd-center" fill="#C0185F" opacity="0.60"/>' +
+      '<circle cx="120" cy="20" r="3.6" class="fd-center-dot" fill="#D4A017" opacity="0.95"/>' +
+      /* Right flanking petals */
+      '<ellipse cx="128" cy="15" rx="5" ry="3" class="fd-petal" fill="#F4A0B0" opacity="0.40" transform="rotate(55 128 15)"/>' +
+      '<ellipse cx="136" cy="20" rx="7.5" ry="4" class="fd-petal" fill="#F4A0B0" opacity="0.55" transform="rotate(35 136 20)"/>' +
+      /* Inner right satellite dots */
+      '<circle cx="146" cy="20" r="2.4" class="fd-accent" fill="#D4A017" opacity="0.48"/>' +
+      '<circle cx="156" cy="20" r="1.8" class="fd-accent" fill="#D4A017" opacity="0.42"/>' +
+      /* Outer right rules with diamond */
+      '<polygon points="168,17 172,20 168,23 164,20" class="fd-accent" fill="#D4A017" opacity="0.32"/>' +
+      '<line x1="170" y1="20" x2="240" y2="20" class="fd-line" stroke="#D4A017" stroke-width="0.7" stroke-dasharray="2 5" opacity="0.38"/>';
     div.appendChild(svg);
     return div;
   }
@@ -994,6 +1014,47 @@
     }, { threshold: 0.5 });
 
     if (poemWrap) observer.observe(poemWrap);
+  }
+
+  /* ── Desktop cursor petal trail ─────────────────────────────────── */
+  function initCursorTrail() {
+    if (reducedMotion || getIsMobile()) return;
+    var layer = document.getElementById('cursor-trail-layer');
+    if (!layer) return;
+
+    var POOL_SIZE = 14;
+    var pool = [];
+    for (var pi = 0; pi < POOL_SIZE; pi++) {
+      var el = document.createElement('div');
+      el.className = 'cursor-petal';
+      layer.appendChild(el);
+      pool.push({ el: el, active: false });
+    }
+
+    var lastSpawn = 0;
+    document.addEventListener('mousemove', function (e) {
+      var now = Date.now();
+      if (now - lastSpawn < 65) return;
+      var p = null;
+      for (var j = 0; j < pool.length; j++) {
+        if (!pool[j].active) { p = pool[j]; break; }
+      }
+      if (!p) return;
+      lastSpawn = now;
+
+      p.active = true;
+      p.el.style.left = e.clientX + 'px';
+      p.el.style.top  = e.clientY + 'px';
+      p.el.style.setProperty('--drift', ((Math.random() - 0.5) * 44).toFixed(1) + 'px');
+      p.el.style.setProperty('--rot',   (100 + Math.random() * 260).toFixed(0) + 'deg');
+      p.el.classList.add('cursor-petal--active');
+
+      var ref = p;
+      setTimeout(function () {
+        ref.el.classList.remove('cursor-petal--active');
+        ref.active = false;
+      }, 800);
+    }, { passive: true });
   }
 
   /* ── Scroll progress bar ─────────────────────────────────────────── */
@@ -3464,6 +3525,7 @@
     initMobileDock();
     initPhotoStageGestures();
     initPullToRestart();
+    initCursorTrail();
 
     raf2(function () {
       initReveal();
