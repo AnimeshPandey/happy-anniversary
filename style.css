@@ -3256,6 +3256,160 @@ body::after {
   .chapter-body::first-letter { float: none; font-size: 1em; }
 }
 
+/* ═══════════════════════════════════════════════════════════════════
+   PHASE 19 — 10 Hyper-Personal Signals
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Next milestone countdown ────────────────────────────────── */
+.next-milestone {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: clamp(0.6875rem, 1.6vw, 0.8125rem);
+  color: var(--gold);
+  text-align: center;
+  margin-top: 0.6rem;
+  letter-spacing: 0.02em;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 1.8s ease 0.5s, transform 1.8s ease 0.5s, color 0.55s ease;
+}
+.next-milestone.visible { opacity: 0.52; transform: translateY(0); }
+
+/* ── 2. Opening datestamp ────────────────────────────────────────── */
+.opening-datestamp {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: clamp(0.6875rem, 1.5vw, 0.8125rem);
+  color: var(--text-soft);
+  text-align: center;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: clamp(0.75rem, 2vw, 1.25rem) 1rem clamp(1.5rem, 4vw, 3rem);
+  letter-spacing: 0.015em;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 2s ease, transform 2s ease, color 0.55s ease;
+}
+.opening-datestamp.visible { opacity: 0.4; transform: translateY(0); }
+
+/* ── 3. Ch1 GPS coordinates ─────────────────────────────────────── */
+.ch1-coordinates {
+  font-family: 'Courier New', monospace;
+  font-size: 0.625rem;
+  color: var(--text-soft);
+  letter-spacing: 0.14em;
+  opacity: 0.32;
+  margin-top: 0.6rem;
+  transition: opacity 0.35s ease, color 0.55s ease;
+  cursor: default;
+}
+.ch1-coordinates:hover { opacity: 0.65; }
+
+/* ── 5. Candle flame cursor (desktop only) ──────────────────────── */
+#candle-cursor-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 997;
+}
+.candle-flame {
+  position: fixed;
+  top: 0;
+  left: 0;
+  will-change: transform;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.candle-flame-inner {
+  animation: flameFlicker 0.62s ease-in-out infinite alternate;
+  transform-origin: 50% 100%;
+}
+@keyframes flameFlicker {
+  from { transform: scaleX(1) scaleY(1) rotate(-0.6deg);   filter: brightness(1);    }
+  to   { transform: scaleX(0.87) scaleY(1.1) rotate(1deg); filter: brightness(1.22); }
+}
+@media (max-width: 768px), (pointer: coarse) {
+  #candle-cursor-layer { display: none; }
+}
+
+/* ── 6. Warm vignette on fast scroll ────────────────────────────── */
+#scroll-vignette {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: rgba(255, 145, 35, 0);
+  transition: background 0.22s ease-out;
+}
+#scroll-vignette.active {
+  background: rgba(255, 145, 35, 0.038);
+  transition: background 0.04s ease-in;
+}
+
+/* ── 7. Ch20 — reverse reveal stagger ──────────────────────────── */
+#chapter-20 .chapter-text-wrap.visible .reveal-child:nth-child(1) {
+  transition-delay: calc(var(--motion-stagger) * 3);
+}
+#chapter-20 .chapter-text-wrap.visible .reveal-child:nth-child(2) {
+  transition-delay: calc(var(--motion-stagger) * 2);
+}
+#chapter-20 .chapter-text-wrap.visible .reveal-child:nth-child(3) {
+  transition-delay: var(--motion-stagger);
+}
+#chapter-20 .chapter-text-wrap.visible .reveal-child:nth-child(4) {
+  transition-delay: 0ms;
+}
+
+/* ── 8. Morse code under Animesh ────────────────────────────────── */
+.morse-line {
+  font-family: 'Courier New', monospace;
+  font-size: 0.48rem;
+  color: var(--text-soft);
+  opacity: 0.15;
+  letter-spacing: 0.2em;
+  text-align: center;
+  margin-top: 0.3rem;
+  user-select: none;
+  cursor: default;
+  transition: opacity 0.55s ease, color 0.55s ease;
+}
+.morse-line:hover { opacity: 0.5; }
+
+/* ── 9. Return visit welcome message ────────────────────────────── */
+.welcome-back-msg {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: clamp(0.875rem, 2.5vw, 1.125rem);
+  color: var(--gold);
+  text-align: center;
+  margin: 0 0 0.5rem;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 1.2s ease, transform 1.2s ease, color 0.55s ease;
+}
+.welcome-back-msg.visible { opacity: 0.78; transform: translateY(0); }
+
+/* ── 10. Final whisper below Begin Again ────────────────────────── */
+.final-whisper {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: clamp(0.8125rem, 1.9vw, 0.9375rem);
+  color: var(--text-soft);
+  text-align: center;
+  margin-top: 1.25rem;
+  letter-spacing: 0.01em;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 2s ease, transform 2s ease, color 0.55s ease;
+}
+.final-whisper.visible { opacity: 0.48; transform: translateY(0); }
+
+/* ── Phase 19 reduced-motion guards ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .candle-flame-inner { animation: none; }
+  #scroll-vignette    { display: none; }
+}
+
 /* ── Mobile: drop cap too large — scale down ─────────────────────── */
 @media (max-width: 480px) {
   .chapter-body::first-letter {

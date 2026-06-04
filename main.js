@@ -400,6 +400,16 @@
     if (!title) return;
 
     if (recipient) recipient.textContent = SITE.recipientName ? 'For ' + SITE.recipientName : '';
+
+    /* Return visit — insert "Welcome back" just below the recipient line */
+    if (document.body.getAttribute('data-return-visit') && recipient && !document.querySelector('.welcome-back-msg')) {
+      var wb = document.createElement('p');
+      wb.className = 'welcome-back-msg';
+      wb.textContent = 'Welcome back, Divya.';
+      recipient.parentNode.insertBefore(wb, recipient.nextSibling);
+      setTimeout(function () { wb.classList.add('visible'); }, 3600);
+    }
+
     var today = new Date();
     var isAnniversaryDay = (today.getFullYear() === 2026 && today.getMonth() === 5 && today.getDate() === 5);
     if (date) {
@@ -829,6 +839,14 @@
       body.className = 'chapter-body reveal-child';
       body.textContent = ch.body;
 
+      /* Ch1 — GPS coordinates of where it all began */
+      var coords = null;
+      if (ch.number === '01') {
+        coords = document.createElement('p');
+        coords.className = 'ch1-coordinates reveal-child';
+        coords.textContent = '13.0101° N, 77.5511° E';
+      }
+
       var ornament = document.createElement('div');
       ornament.className = 'chapter-ornament reveal-child';
       ornament.setAttribute('aria-hidden', 'true');
@@ -848,6 +866,7 @@
       textWrap.appendChild(num);
       textWrap.appendChild(titleEl);
       textWrap.appendChild(body);
+      if (coords) textWrap.appendChild(coords);
       textWrap.appendChild(ornament);
       article.appendChild(imgWrap);
       article.appendChild(textWrap);
@@ -969,6 +988,12 @@
       author.className = 'closing-author';
       author.textContent = SITE.closing.author;
       sign.parentNode.insertBefore(author, sign.nextSibling);
+      /* Morse — 'I love you' hidden in plain sight */
+      var morseEl = document.createElement('p');
+      morseEl.className = 'morse-line';
+      morseEl.setAttribute('aria-hidden', 'true');
+      morseEl.textContent = '\u00b7\u00b7 \u00b7\u2212\u00b7\u00b7 \u2212\u2212\u2212 \u00b7\u00b7\u00b7\u2212 \u00b7 \u2212\u00b7\u2212\u2212 \u2212\u2212\u2212 \u00b7\u00b7\u2212';
+      sign.parentNode.insertBefore(morseEl, author.nextSibling);
     }
   }
 
@@ -1340,6 +1365,16 @@
             intervalRef = setInterval(tick, 1000);
             requestAnimationFrame(function () {
               requestAnimationFrame(function () { counter.classList.add('visible'); });
+            });
+            /* Next milestone countdown */
+            var milestone = document.createElement('p');
+            milestone.className = 'next-milestone';
+            var msDate = new Date('2027-06-05T00:00:00');
+            var daysLeft = Math.max(0, Math.ceil((msDate.getTime() - Date.now()) / 86400000));
+            milestone.textContent = daysLeft + ' days until our second.';
+            closingInner.appendChild(milestone);
+            requestAnimationFrame(function () {
+              requestAnimationFrame(function () { milestone.classList.add('visible'); });
             });
             document.addEventListener('visibilitychange', function () {
               if (document.hidden) {
@@ -2179,6 +2214,26 @@
   }
 
   /* ── Chapter chime — uses active theme's scale (2-note chord) ─────── */
+  /* ── Page-turn paper rustle (Web Audio, no file) ──────────────────── */
+  function playPageTurn() {
+    if (!audioCtx || audioCtx.state !== 'running') return;
+    var len = Math.floor(audioCtx.sampleRate * 0.11);
+    var buf = audioCtx.createBuffer(1, len, audioCtx.sampleRate);
+    var data = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) {
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 1.3);
+    }
+    var src = audioCtx.createBufferSource();
+    src.buffer = buf;
+    var bpf = audioCtx.createBiquadFilter();
+    bpf.type = 'bandpass'; bpf.frequency.value = 1900; bpf.Q.value = 0.35;
+    var g = audioCtx.createGain();
+    g.gain.setValueAtTime(0.048, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+    src.connect(bpf); bpf.connect(g); g.connect(audioCtx.destination);
+    src.start(); src.stop(audioCtx.currentTime + 0.13);
+  }
+
   function playChime(chapterIndex) {
     var s     = getThemeSound();
     var theme = (typeof ThemeController !== 'undefined') ? ThemeController.current() : null;
@@ -2369,6 +2424,7 @@
         if (idx !== lastChimeIdx) {
           lastChimeIdx = idx;
           playChime(idx);
+          playPageTurn();
           haptic(10);
         }
 
@@ -3525,6 +3581,127 @@
   }
 
   /* ── Dispatch per-theme ambient effects ──────────────────────────── */
+
+  /* ── Opening datestamp — captures first-open moment ────────────────── */
+  function initOpeningDatestamp() {
+    var stored = localStorage.getItem('anniversary-first-open');
+    var d;
+    if (stored) {
+      d = new Date(parseInt(stored, 10));
+    } else {
+      d = new Date();
+      localStorage.setItem('anniversary-first-open', String(d.getTime()));
+    }
+    var dayNames   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var monthNames = ['January','February','March','April','May','June',
+                      'July','August','September','October','November','December'];
+    var day = dayNames[d.getDay()];
+    var date = d.getDate();
+    var sfx = (date === 1 || date === 21 || date === 31) ? 'st'
+            : (date === 2 || date === 22)                ? 'nd'
+            : (date === 3 || date === 23)                ? 'rd' : 'th';
+    var text = 'You first opened this on a ' + day + ', the ' + date + sfx
+             + ' of ' + monthNames[d.getMonth()] + ' ' + d.getFullYear() + '.';
+
+    var poemSection = document.querySelector('.opening-poem');
+    if (!poemSection) return;
+    var stamp = document.createElement('p');
+    stamp.className = 'opening-datestamp';
+    stamp.textContent = text;
+    poemSection.parentNode.insertBefore(stamp, poemSection.nextSibling);
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) { obs.disconnect(); stamp.classList.add('visible'); }
+      });
+    }, { threshold: 0.3 });
+    obs.observe(stamp);
+  }
+
+  /* ── Warm amber vignette on fast scroll ─────────────────────────────── */
+  function initScrollVignette() {
+    if (reducedMotion) return;
+    var vig = document.createElement('div');
+    vig.id = 'scroll-vignette';
+    document.body.appendChild(vig);
+    var lastY = window.scrollY, lastT = Date.now(), hideTimer = null;
+    window.addEventListener('scroll', function () {
+      var now = Date.now();
+      var dt = now - lastT;
+      if (dt < 16) return;
+      var velocity = Math.abs(window.scrollY - lastY) / dt;
+      if (velocity > 1.4) {
+        vig.classList.add('active');
+        clearTimeout(hideTimer);
+        hideTimer = setTimeout(function () { vig.classList.remove('active'); }, 340);
+      }
+      lastY = window.scrollY;
+      lastT = now;
+    }, { passive: true });
+  }
+
+  /* ── Candle flame cursor (desktop only) ─────────────────────────────── */
+  function initCandleCursor() {
+    if (reducedMotion) return;
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    var layer = document.createElement('div');
+    layer.id = 'candle-cursor-layer';
+    document.body.appendChild(layer);
+    var flame = document.createElement('div');
+    flame.className = 'candle-flame';
+    var inner = document.createElement('div');
+    inner.className = 'candle-flame-inner';
+    inner.innerHTML = '<svg viewBox="0 0 20 32" width="18" height="28" aria-hidden="true">'
+      + '<defs><linearGradient id="fg19" x1="0" y1="0" x2="0" y2="1">'
+      + '<stop offset="0%" stop-color="#FFE680"/>'
+      + '<stop offset="55%" stop-color="#FFA500" stop-opacity="0.9"/>'
+      + '<stop offset="100%" stop-color="#FF4500" stop-opacity="0.7"/>'
+      + '</linearGradient></defs>'
+      + '<path d="M10 30C4 26 2 20 3 14 4 8 7 4 10 2 13 4 16 8 17 14 18 20 16 26 10 30Z" fill="url(#fg19)"/>'
+      + '</svg>';
+    flame.appendChild(inner);
+    layer.appendChild(flame);
+    var mx = -100, my = -100, cx = -100, cy = -100;
+    document.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; });
+    document.addEventListener('mouseleave', function () { flame.style.opacity = '0'; });
+    document.addEventListener('mouseenter', function () { flame.style.opacity = ''; });
+    function update() {
+      cx += (mx - cx) * 0.2;
+      cy += (my - cy) * 0.2;
+      flame.style.transform = 'translate3d(' + (cx - 9) + 'px,' + (cy - 28) + 'px,0)';
+      requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  /* ── Final whisper below Begin Again ────────────────────────────────── */
+  function initFinalWhisper() {
+    if (!window.IntersectionObserver) return;
+    var btn = document.getElementById('replay-btn');
+    if (!btn) return;
+    var shown = false, timer = null;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting && !shown) {
+          timer = setTimeout(function () {
+            if (!shown) {
+              shown = true; obs.disconnect();
+              var w = document.createElement('p');
+              w.className = 'final-whisper';
+              w.textContent = 'Thank you for staying until the end.';
+              btn.parentNode.insertBefore(w, btn.nextSibling);
+              requestAnimationFrame(function () {
+                requestAnimationFrame(function () { w.classList.add('visible'); });
+              });
+            }
+          }, 5000);
+        } else if (!entry.isIntersecting && timer) {
+          clearTimeout(timer); timer = null;
+        }
+      });
+    }, { threshold: 0.5 });
+    obs.observe(btn);
+  }
+
   var EFFECT_MODULES = {
     'fireflies':         initFireflies,
     'shooting-stars':    initShootingStars,
@@ -3575,6 +3752,13 @@
 
   /* ── Init ────────────────────────────────────────────────────────── */
   function init() {
+    /* Track visits — drives return-visit ceremony message */
+    (function () {
+      var v = parseInt(localStorage.getItem('anniversary-visits') || '0', 10) + 1;
+      localStorage.setItem('anniversary-visits', String(v));
+      if (v > 1) document.body.setAttribute('data-return-visit', '1');
+    }());
+
     initPetals();
     initThemeSelector();
     buildOpeningPanels();
@@ -3593,6 +3777,7 @@
     initCursorTrail();
 
     raf2(function () {
+      initOpeningDatestamp();
       initReveal();
       initHeart();
       initLiveCounter();
@@ -3606,6 +3791,9 @@
       initDoubleTapLove();
       initImageScrollEffects();
       initClosingSignoff();
+      initScrollVignette();
+      initCandleCursor();
+      initFinalWhisper();
       initReplay();
       initShakeDetection();
     });
