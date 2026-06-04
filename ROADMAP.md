@@ -512,3 +512,27 @@ Each theme has a 12-note `scale` array. `playChime()` picks root + chord notes f
 | Gold hairline separator | Replaced dashed rose separator with thin gold line (0.14 opacity) |
 | Chapter title scale | Grew to `clamp(1.9rem, 5.5vw, 3.2rem)` with −0.01em tracking |
 | Opening poem scale | Grew to `clamp(1.65rem, 4.8vw, 2.65rem)` |
+
+---
+
+## Phase 20 — Artful Mobile Refinements
+**Status: DONE (2026-06-04)**
+
+| Item | Shipped |
+|------|---------|
+| **A1** Wider reading margin | `--pad-x` floor: `1.25rem → 1.75rem` — letter margins, not app gutters |
+| **A2** Chapter breathing | Padding floor: `2.5rem → 3.5rem` — each chapter feels like a page turn |
+| **A3** Chapter number air | `margin-bottom: 0.6rem → 1.25rem` — header block has typographic weight |
+| **A4** Signoff ceremony | `padding-top: 1.5rem → 3rem` — beat of silence before the signature |
+| **B1** Commanding poem | `clamp(1.65rem → 2rem, 5.5vw, 2.75rem)`, centered, `letter-spacing: -0.01em` |
+| **B2** Mobile prose leading | `line-height: 2.15 → 1.95` on mobile — tighter, more intentional |
+| **B3** Closing message scale | `clamp(1.125rem → 1.3125rem, 3.5vw, 1.65rem)` — emotional peak reads at scale |
+| **B4** Widow control | `text-wrap: pretty; hanging-punctuation: first last` on all prose |
+| **C1** Heart breathing | `margin: 3.5rem auto 0 → 5rem auto 2rem` — the heart earns its space |
+| **C2** Dedication as title | `clamp(1.125rem → 1.625rem, 4.5vw, 2.25rem)`, upright, `letter-spacing: 0.02em` |
+| **C3** Live counter visible | `clamp(0.75rem → 0.875rem, 2vw, 1rem)`, opacity `0.58 → 0.65` |
+| **D2** Ghost number mobile | `clamp(5.5rem, 28vw, 9rem)` at `opacity: 0.045` — atmospheric on phone |
+| **D3** Ch1 drop cap rose | First chapter drop cap in `var(--rose)` at `5.2em` — the opening letter is special |
+| **E1** Warm reading zone | `background-image: radial-gradient(var(--cream))` on `#chapters` |
+| **E2** Crescendo scale | `clamp(2rem → 2.25rem, 7vw, 4.25rem)` — climax lines feel cinematic |
+| **E3** Image frame depth | `box-shadow` on `.image-placeholder` — photos feel presented, not loaded |

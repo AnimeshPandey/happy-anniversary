@@ -64,7 +64,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   --ease-spring:   cubic-bezier(0.34, 1.56, 0.64, 1);
 
   --max-w:         900px;
-  --pad-x:         clamp(1.25rem, 5vw, 3rem);
+  --pad-x:         clamp(1.75rem, 5vw, 3rem);
   --pad-section:   clamp(4rem, 10vw, 7rem);
 }
 
@@ -537,9 +537,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: grid;
   grid-template-columns: 1fr;
   gap: 2rem;
-  padding: clamp(2.5rem, 6vw, 4.5rem) 0;
+  padding: clamp(3.5rem, 8vw, 5rem) 0;
   border-bottom: 1px dashed rgba(192,24,95,0.2);
   align-items: center;
+  position: relative;
 }
 .chapter-number {
   font-family: var(--font-body);
@@ -548,7 +549,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--gold);
-  margin-bottom: 0.6rem;
+  margin-bottom: 1.25rem;
   transition: color 0.55s ease;
 }
 .chapter-title {
@@ -682,7 +683,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .crescendo-line {
   font-family: var(--font-display);
   font-style: italic;
-  font-size: clamp(2rem, 6.5vw, 4.25rem);
+  font-size: clamp(2.25rem, 7vw, 4.25rem);
   color: rgba(255,255,255,0.92);
   line-height: 1.25;
   margin-bottom: 0.25rem;
@@ -723,7 +724,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-size: clamp(1.375rem, 3.5vw, 1.75rem);
   color: var(--rose);
   position: relative;
-  padding-top: 1.5rem;
+  padding-top: 3rem;
   transition: color 0.55s ease;
 }
 .closing-signoff::before {
@@ -738,7 +739,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 /* SVG heart */
-.heart-wrap { width: clamp(70px, 18vw, 110px); margin: 3.5rem auto 0; }
+.heart-wrap { width: clamp(70px, 18vw, 110px); margin: 5rem auto 2rem; }
 .heart-svg { width: 100%; height: auto; display: block; }
 #heart-path { transition: stroke-dashoffset 1.6s cubic-bezier(0.4,0,0.2,1), stroke 0.55s ease; stroke: var(--rose); }
 
@@ -1891,11 +1892,12 @@ body::after {
 /* ── Anniversary dedication reveal below heart ───────────────────── */
 .anniversary-dedication {
   font-family: var(--font-display);
-  font-style: italic;
-  font-size: clamp(1.125rem, 3.5vw, 1.625rem);
+  font-style: normal;
+  font-size: clamp(1.625rem, 4.5vw, 2.25rem);
   color: var(--rose);
   text-align: center;
-  margin-top: 2.5rem;
+  margin-top: 3rem;
+  letter-spacing: 0.02em;
   opacity: 0;
   transition: opacity 0.9s ease, color 0.55s ease;
 }
@@ -2962,8 +2964,10 @@ html[data-theme="sangeetspark"] .chapter-number {
 /* ── Opening poem — editorial serif, more commanding ─────────────── */
 .opening-poem p {
   font-family: var(--font-editorial);
-  font-size: clamp(1.65rem, 4.8vw, 2.65rem);
+  font-size: clamp(2rem, 5.5vw, 2.75rem);
   line-height: 1.75;
+  letter-spacing: -0.01em;
+  text-align: center;
 }
 
 /* ── Opening panels — editorial prose ───────────────────────────── */
@@ -2977,9 +2981,9 @@ html[data-theme="sangeetspark"] .chapter-number {
 /* ── Closing message — editorial serif ──────────────────────────── */
 .closing-message {
   font-family: var(--font-editorial);
-  font-size: clamp(1.125rem, 3vw, 1.55rem);
+  font-size: clamp(1.3125rem, 3.5vw, 1.65rem);
   font-style: italic;
-  line-height: 2.25;
+  line-height: 2.15;
 }
 
 /* ── Drop cap — first letter of each chapter body ───────────────── */
@@ -3453,7 +3457,7 @@ body::after {
 .live-counter {
   font-family: var(--font-editorial);
   font-style: italic;
-  font-size: clamp(0.75rem, 1.8vw, 0.875rem);
+  font-size: clamp(0.875rem, 2vw, 1rem);
   color: var(--text-soft);
   text-align: center;
   margin-top: 1.75rem;
@@ -3463,7 +3467,7 @@ body::after {
   transition: opacity 1.8s ease, transform 1.8s ease, color 0.55s ease;
 }
 .live-counter.visible {
-  opacity: 0.58;
+  opacity: 0.65;
   transform: translateY(0);
 }
 
@@ -3498,4 +3502,78 @@ body::after {
 @keyframes anniversaryGlow {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.6; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   PHASE 20 — Artful Mobile Refinements
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── B2. Chapter body — tighter leading on mobile ────────────────── */
+@media (max-width: 768px) {
+  .chapter-body    { line-height: 1.95; }
+  .closing-message { max-width: 400px; margin-left: auto; margin-right: auto; }
+}
+
+/* ── B4. Widow control + hanging punctuation on all prose ────────── */
+.chapter-body,
+.panel-text,
+.closing-message {
+  text-wrap: pretty;
+  hanging-punctuation: first last;
+}
+
+/* ── D3. Ch1 drop cap — rose-coloured opening letter ─────────────── */
+#chapter-01 .chapter-body::first-letter {
+  color: var(--rose);
+  font-size: 5.2em;
+  margin-right: 0.08em;
+}
+@media (max-width: 480px) {
+  #chapter-01 .chapter-body::first-letter { font-size: 4.2em; }
+}
+
+/* ── D2. Ghost chapter number on mobile ──────────────────────────── */
+@media (max-width: 767px) {
+  .chapter:not(#chapter-hidden) {
+    overflow: visible;
+  }
+  .chapter:not(#chapter-hidden)::before {
+    content: attr(data-num);
+    position: absolute;
+    font-family: var(--font-display);
+    font-size: clamp(5.5rem, 28vw, 9rem);
+    color: var(--rose);
+    opacity: 0.045;
+    right: -0.25rem;
+    top: 44%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    line-height: 1;
+    z-index: 0;
+    transition: color 0.55s ease;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* ── E1. Warm paper glow in the reading zone ─────────────────────── */
+#chapters {
+  background-image: radial-gradient(
+    ellipse 100% 30% at 50% 8%,
+    var(--cream) 0%,
+    transparent 60%
+  );
+}
+
+/* ── E3. Framed image presence ───────────────────────────────────── */
+.image-placeholder {
+  box-shadow: 0 3px 16px rgba(0,0,0,0.06), 0 1px 4px rgba(0,0,0,0.04);
+}
+.image-placeholder--loaded {
+  box-shadow: 0 4px 22px rgba(0,0,0,0.08), 0 1px 6px rgba(0,0,0,0.05);
+}
+
+/* ── Phase 20 reduced-motion guards ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  #chapter-01 .chapter-body::first-letter { font-size: 4.6em; }
+  .chapter:not(#chapter-hidden)::before   { display: none; }
 }
