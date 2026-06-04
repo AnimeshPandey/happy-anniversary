@@ -19,7 +19,7 @@ Run this before every deploy. Check off items as you go.
 
 ### Display
 - [ ] "for Divya, with love" dedication line appears above "Choose Our Love Mood"
-- [ ] Orb renders with correct gradient for default theme (PetalPop Parade)
+- [ ] Orb renders with correct gradient for default theme (Purrfect Pair)
 - [ ] Theme name, tagline, and icon display correctly
 - [ ] All 9 theme dots render below the orb
 - [ ] `<` and `>` chevron buttons are visible and tappable
@@ -38,8 +38,8 @@ Run this before every deploy. Check off items as you go.
 
 ### Theme visuals
 - [ ] Switch through all 9 themes; orb gradient, name, tagline all match each theme
-- [ ] SangeetSpark Symphony (index 6) shows dark background in selector
-- [ ] Purrfect Pair (index 8) shows lavender/lilac background with paw emoji icon
+- [ ] SangeetSpark Symphony (index 7) shows dark background in selector
+- [ ] Purrfect Pair (index 0, default) shows lavender/lilac background with paw emoji icon
 - [ ] Petal colours change noticeably between themes on the falling petals
 - [ ] `<meta name="theme-color">` updates to match the new theme's rose colour (check in DevTools Elements)
 
@@ -216,10 +216,11 @@ Run this before every deploy. Check off items as you go.
 - [ ] Switching theme while ambient is playing crossfades to new theme's ambient frequencies smoothly
 
 ### Per-theme ambient effects
-- [ ] PetalPop Parade — fireflies and cherry petal gusts visible in journey
-- [ ] Purrfect Pair — kitty paw prints, yarn ball, floating whiskers visible; cat cameo appears within ~90s
-- [ ] SangeetSpark Symphony — firework bursts and diyas visible
-- [ ] VelvetVows Voyage — candle flicker, gold leaf dust, peacock visible
+- [ ] Purrfect Pair (default) — kitty paw prints, yarn ball, floating whiskers visible; cat cameo appears within ~90s
+- [ ] PetalPop Parade — cherry petal gusts and ladybird visible
+- [ ] Gulabo Garden Gala — peacock and marigold garland visible
+- [ ] SangeetSpark Symphony — diyas, firework bursts, and elephant visible
+- [ ] VelvetVows Voyage — candles and gold leaf visible
 - [ ] Switching theme clears previous effects and starts new ones
 - [ ] Replay clears all effects and stops ambient
 

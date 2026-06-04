@@ -28,8 +28,17 @@
 | `ch9-main` | `ch9-main.jpg` | 4:3 | An ordinary day |
 | `ch10-main` | `ch10-main.jpg` | 4:3 | A memory you never want to forget |
 | `ch11-main` | `ch11-main.jpg` | 16:9 | Looking ahead |
-| `ch12-main` | `ch12-main.jpg` | 4:3 | Everything, always |
+| `ch12-main` | `ch12-main.jpg` | 4:3 | Mishti and Barfi |
+| `ch13-main` | `ch13-main.jpg` | 4:3 | The evening in maroon |
+| `ch14-main` | `ch14-main.jpg` | 4:3 | In our kitchen |
+| `ch15-main` | `ch15-main.jpg` | 4:3 | Puja mornings |
+| `ch16-main` | `ch16-main.jpg` | 3:4 (portrait) | Dressed in red |
+| `ch17-main` | `ch17-main.jpg` | 4:3 | Going somewhere |
+| `ch18-main` | `ch18-main.jpg` | 4:3 | In the dark together |
+| `ch19-main` | `ch19-main.jpg` | 4:3 | Every colourful corner |
+| `ch20-main` | `ch20-main.jpg` | 16:9 | One year |
 | `closing-hero` | `closing-hero.jpg` | 3:4 (portrait) | THE photo. The most important one. |
+| `hidden-ch` | `hidden-ch.jpg` | 4:3 | The hidden chapter — easter egg reveal |
 
 ---
 
@@ -92,7 +101,7 @@ Change `aspectRatio` in `IMAGE_SLOTS` to match your photo:
 
 ## Automated pipeline
 
-If you have all 15 photos ready, use the script to resize and convert them in one pass:
+If you have all 24 photos ready, use the script to resize and convert them in one pass:
 
 ```bash
 # Put your photos in a folder, named to match the slot IDs

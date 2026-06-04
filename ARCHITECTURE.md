@@ -9,7 +9,7 @@ A single-page, vanilla HTML/CSS/JS anniversary experience. No build step, no fra
 | File | Role |
 |------|------|
 | `index.html` | All markup. Static shell + injected regions for dynamic content. JSON-LD WebPage schema in `<head>`. |
-| `style.css` | All styles (~2350 lines). Base block + Phase additions + ambient effect keyframes + per-theme overrides + `prefers-reduced-motion` block at end. |
+| `style.css` | All styles (~3266 lines). Base block + Phase additions + ambient effect keyframes + per-theme overrides + `prefers-reduced-motion` block at end. |
 | `content.js` | Single `SITE` object + `IMAGE_SLOTS` map. All copy lives here — change text here only. |
 | `themes.js` | `THEMES` array — 9 theme objects each with CSS token map, sound profile, pentatonic scale, ambient note pair, ambient effects list, motion config, and particle style. |
 | `theme-controller.js` | `ThemeController` IIFE — applies tokens to `:root`, animates content swap, builds dots. |
@@ -166,12 +166,12 @@ Effect modules registered in `EFFECT_MODULES` dispatch table (21 modules):
 | `shooting-stars` | Timed shooting star respawn every 4–12s |
 | `moon-glow` | Single moon element with `moonFloat` animation |
 | `cherry-gusts` | Burst of 6–13 petals every 5–13s |
-| `butterfly-flutter` | RAF sinusoidal flight path, CSS wing flap |
+| `butterflies` | RAF sinusoidal flight path, CSS wing flap |
 | `drifting-clouds` | Cloud elements with `cloudDrift` CSS animation |
 | `diyas` | 5–8 fixed `.diya-wrap` elements at screen bottom |
-| `firework-bursts` | Fixed spark elements appended to body every 4–10s |
-| `candle-flicker` | 4–6 `.candle-wrap` elements at bottom |
-| `gold-leaf-dust` | `.gold-leaf` elements spawned every 1.8–5s |
+| `fireworks` | Fixed spark elements appended to body every 4–10s |
+| `candles` | 4–6 `.candle-wrap` elements at bottom |
+| `gold-leaf` | `.gold-leaf` elements spawned every 1.8–5s |
 | `peacock` | `.peacock-wrap` emoji walking across bottom |
 | `ladybird` | 3–5 🐞 emoji elements with `ladybirdHop` |
 | `constellations` | 20–35 `.constellation-dot` elements with `starTwinkle` |

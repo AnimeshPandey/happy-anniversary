@@ -44,8 +44,9 @@ How themes work, how to add one, and what every property does.
   // --- Ambient effect modules active in the journey ---
   ambientEffects: ['fireflies', 'cherry-gusts'],
   // Available modules: fireflies, shooting-stars, moon-glow, cherry-gusts,
-  // butterfly-flutter, drifting-clouds, diyas, firework-bursts, candle-flicker,
-  // gold-leaf-dust, peacock, ladybird, constellations, sprinkles,
+  // butterflies, drifting-clouds, diyas, fireworks, candles,
+  // gold-leaf, peacock, ladybird, constellations, sprinkles,
+  // marigold-garland, mint-leaves, elephant,
   // kitty-paws, yarn-ball, floating-whiskers, cat-cameo
 
   particleStyle: {                // shapes applied to falling petals
@@ -185,14 +186,14 @@ The `revealOffset` sets `--motion-reveal-offset` which is the starting `translat
 
 ## Current Theme Index
 
-| Index | ID | Name |
-|-------|----|------|
-| 0 | `purrfect-pair` | Purrfect Pair (default) |
-| 1 | `petalpop` | PetalPop Parade |
-| 2 | `moonlight-mithai` | Moonlight Mithai |
-| 3 | `candy-cloud` | CandyCloud Caravan |
-| 4 | `gulabo-garden` | Gulabo Garden Gala |
-| 5 | `starry-snuggle` | Starry Snuggle Story |
-| 6 | `butterfly-blush` | ButterflyBlush Bash |
-| 7 | `sangeetspark` | SangeetSpark Symphony |
-| 8 | `velvet-vows` | VelvetVows Voyage |
+| Index | ID | Name | Ambient effects |
+|-------|----|------|-----------------|
+| 0 | `purrfect-pair` | Purrfect Pair (default) | kitty-paws, yarn-ball, floating-whiskers, cat-cameo |
+| 1 | `petalpop` | PetalPop Parade | cherry-gusts, ladybird |
+| 2 | `moonlight-mithai` | Moonlight Mithai | shooting-stars, moon-glow |
+| 3 | `candy-cloud` | CandyCloud Caravan | drifting-clouds, sprinkles |
+| 4 | `gulabo-garden` | Gulabo Garden Gala | peacock, marigold-garland |
+| 5 | `starry-snuggle` | Starry Snuggle Story | fireflies, constellations |
+| 6 | `butterfly-blush` | ButterflyBlush Bash | butterflies, mint-leaves |
+| 7 | `sangeetspark` | SangeetSpark Symphony | diyas, fireworks, elephant |
+| 8 | `velvet-vows` | VelvetVows Voyage | candles, gold-leaf |

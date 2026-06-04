@@ -1,6 +1,6 @@
 # Anniversary Experience — Improvement Roadmap
 
-Saved and updated: 2026-06-03.
+Saved and updated: 2026-06-04.
 
 ---
 
@@ -55,14 +55,15 @@ designed for a 390px portrait screen first, then enhanced for wider viewports.
 
 ---
 
-## Diagnosis (as of Phase 1 + 2 + 3 completion)
+## Diagnosis (as of Phase 17 — current state)
 
-Theme switching swaps colour variables, particle shapes, and motion presets.
-Staggered reveals, typewriter poem, image frames, crescendo burst, heart confetti,
-chapter navigation, and PWA manifest are all implemented. The experience now has
-ambient life, premium interactions, and mobile-first haptics. What remains:
-cinematic transitions, chapter system depth, sound, personalisation easter eggs,
-and technical foundations like offline support and performance optimisations.
+All 17 planned phases are complete. The experience ships with: 9 themes (Purrfect Pair
+default), 20 personalised chapters with real photos and AI illustrated mode, 21 ambient
+effect modules, synthesised Web Audio (zero audio files), mobile dock, photo stage
+overlay, editorial typography with drop caps and Cormorant Garamond prose, Ken Burns
+scroll animation, and a full offline service worker cache. What remains: 12 AI image
+slots still falling back to real photos (needs external AI generation), and one OG
+share image for WhatsApp/iMessage previews.
 
 ---
 
@@ -391,6 +392,20 @@ Each theme has a 12-note `scale` array. `playChime()` picks root + chord notes f
 
 ---
 
+## Phase 18 — Ultra Refinement
+**Status: DONE (2026-06-04)**
+
+| Item | Shipped |
+|------|---------|
+| Alex Brush calligraphic font | "Yours, always" and "Animesh" in handwritten script — letter feels signed by hand |
+| Live seconds counter | Closing section: "364 days, 14 hours, 43 minutes and 3 seconds of us." — ticks live |
+| Anniversary Day variant | Ceremony subtitle reads "Today is the day." on June 5, 2026 only |
+| Ink-bleed texture | `text-shadow` on all Cormorant prose — printed quality, not screen flatness |
+| Inside chai reference | Ch14 "In Our Kitchen" — "The first chai of the morning, already made before I ask." |
+| Hidden chapter whisper | 30s after `∞` chapter reveals: "P.S. This entire page was made just for you." fades in |
+
+---
+
 ## Future upgrades (original extension menu)
 
 - SurpriseMe mode: random theme on load ✅ Done
@@ -429,8 +444,13 @@ Each theme has a 12-note `scale` array. `playChime()` picks root + chord notes f
 | ✅ Done | TOC slide-up sheet | M | Navigation at 12 chapters |
 | ✅ Done | Pull-to-restart | M | Native mobile feel |
 | ✅ Done | Per-theme ambient audio | M | Synthesised Web Audio, no files needed |
-| ✅ Done | Per-theme visual effects | L | 18 effect modules, all 9 themes wired |
-| ✅ Done | Purrfect Pair theme | M | 9th theme with cat cameo + ambient |
+| ✅ Done | Per-theme visual effects | L | 21 effect modules, all 9 themes wired |
+| ✅ Done | Purrfect Pair theme | M | Default theme with cat cameo + ambient |
+| ✅ Done | 6 new Web Audio moments | M | Ornament, crescendo, heart, photo stage, easter egg, days tick |
+| ✅ Done | Orb particles from frame one | S | Themed chars orbit the selector orb |
+| ✅ Done | Editorial typography + drop caps | M | Cormorant Garamond, drop caps, ghost numbers |
+| 🟡 Next | 12 remaining AI images | L | Must be generated externally (prompts in Next-steps.md) |
+| 🟡 Next | OG share image | S | 1200×630 screenshot for WhatsApp/iMessage previews |
 | 🟡 Next | Real photos | L | Must be provided by user |
 | 🟡 Next | Blur-up photo loading | M | Needs real photos first |
 | 🟡 Next | Ken Burns on images | M | Needs real photos to shine |
@@ -458,4 +478,37 @@ Each theme has a 12-note `scale` array. `playChime()` picks root + chord notes f
 | Content/meta | Twenty chapters, POV fixes, `aiSrc` paths wired |
 | Prompt artifact | `prompts/phase-15-mobile-premium-claude-prompt.md` |
 | SW cache | `anniversary-v13` |
-| 🟢 Later | Map of places | M | Needs coordinate data |
+
+---
+
+## Phase 16 — Sounds Everywhere + Theme Life from Frame One
+**Status: DONE (2026-06-04)**
+
+| Item | Shipped |
+|------|---------|
+| `playOrnamentPop()` | 4-note upward arpeggio on chapter ornament particle burst |
+| `playCrescendoSwell()` | Low pad swell when crescendo section enters view (one-shot) |
+| `playHeartBell()` | Two-partial bell (sine + triangle) on heart stroke complete |
+| `playPhotoStageWhoosh()` | Bandpass sawtooth sweep on photo stage open/close |
+| `playHiddenReveal()` | 7-note ascending magic sweep for easter egg chapter reveal |
+| `playDaysTick()` | Soft tick every 4th count-up increment in days counter |
+| Purrfect Pair purr | AM-modulated bandpass noise purring (0.65 Hz LFO) — theme-specific ambient |
+| SangeetSpark tabla | Shaped noise tabla transients at random 600–2200ms intervals |
+| `initOrbParticles()` | 4 themed characters orbit the theme selector orb from frame one (cat paw / note / star / flower per theme) |
+
+---
+
+## Phase 17 — Artistic Polish, Editorial Typography, Drop Caps
+**Status: DONE (2026-06-04)**
+
+| Item | Shipped |
+|------|---------|
+| Cormorant Garamond | Editorial serif for chapter body, panel text, opening poem, closing message |
+| Italic chapter body | Prose is now italic Cormorant Garamond (literary journal register) |
+| Drop cap | Every chapter opening letter: Playfair Display 4.6em, floated left |
+| "CHAPTER" micro-label | 0.5rem spaced caps above each chapter number |
+| "01 of 20" breadcrumb | Gold, below chapter number, via CSS `attr()` |
+| Ghost chapter number | Enlarged to `clamp(8rem, 20vw, 17rem)` at 0.058 opacity |
+| Gold hairline separator | Replaced dashed rose separator with thin gold line (0.14 opacity) |
+| Chapter title scale | Grew to `clamp(1.9rem, 5.5vw, 3.2rem)` with −0.01em tracking |
+| Opening poem scale | Grew to `clamp(1.65rem, 4.8vw, 2.65rem)` |

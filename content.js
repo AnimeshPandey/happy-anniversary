@@ -128,7 +128,7 @@ var SITE = {
     {
       number: '14',
       title:  'In Our Kitchen',
-      body:   'The apron. The sound of cooking. The smell of something good happening in our kitchen. There are whole chapters of this year that smell like food and feel like home. You made a place into a home by being in it. That is an extraordinary thing.',
+      body:   'The apron. The sound of cooking. The first chai of the morning, already made before I ask. The smell of something good happening in our kitchen. There are whole chapters of this year that smell like food and feel like home. You made a place into a home by being in it. That is an extraordinary thing.',
       imageId: 'ch14-main',
       layout:  'right',
       mood:    '🍽️'

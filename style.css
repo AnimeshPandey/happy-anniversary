@@ -3264,3 +3264,84 @@ body::after {
   }
   #cursor-trail-layer { display: none !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PHASE 18 — Ultra Refinement
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Calligraphic script font ────────────────────────────────────── */
+:root {
+  --font-script: 'Alex Brush', 'Dancing Script', cursive;
+}
+
+/* ── Calligraphic closing signoff and author ─────────────────────── */
+.closing-signoff {
+  font-family: var(--font-script);
+  font-style: normal;
+  font-size: clamp(2.25rem, 5.5vw, 3rem);
+  letter-spacing: 0.01em;
+}
+.closing-author {
+  font-family: var(--font-script);
+  font-style: normal;
+  font-size: clamp(1.75rem, 4.5vw, 2.25rem);
+  margin-top: 0.1rem;
+}
+
+/* ── Ink-bleed texture on Cormorant prose ───────────────────────── */
+.chapter-body,
+.panel-text,
+.closing-message {
+  text-shadow: 0.35px 0.4px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* ── Live time-together counter in closing ───────────────────────── */
+.live-counter {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: clamp(0.75rem, 1.8vw, 0.875rem);
+  color: var(--text-soft);
+  text-align: center;
+  margin-top: 1.75rem;
+  letter-spacing: 0.015em;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 1.8s ease, transform 1.8s ease, color 0.55s ease;
+}
+.live-counter.visible {
+  opacity: 0.58;
+  transform: translateY(0);
+}
+
+/* ── Hidden chapter second whisper ──────────────────────────────── */
+.hidden-whisper {
+  font-family: var(--font-editorial);
+  font-style: italic;
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+  color: var(--gold);
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(212, 160, 23, 0.18);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 2.5s ease, transform 2.5s ease;
+  text-align: center;
+  letter-spacing: 0.015em;
+  line-height: 1.9;
+}
+.hidden-whisper.visible {
+  opacity: 0.68;
+  transform: translateY(0);
+}
+
+/* ── Anniversary Day ceremony variant ───────────────────────────── */
+.anniversary-day {
+  color: var(--gold) !important;
+  font-style: italic;
+  letter-spacing: 0.08em;
+  animation: anniversaryGlow 3s ease-in-out infinite;
+}
+@keyframes anniversaryGlow {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.6; }
+}

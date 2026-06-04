@@ -8,7 +8,7 @@ Live at [anmshpndy.com/happy-anniversary](https://anmshpndy.com/happy-anniversar
 
 ## What it is
 
-A love letter as a scrollable experience. The recipient chooses a visual mood (theme), watches a ceremony, then scrolls through 12 chapters of memories, a crescendo, a closing message, and a heart animation. Everything is themed: colours, falling petals, chapter animations, ambient sound, and live ambient visual effects.
+A love letter as a scrollable experience. The recipient chooses a visual mood (theme), watches a ceremony, then scrolls through 20 chapters of memories, a crescendo, a closing message, and a heart animation. Everything is themed: colours, falling petals, chapter animations, ambient sound, and live ambient visual effects.
 
 ---
 
@@ -34,7 +34,7 @@ npx serve .
 All text content lives in `content.js`. Open it and find the `SITE` object:
 
 - `SITE.opening` — poem text and the two opening panels
-- `SITE.chapters` — array of 12 chapter objects (`title`, `body`, `mood`)
+- `SITE.chapters` — array of 20 chapter objects (`title`, `body`, `mood`)
 - `SITE.crescendo` — three closing crescendo lines
 - `SITE.closing` — closing message, signoff, recipient name, author
 
@@ -77,7 +77,7 @@ npm test
 npx playwright test
 ```
 
-150 Playwright tests across Chromium and mobile-Chrome. See `TESTING.md` for the manual QA checklist.
+160 Playwright tests across Chromium and mobile-Chrome. See `TESTING.md` for the manual QA checklist.
 
 ---
 

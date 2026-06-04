@@ -400,7 +400,12 @@
     if (!title) return;
 
     if (recipient) recipient.textContent = SITE.recipientName ? 'For ' + SITE.recipientName : '';
-    if (date) date.textContent = SITE.date || 'One beautiful year';
+    var today = new Date();
+    var isAnniversaryDay = (today.getFullYear() === 2026 && today.getMonth() === 5 && today.getDate() === 5);
+    if (date) {
+      date.textContent = isAnniversaryDay ? 'Today is the day.' : (SITE.date || 'One beautiful year');
+      if (isAnniversaryDay) date.classList.add('anniversary-day');
+    }
     initCeremonyParticles();
 
     setTimeout(function () { title.classList.add('visible'); }, 1200);
@@ -1279,6 +1284,19 @@
           setTimeout(function () {
             hidden.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }, 300);
+          /* Second secret: 30s after reveal, a whisper fades in */
+          setTimeout(function () {
+            var chBody = hidden.querySelector('.chapter-body');
+            if (chBody && !hidden.querySelector('.hidden-whisper')) {
+              var w = document.createElement('p');
+              w.className = 'hidden-whisper';
+              w.textContent = 'P.S. This entire page was made just for you. Every word of it.';
+              chBody.appendChild(w);
+              requestAnimationFrame(function () {
+                requestAnimationFrame(function () { w.classList.add('visible'); });
+              });
+            }
+          }, 30000);
         }
       }
     }
@@ -1288,6 +1306,53 @@
       e.preventDefault();
       handleTap();
     }, { passive: false });
+  }
+
+  /* ── Live time-together counter ─────────────────────────────────── */
+  function initLiveCounter() {
+    if (!window.IntersectionObserver) return;
+    var wrap = document.querySelector('.heart-wrap');
+    if (!wrap) return;
+    var started = false;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting && !started) {
+          started = true;
+          obs.disconnect();
+          /* Appear 4.5s after heart enters view, after the dedication */
+          setTimeout(function () {
+            var closingInner = document.querySelector('.closing-inner');
+            if (!closingInner || document.querySelector('.live-counter')) return;
+            var counter = document.createElement('p');
+            counter.className = 'live-counter';
+            closingInner.appendChild(counter);
+            var start = new Date('2025-06-05T00:00:00');
+            var intervalRef = null;
+            function tick() {
+              var elapsed = Math.floor((Date.now() - start.getTime()) / 1000);
+              var s = elapsed % 60;
+              var m = Math.floor(elapsed / 60) % 60;
+              var h = Math.floor(elapsed / 3600) % 24;
+              var d = Math.floor(elapsed / 86400);
+              counter.textContent = d + ' days, ' + h + ' hours, ' + m + ' minutes and ' + s + ' seconds of us.';
+            }
+            tick();
+            intervalRef = setInterval(tick, 1000);
+            requestAnimationFrame(function () {
+              requestAnimationFrame(function () { counter.classList.add('visible'); });
+            });
+            document.addEventListener('visibilitychange', function () {
+              if (document.hidden) {
+                clearInterval(intervalRef); intervalRef = null;
+              } else if (!intervalRef) {
+                tick(); intervalRef = setInterval(tick, 1000);
+              }
+            });
+          }, 4500);
+        }
+      });
+    }, { threshold: 0.5 });
+    obs.observe(wrap);
   }
 
   /* ── Post-heart slow petal cascade ──────────────────────────────── */
@@ -3530,6 +3595,7 @@
     raf2(function () {
       initReveal();
       initHeart();
+      initLiveCounter();
       initTypewriter();
       initChapterNav();
       initFloats();

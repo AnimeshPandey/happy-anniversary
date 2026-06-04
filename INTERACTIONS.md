@@ -138,15 +138,15 @@ Tap any chapter image wrap to expand the photo full-screen:
 
 | Theme | Active effects |
 |-------|----------------|
-| PetalPop Parade | `cherry-gusts`, `fireflies` |
-| Moonlight Mithai | `moon-glow`, `fireflies`, `shooting-stars` |
+| Purrfect Pair (default) | `kitty-paws`, `yarn-ball`, `floating-whiskers`, `cat-cameo` |
+| PetalPop Parade | `cherry-gusts`, `ladybird` |
+| Moonlight Mithai | `shooting-stars`, `moon-glow` |
 | CandyCloud Caravan | `drifting-clouds`, `sprinkles` |
-| Gulabo Garden Gala | `cherry-gusts`, `diyas` |
-| Starry Snuggle Story | `constellations`, `shooting-stars` |
-| ButterflyBlush Bash | `butterfly-flutter`, `cherry-gusts` |
-| SangeetSpark Symphony | `firework-bursts`, `diyas` |
-| VelvetVows Voyage | `candle-flicker`, `gold-leaf-dust`, `peacock` |
-| Purrfect Pair | `kitty-paws`, `yarn-ball`, `floating-whiskers`, `cat-cameo` |
+| Gulabo Garden Gala | `peacock`, `marigold-garland` |
+| Starry Snuggle Story | `fireflies`, `constellations` |
+| ButterflyBlush Bash | `butterflies`, `mint-leaves` |
+| SangeetSpark Symphony | `diyas`, `fireworks`, `elephant` |
+| VelvetVows Voyage | `candles`, `gold-leaf` |
 
 **Cat cameo (Purrfect Pair only)**: the `cat-cameo` module performs a full sequence every 45–90s. Either Mishti (white cat, pink nose, sapphire eyes) or Barfi (cream cat, black nose, periwinkle eyes) enters from the screen edge, blinks twice, pops a heart bubble, and exits. The SVG illustrations are inline path strings (`MISHTI_SVG`, `BARFI_SVG`) rendered at runtime.
 
