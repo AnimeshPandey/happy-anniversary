@@ -225,6 +225,12 @@
     var savedIdx = loadSavedTheme();
     ThemeController.init();
     if (savedIdx !== 0) ThemeController.set(savedIdx);
+    /* Initialise orb particles and breathing for the starting theme */
+    setTimeout(function () {
+      var initTheme = ThemeController.current();
+      initOrbParticles(initTheme);
+      updateOrbBreathing(initTheme);
+    }, 200);
 
     /* Sync meta[name="theme-color"] with the active theme on every load */
     (function () {
@@ -252,6 +258,9 @@
       flashThemeTransition();
       haptic(20);
       playThemeSelect();
+      var newTheme = ThemeController.current();
+      initOrbParticles(newTheme);
+      updateOrbBreathing(newTheme);
       /* Orb pulse via inline style to avoid conflicting with orbFloat animation */
       var orb = document.querySelector('.ts-orb');
       if (orb) {
@@ -375,6 +384,7 @@
     function tick() {
       current = Math.min(current + inc, diff);
       el.textContent = current + (current === 1 ? ' day' : ' days') + ' of love';
+      playDaysTick();
       if (current < diff) setTimeout(tick, 18);
     }
     setTimeout(tick, 500);
@@ -391,6 +401,7 @@
 
     if (recipient) recipient.textContent = SITE.recipientName ? 'For ' + SITE.recipientName : '';
     if (date) date.textContent = SITE.date || 'One beautiful year';
+    initCeremonyParticles();
 
     setTimeout(function () { title.classList.add('visible'); }, 1200);
     setTimeout(function () { if (recipient) recipient.classList.add('visible'); }, 1900);
@@ -1082,8 +1093,15 @@
         if (!crescendoFired && el.classList.contains('crescendo-text')) {
           crescendoFired = true;
           setTimeout(fireCrescendoBurst, 300);
+          playCrescendoSwell();
           var inner = document.querySelector('.crescendo-inner');
           if (inner) setTimeout(function () { inner.classList.add('rings-active'); }, 800);
+        }
+
+        /* Chapter reveal mark — brief themed stamp on chapter-number */
+        if (!reducedMotion && el.classList.contains('chapter-text-wrap')) {
+          var chArticle = el.closest('.chapter');
+          if (chArticle) spawnChapterRevealMark(chArticle);
         }
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
@@ -1127,6 +1145,7 @@
   /* ── Chapter ornament completion pop ─────────────────────────────── */
   function fireChapterCompletionPop(dotEl) {
     if (reducedMotion || !dotEl) return;
+    playOrnamentPop();
     var rect  = dotEl.getBoundingClientRect();
     var cx    = rect.left + rect.width  / 2;
     var cy    = rect.top  + rect.height / 2;
@@ -1194,6 +1213,7 @@
         if (hidden && !hidden.classList.contains('revealed')) {
           hidden.classList.add('revealed');
           haptic([30, 20, 60]);
+          playHiddenReveal();
           fireConfetti(window.innerWidth / 2, window.innerHeight / 2);
           setTimeout(function () {
             hidden.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1268,6 +1288,7 @@
             path.classList.add('filled');
             if (wrap) wrap.classList.add('heart-done');
             haptic(40);
+            playHeartBell();
 
             /* Anniversary dedication reveal + slow cascade */
             setTimeout(function () {
@@ -1345,6 +1366,7 @@
     _photoStageOpen = true;
     document.body.classList.add('photo-stage-open');
     raf2(function () { stage.classList.add('open'); });
+    playPhotoStageWhoosh(true);
 
     if (!reducedMotion) fireConfetti(window.innerWidth / 2, window.innerHeight / 2);
     haptic(25);
@@ -1356,6 +1378,7 @@
     stage.classList.remove('open');
     _photoStageOpen = false;
     document.body.classList.remove('photo-stage-open');
+    playPhotoStageWhoosh(false);
     setTimeout(function () { stage.setAttribute('hidden', ''); }, 320);
   }
 
@@ -1705,6 +1728,330 @@
     });
   }
 
+  /* ── Ornament pop arpeggio (4-note upward) ──────────────────────── */
+  function playOrnamentPop() {
+    if (reducedMotion) return;
+    var ctx = getAudioCtx();
+    if (!ctx || ctx.state !== 'running') return;
+    var s     = getThemeSound();
+    var theme = (typeof ThemeController !== 'undefined') ? ThemeController.current() : null;
+    var scale = (theme && theme.scale) ? theme.scale : [523.25, 587.33, 659.25, 783.99];
+    for (var i = 0; i < 4; i++) {
+      (function (idx) {
+        setTimeout(function () {
+          playToneShort(scale[idx % scale.length], s.waveform, s.gainPeak * 0.30, s.attackTime * 0.4, s.decayTime * 0.22);
+        }, idx * 38);
+      })(i);
+    }
+  }
+
+  /* ── Crescendo pad swell (one-shot on section entry) ─────────────── */
+  var _crescendoSwellDone = false;
+  function playCrescendoSwell() {
+    if (_crescendoSwellDone) return;
+    _crescendoSwellDone = true;
+    var ctx = getAudioCtx();
+    if (!ctx) return;
+    var theme = (typeof ThemeController !== 'undefined') ? ThemeController.current() : null;
+    var root  = (theme && theme.ambientNote) ? theme.ambientNote.root * 0.5 : 130.81;
+    var t = ctx.currentTime;
+    function doSwell() {
+      try {
+        var osc  = ctx.createOscillator();
+        var gain = ctx.createGain();
+        var filt = ctx.createBiquadFilter();
+        filt.type = 'lowpass'; filt.frequency.value = 550; filt.Q.value = 0.6;
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(root, t);
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.075, t + 0.8);
+        gain.gain.linearRampToValueAtTime(0.05,  t + 2.2);
+        gain.gain.linearRampToValueAtTime(0,     t + 4.0);
+        osc.connect(filt); filt.connect(gain); gain.connect(ctx.destination);
+        osc.start(t); osc.stop(t + 4.1);
+      } catch (e) {}
+    }
+    if (ctx.state === 'running') doSwell();
+    else ctx.resume().then(doSwell).catch(function () {});
+  }
+
+  /* ── Heart bell (two partials, long decay) ───────────────────────── */
+  function playHeartBell() {
+    var ctx = getAudioCtx();
+    if (!ctx) return;
+    var theme = (typeof ThemeController !== 'undefined') ? ThemeController.current() : null;
+    var scale = (theme && theme.scale) ? theme.scale : [523.25, 659.25, 783.99];
+    var freq  = scale[Math.floor(scale.length * 0.7)];
+    var t     = ctx.currentTime;
+    function doBell() {
+      [[1, 'sine', 0.12], [2.756, 'triangle', 0.028]].forEach(function (args) {
+        try {
+          var partial = args[0], wave = args[1], peak = args[2];
+          var osc  = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = wave;
+          osc.frequency.setValueAtTime(freq * partial, t);
+          gain.gain.setValueAtTime(0, t);
+          gain.gain.linearRampToValueAtTime(peak, t + 0.012);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 2.5);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(t); osc.stop(t + 2.6);
+        } catch (e) {}
+      });
+    }
+    if (ctx.state === 'running') doBell();
+    else ctx.resume().then(doBell).catch(function () {});
+  }
+
+  /* ── Photo stage whoosh (opening: up sweep, closing: down sweep) ── */
+  function playPhotoStageWhoosh(opening) {
+    var ctx = getAudioCtx();
+    if (!ctx) return;
+    var t = ctx.currentTime;
+    function doWhoosh() {
+      try {
+        var osc  = ctx.createOscillator();
+        var gain = ctx.createGain();
+        var filt = ctx.createBiquadFilter();
+        filt.type = 'bandpass';
+        filt.frequency.value = opening ? 450 : 700;
+        filt.Q.value = 0.9;
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(opening ? 220 : 700, t);
+        osc.frequency.linearRampToValueAtTime(opening ? 900 : 180, t + 0.22);
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.07, t + 0.04);
+        gain.gain.linearRampToValueAtTime(0, t + 0.24);
+        osc.connect(filt); filt.connect(gain); gain.connect(ctx.destination);
+        osc.start(t); osc.stop(t + 0.28);
+      } catch (e) {}
+    }
+    if (ctx.state === 'running') doWhoosh();
+    else ctx.resume().then(doWhoosh).catch(function () {});
+  }
+
+  /* ── Hidden chapter reveal — 7-note ascending magic sweep ─────────── */
+  function playHiddenReveal() {
+    var s     = getThemeSound();
+    var theme = (typeof ThemeController !== 'undefined') ? ThemeController.current() : null;
+    var scale = (theme && theme.scale) ? theme.scale : [523.25, 587.33, 659.25, 698.46, 783.99, 880, 987.77];
+    for (var i = 0; i < 7; i++) {
+      (function (idx) {
+        setTimeout(function () {
+          playToneShort(scale[idx % scale.length], s.waveform, s.gainPeak * 0.50, s.attackTime, s.decayTime * 0.55);
+        }, idx * 60);
+      })(i);
+    }
+  }
+
+  /* ── Days counter tick (fires only when AudioContext is warm) ─────── */
+  var _tickEvery = 0;
+  function playDaysTick() {
+    _tickEvery++;
+    if (_tickEvery % 4 !== 0) return; /* play every 4th tick to avoid clutter */
+    var ctx = getAudioCtx();
+    if (!ctx || ctx.state !== 'running') return;
+    var theme = (typeof ThemeController !== 'undefined') ? ThemeController.current() : null;
+    var freq  = (theme && theme.scale) ? theme.scale[0] * 2 : 1046.5;
+    try {
+      var osc  = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(0, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.016, ctx.currentTime + 0.005);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.065);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.07);
+    } catch (e) {}
+  }
+
+  /* ── Theme-specific ambient extras (purr, tabla) ─────────────────── */
+  var _extraNodes  = null;
+  var _extraTimers = [];
+
+  function startThemeAmbientExtras(theme) {
+    stopThemeAmbientExtras();
+    if (reducedMotion || !theme) return;
+    var ctx = getAudioCtx();
+    if (!ctx) return;
+
+    if (theme.id === 'purrfect-pair') {
+      /* Purring: AM-modulated bandpass noise at ~25-50 Hz purr rate */
+      try {
+        var bufLen = ctx.sampleRate * 2;
+        var buf    = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+        var data   = buf.getChannelData(0);
+        for (var i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
+
+        var src  = ctx.createBufferSource();
+        src.buffer = buf;
+        src.loop   = true;
+
+        var filt = ctx.createBiquadFilter();
+        filt.type = 'bandpass';
+        filt.frequency.value = 140;
+        filt.Q.value = 3.5;
+
+        var lfo = ctx.createOscillator();
+        lfo.type = 'sine';
+        lfo.frequency.value = 0.65; /* purr cycle */
+
+        var lfoGain = ctx.createGain();
+        lfoGain.gain.value = 0.04;
+
+        var masterGain = ctx.createGain();
+        masterGain.gain.setValueAtTime(0, ctx.currentTime);
+        masterGain.gain.linearRampToValueAtTime(0.055, ctx.currentTime + 2.5);
+
+        lfo.connect(lfoGain);
+        lfoGain.connect(masterGain.gain);
+        src.connect(filt);
+        filt.connect(masterGain);
+        masterGain.connect(ctx.destination);
+        src.start();
+        lfo.start();
+
+        _extraNodes = { src: src, lfo: lfo, masterGain: masterGain };
+      } catch (e) {}
+
+    } else if (theme.id === 'sangeetspark') {
+      /* Tabla: shaped noise transient burst, rhythmic */
+      var running = true;
+      function spawnTabla() {
+        if (!running) return;
+        var ctx2 = getAudioCtx();
+        if (!ctx2) return;
+        var t2 = ctx2.currentTime;
+        try {
+          var tbuf = ctx2.createBuffer(1, Math.floor(ctx2.sampleRate * 0.11), ctx2.sampleRate);
+          var td   = tbuf.getChannelData(0);
+          for (var j = 0; j < td.length; j++) td[j] = Math.random() * 2 - 1;
+          var tsrc = ctx2.createBufferSource();
+          tsrc.buffer = tbuf;
+          var tf = ctx2.createBiquadFilter();
+          tf.type = 'bandpass'; tf.frequency.value = 200 + Math.random() * 80; tf.Q.value = 4;
+          var tg = ctx2.createGain();
+          tg.gain.setValueAtTime(0.10, t2);
+          tg.gain.exponentialRampToValueAtTime(0.001, t2 + 0.10);
+          tsrc.connect(tf); tf.connect(tg); tg.connect(ctx2.destination);
+          tsrc.start(t2); tsrc.stop(t2 + 0.11);
+        } catch (e) {}
+        var next = 600 + Math.random() * 1600;
+        _extraTimers.push(setTimeout(spawnTabla, next));
+      }
+      _extraTimers.push(setTimeout(spawnTabla, 800 + Math.random() * 600));
+      _extraNodes = { _stop: function () { running = false; } };
+    }
+  }
+
+  function stopThemeAmbientExtras() {
+    _extraTimers.forEach(function (t) { clearTimeout(t); });
+    _extraTimers = [];
+    if (_extraNodes) {
+      if (_extraNodes._stop) _extraNodes._stop();
+      var mgain = _extraNodes.masterGain;
+      var esrc  = _extraNodes.src;
+      var elfo  = _extraNodes.lfo;
+      var ctx3  = getAudioCtx();
+      if (mgain && ctx3) {
+        try { mgain.gain.linearRampToValueAtTime(0, ctx3.currentTime + 0.5); } catch (e) {}
+      }
+      setTimeout(function () {
+        try { if (esrc) esrc.stop(); } catch (e) {}
+        try { if (elfo) elfo.stop(); } catch (e) {}
+      }, 600);
+      _extraNodes = null;
+    }
+  }
+
+  /* ── Orb micro-particles (spawned per theme on theme change) ─────── */
+  var ORB_PARTICLE_CHARS = {
+    'purrfect-pair':     ['🐾', '🐾', '✦', '🐾'],
+    'moonlight-mithai':  ['✦', '★', '✧', '✦'],
+    'sangeetspark':      ['♩', '♪', '✺', '♩'],
+    'velvet-vows':       ['❖', '✦', '❖', '✦'],
+    'starry-snuggle':    ['✦', '★', '✧', '·'],
+    'gulabo-garden':     ['❀', '✿', '❀', '✦'],
+    'butterfly-blush':   ['❋', '·', '❋', '✦'],
+    'petalpop':          ['✿', '·', '✿', '♥'],
+    'candy-cloud':       ['☁', '✦', '☁', '·']
+  };
+
+  function initOrbParticles(theme) {
+    if (reducedMotion || !theme) return;
+    /* clear old */
+    document.querySelectorAll('.orb-particle').forEach(function (p) { p.remove(); });
+    var orbWrap = document.getElementById('ts-orb-wrap');
+    if (!orbWrap) return;
+    var chars = ORB_PARTICLE_CHARS[theme.id] || ['✦', '·', '✦', '·'];
+    chars.forEach(function (ch, i) {
+      var p = document.createElement('span');
+      p.className = 'orb-particle';
+      p.setAttribute('aria-hidden', 'true');
+      p.textContent = ch;
+      p.style.setProperty('--op-i', String(i));
+      p.style.setProperty('--op-total', String(chars.length));
+      orbWrap.appendChild(p);
+    });
+  }
+
+  /* ── Orb breathing speed/curve class per theme ───────────────────── */
+  function updateOrbBreathing(theme) {
+    var orb = document.querySelector('.ts-orb');
+    if (!orb || !theme) return;
+    /* strip previous theme breathing class */
+    var cls = orb.className.split(' ').filter(function (c) { return c.indexOf('orb-breathe--') !== 0; });
+    cls.push('orb-breathe--' + theme.id);
+    orb.className = cls.join(' ');
+  }
+
+  /* ── Ceremony floating particles ─────────────────────────────────── */
+  function initCeremonyParticles() {
+    if (reducedMotion) return;
+    var ceremony = document.getElementById('ceremony');
+    if (!ceremony) return;
+    ceremony.querySelectorAll('.ceremony-particle').forEach(function (p) { p.remove(); });
+    var count = mobileCount(6);
+    for (var i = 0; i < count; i++) {
+      (function (idx) {
+        var p = document.createElement('div');
+        p.className = 'ceremony-particle';
+        p.setAttribute('aria-hidden', 'true');
+        var size = 4 + Math.random() * 7;
+        p.style.left              = (5 + Math.random() * 90) + '%';
+        p.style.width             = size + 'px';
+        p.style.height            = (size * 1.4).toFixed(1) + 'px';
+        p.style.animationDuration = (7 + Math.random() * 6) + 's';
+        p.style.animationDelay    = -(Math.random() * 12) + 's';
+        p.style.setProperty('--drift',      ((Math.random() - 0.5) * 80).toFixed(0) + 'px');
+        p.style.setProperty('--end-rotate', (180 + Math.random() * 360).toFixed(0) + 'deg');
+        p.style.background = 'var(--petal-' + ((idx % 6) + 1) + ')';
+        applyParticleStyle(p);
+        ceremony.appendChild(p);
+      })(i);
+    }
+  }
+
+  /* ── Per-chapter reveal mark (theme-specific stamp) ──────────────── */
+  function spawnChapterRevealMark(chapterEl) {
+    if (reducedMotion) return;
+    var numEl = chapterEl.querySelector('.chapter-number');
+    if (!numEl || numEl.querySelector('.ch-reveal-mark')) return;
+    var theme  = (typeof ThemeController !== 'undefined') ? ThemeController.current() : null;
+    var themeId = theme ? theme.id : 'default';
+    var chars  = ORB_PARTICLE_CHARS[themeId] || ['✦', '·'];
+    var mark = document.createElement('span');
+    mark.className = 'ch-reveal-mark ch-reveal-mark--' + themeId;
+    mark.setAttribute('aria-hidden', 'true');
+    mark.textContent = chars[0];
+    numEl.appendChild(mark);
+    setTimeout(function () {
+      mark.classList.add('ch-reveal-mark--out');
+      setTimeout(function () { mark.remove(); }, 600);
+    }, 900);
+  }
+
   /* ── Chapter chime — uses active theme's scale (2-note chord) ─────── */
   function playChime(chapterIndex) {
     var s     = getThemeSound();
@@ -1772,6 +2119,9 @@
 
     _ambientNodes = { osc1: osc1, osc2: osc2, gainNode: gain, filter: filt };
     _ambientOn    = true;
+
+    /* Launch theme-specific extras (purr, tabla) alongside the drone */
+    startThemeAmbientExtras(theme);
   }
 
   function stopAmbient() {
@@ -1788,6 +2138,7 @@
     } catch (e) {}
     _ambientNodes = null;
     _ambientOn    = false;
+    stopThemeAmbientExtras();
   }
 
   function crossfadeAmbient(newTheme) {
@@ -1806,6 +2157,7 @@
         _ambientOn    = false;
       } catch (e) {}
     }
+    stopThemeAmbientExtras();
     if (newTheme) setTimeout(function () { startAmbient(newTheme); }, 600);
   }
 

@@ -2765,3 +2765,175 @@ body.photo-stage-open { overflow: hidden; }
     animation: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   PHASE 16 — Sounds everywhere + theme life from frame one
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Ceremony floating particles ─────────────────────────────────── */
+.ceremony-particle {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50% 45% 50% 45% / 45% 50% 45% 50%;
+  animation: petalFall 10s ease-in var(--del, 0s) infinite;
+  z-index: 1;
+  opacity: 0.22;
+}
+/* #ceremony is already position:fixed inset:0, so absolute children are contained */
+
+/* ── Orb micro-particles (orbit the orb in theme selector) ──────── */
+.ts-orb-wrap { position: relative; }
+
+.orb-particle {
+  position: absolute;
+  pointer-events: none;
+  font-size: 0.75rem;
+  line-height: 1;
+  color: var(--rose);
+  opacity: 0;
+  animation: orbParticleOrbit 4s ease-in-out infinite;
+  animation-delay: calc(var(--op-i, 0) * 1s);
+  /* orbit placement: each particle starts at a different angle */
+  top: 50%;
+  left: 50%;
+  transform-origin: 0 0;
+}
+
+@keyframes orbParticleOrbit {
+  0%   { opacity: 0; transform: rotate(calc(var(--op-i, 0) * 90deg)) translateX(calc(min(105px, 28vw))) scale(0.8); }
+  20%  { opacity: 0.65; }
+  50%  { opacity: 0.45; transform: rotate(calc(var(--op-i, 0) * 90deg + 180deg)) translateX(calc(min(115px, 30vw))) scale(1.1); }
+  80%  { opacity: 0.65; }
+  100% { opacity: 0; transform: rotate(calc(var(--op-i, 0) * 90deg + 360deg)) translateX(calc(min(105px, 28vw))) scale(0.8); }
+}
+
+/* ── Orb breathing — per-theme animation override ───────────────── */
+/* Default orbFloat is 4s ease-in-out (defined earlier) */
+/* Purrfect Pair: slow cat-breathing, gentle sway */
+.ts-orb.orb-breathe--purrfect-pair {
+  animation: orbBreathePurrfect 3.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+@keyframes orbBreathePurrfect {
+  0%, 100% { transform: translateY(0) translateX(0) scale(1); }
+  35%       { transform: translateY(-10px) translateX(-4px) scale(1.025); }
+  65%       { transform: translateY(-8px) translateX(5px) scale(1.03); }
+}
+
+/* Moonlight Mithai: long cinematic float */
+.ts-orb.orb-breathe--moonlight-mithai {
+  animation: orbBreatheMoon 6s cubic-bezier(0.0, 0.0, 0.2, 1) infinite;
+}
+@keyframes orbBreatheMoon {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-18px) translateX(3px) scale(1.045); }
+}
+
+/* SangeetSpark: bouncy spring */
+.ts-orb.orb-breathe--sangeetspark {
+  animation: orbBounceSangeet 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+@keyframes orbBounceSangeet {
+  0%, 100% { transform: translateY(0) scale(1); }
+  45%       { transform: translateY(-16px) scale(1.06); }
+  65%       { transform: translateY(-14px) scale(0.97); }
+}
+
+/* CandyCloud: gentle bobbing */
+.ts-orb.orb-breathe--candy-cloud {
+  animation: orbBobCandy 3s ease-in-out infinite;
+}
+@keyframes orbBobCandy {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-12px) translateX(3px) scale(1.035); }
+}
+
+/* VelvetVows: slow stately rise */
+.ts-orb.orb-breathe--velvet-vows {
+  animation: orbRiseVelvet 5.5s cubic-bezier(0.0, 0.0, 0.1, 1) infinite;
+}
+@keyframes orbRiseVelvet {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-20px) scale(1.05); }
+}
+
+/* Starry Snuggle: twinkle pulse */
+.ts-orb.orb-breathe--starry-snuggle {
+  animation: orbTwinkleStarry 2.8s ease-in-out infinite;
+}
+@keyframes orbTwinkleStarry {
+  0%, 100% { transform: scale(1) translateY(0); }
+  30%       { transform: scale(1.05) translateY(-12px); }
+  60%       { transform: scale(0.97) translateY(-10px); }
+}
+
+/* Gulabo Garden: festive spin-bob */
+.ts-orb.orb-breathe--gulabo-garden {
+  animation: orbFestiveGulabo 2.0s ease-in-out infinite;
+}
+@keyframes orbFestiveGulabo {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  50%       { transform: translateY(-14px) rotate(2deg) scale(1.04); }
+}
+
+/* ButterflyBlush: light airy lift */
+.ts-orb.orb-breathe--butterfly-blush {
+  animation: orbAiryButterfly 3.2s cubic-bezier(0.34, 1.4, 0.64, 1) infinite;
+}
+@keyframes orbAiryButterfly {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%       { transform: translateY(-16px) translateX(6px) scale(1.04); }
+}
+
+/* PetalPop: snappy spring */
+.ts-orb.orb-breathe--petalpop {
+  animation: orbSpringPetal 1.8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+}
+@keyframes orbSpringPetal {
+  0%, 100% { transform: translateY(0) scale(1); }
+  40%       { transform: translateY(-14px) scale(1.055); }
+  70%       { transform: translateY(-12px) scale(0.98); }
+}
+
+/* ── Per-chapter reveal mark (theme stamp on chapter number) ─────── */
+.ch-reveal-mark {
+  display: inline-block;
+  position: absolute;
+  top: -0.2em;
+  right: -1.2em;
+  font-size: 0.85em;
+  opacity: 0;
+  transform: scale(0.4) translateY(8px);
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+  color: var(--rose);
+  line-height: 1;
+}
+/* Animate in after JS adds the element */
+.chapter-number { position: relative; }
+.ch-reveal-mark:not(.ch-reveal-mark--out) {
+  opacity: 0.75;
+  transform: scale(1) translateY(0);
+}
+.ch-reveal-mark--out {
+  opacity: 0;
+  transform: scale(1.4) translateY(-10px);
+  transition: opacity 0.45s ease, transform 0.5s ease;
+}
+
+/* SangeetSpark: chapter number bounces on reveal */
+.ts-orb.orb-breathe--sangeetspark ~ * .chapter-number,
+html[data-theme="sangeetspark"] .chapter-number {
+  /* spring-in override via odometer-flip — no separate class needed */
+}
+
+/* ── Ceremony particle + reduced-motion guards ───────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .orb-particle,
+  .ceremony-particle,
+  .ch-reveal-mark {
+    display: none !important;
+  }
+  .ts-orb[class*="orb-breathe--"] {
+    animation: orbFloat 4s ease-in-out infinite !important;
+  }
+}
