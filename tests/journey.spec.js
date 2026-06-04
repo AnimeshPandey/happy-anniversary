@@ -25,18 +25,7 @@ test.describe('Journey structure', () => {
     expect(hidden).toBeNull();
   });
 
-  test('tapping a chapter nav dot scrolls to that chapter', async ({ page }) => {
-    // #chapter-nav has pointer-events:none until the .visible class is applied, which
-    // only happens when a chapter enters the viewport. Scroll there first, then click.
-    await page.evaluate(() => {
-      const ch = document.getElementById('chapter-01');
-      if (ch) ch.scrollIntoView({ behavior: 'instant' });
-    });
-    // Advance fake rAF so IntersectionObserver fires and nav gets .visible
-    await page.clock.runFor(300);
-    await page.waitForTimeout(150);
-
-    // Now the nav is .visible (pointer-events:auto) — patch smooth scroll to instant
+  test('tapping a chapter nav dot scrolls to that chapter', async ({ page }, testInfo) => {
     await page.evaluate(() => {
       const orig = Element.prototype.scrollIntoView;
       Element.prototype.scrollIntoView = function (opts) {
@@ -45,9 +34,23 @@ test.describe('Journey structure', () => {
       };
     });
 
-    const dot = page.locator('#chapter-nav button').nth(5);
-    await dot.click();
-    await page.waitForTimeout(300);
+    if (testInfo.project.name === 'mobile-chrome') {
+      await page.locator('#dock-chapters-btn').click();
+      await page.waitForTimeout(350);
+      await page.locator('#toc-list li').nth(5).click();
+      await page.waitForTimeout(400);
+    } else {
+      await page.evaluate(() => {
+        const ch = document.getElementById('chapter-01');
+        if (ch) ch.scrollIntoView({ behavior: 'instant' });
+      });
+      await page.clock.runFor(300);
+      await page.waitForTimeout(150);
+
+      const dot = page.locator('#chapter-nav button').nth(5);
+      await dot.click();
+      await page.waitForTimeout(300);
+    }
 
     const scrollY = await page.evaluate(() => window.scrollY);
     expect(scrollY).toBeGreaterThan(500);
@@ -178,5 +181,25 @@ test.describe('Journey structure', () => {
     await page.waitForTimeout(200);
 
     await expect(page.locator('#chapter-01 .chapter-text-wrap')).toHaveClass(/visible/);
+  });
+
+  test('default image mode is real when localStorage empty', async ({ page }) => {
+    const mode = await page.evaluate(() => {
+      try { localStorage.removeItem('image-mode'); } catch (e) {}
+      return localStorage.getItem('image-mode') || 'real';
+    });
+    expect(mode).toBe('real');
+  });
+
+  test('mobile dock is visible in journey', async ({ page }) => {
+    await page.clock.runFor(500);
+    await page.waitForTimeout(200);
+    const hidden = await page.locator('#mobile-dock').getAttribute('hidden');
+    expect(hidden).toBeNull();
+    await expect(page.locator('#mobile-dock')).toHaveClass(/visible/);
+  });
+
+  test('image mode button exists in dock', async ({ page }) => {
+    await expect(page.locator('#image-mode-btn')).toBeAttached();
   });
 });

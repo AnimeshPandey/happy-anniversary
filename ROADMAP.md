@@ -438,4 +438,24 @@ Each theme has a 12-note `scale` array. `playChime()` picks root + chord notes f
 | 🟢 Later | 3D card tilt | S | Desktop only, lower reach |
 | 🟢 Later | Konami code | S | Fun but not essential |
 | 🟢 Later | Memory quiz | L | Needs content design |
+
+---
+
+## Phase 15 — Mobile Premium Polish
+**Status: DONE (2026-06-04)**
+
+| Item | Shipped |
+|------|---------|
+| Image shine/blur fix | `ph-loaded` race fix, z-index, mobile opacity fade, shimmer kill |
+| Real photos default | `localStorage` default `real`, force reload on toggle |
+| Sound reliability | Mobile gain 0.10, Begin unlock, touchend + micro-toast |
+| Missing effects | `marigold-garland`, `mint-leaves`, `elephant` modules |
+| Mobile cat cameo | Enabled on phone with smaller SVGs |
+| Photo stage | Tap-to-expand fullscreen with theme accents |
+| Mobile action dock | Share, sound, photo mode, chapters button |
+| Ken Burns + scroll burst | In-flow animation + particle burst on image entry |
+| Theme parity | `getIsMobile()` / `mobileCount(70%)`, themed frames, mood bounce |
+| Content/meta | Twenty chapters, POV fixes, `aiSrc` paths wired |
+| Prompt artifact | `prompts/phase-15-mobile-premium-claude-prompt.md` |
+| SW cache | `anniversary-v13` |
 | 🟢 Later | Map of places | M | Needs coordinate data |

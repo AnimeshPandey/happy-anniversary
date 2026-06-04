@@ -148,24 +148,27 @@ test.describe('TOC sheet', () => {
     await goToJourney(page);
   });
 
-  test('long-pressing chapter nav opens the TOC sheet', async ({ page }) => {
-    // Scroll so the chapter nav is visible in viewport
-    await page.evaluate(() => {
-      const ch = document.getElementById('chapter-01');
-      if (ch) ch.scrollIntoView({ behavior: 'instant' });
-    });
-    await page.waitForTimeout(200);
+  test('long-pressing chapter nav opens the TOC sheet', async ({ page }, testInfo) => {
+    if (testInfo.project.name === 'mobile-chrome') {
+      await page.locator('#dock-chapters-btn').click();
+      await page.waitForTimeout(350);
+    } else {
+      await page.evaluate(() => {
+        const ch = document.getElementById('chapter-01');
+        if (ch) ch.scrollIntoView({ behavior: 'instant' });
+      });
+      await page.waitForTimeout(200);
 
-    // Simulate long-press: mousedown → advance 600ms fake time → mouseup
-    const nav = page.locator('#chapter-nav');
-    const box = await nav.boundingBox();
-    if (box) {
-      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
-      await page.mouse.down();
-      await page.clock.runFor(600);
-      await page.waitForTimeout(100);
-      await page.mouse.up();
-      await page.waitForTimeout(100);
+      const nav = page.locator('#chapter-nav');
+      const box = await nav.boundingBox();
+      if (box) {
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        await page.mouse.down();
+        await page.clock.runFor(600);
+        await page.waitForTimeout(100);
+        await page.mouse.up();
+        await page.waitForTimeout(100);
+      }
     }
 
     const isHidden = await page.locator('#toc-sheet').getAttribute('hidden');

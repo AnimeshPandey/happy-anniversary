@@ -1,7 +1,7 @@
 {
   "name": "Happy Anniversary",
   "short_name": "Anniversary",
-  "description": "A journey through our first year together.",
+  "description": "A journey through our first year together. Twenty chapters of love.",
   "start_url": "/happy-anniversary/",
   "display": "standalone",
   "orientation": "portrait",

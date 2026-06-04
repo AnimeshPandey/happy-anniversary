@@ -14,7 +14,7 @@ A single-page, vanilla HTML/CSS/JS anniversary experience. No build step, no fra
 | `themes.js` | `THEMES` array — 9 theme objects each with CSS token map, sound profile, pentatonic scale, ambient note pair, ambient effects list, motion config, and particle style. |
 | `theme-controller.js` | `ThemeController` IIFE — applies tokens to `:root`, animates content swap, builds dots. |
 | `main.js` | All behaviour — init sequence, animations, observers, gestures, synthesised audio, ambient effects. One IIFE, no globals exposed. |
-| `sw.js` | Service worker — network-first for HTML navigation, cache-first for static assets. Current cache: `anniversary-v10`. |
+| `sw.js` | Service worker — network-first for HTML navigation, cache-first for static assets. Current cache: `anniversary-v13`. |
 | `manifest.json` | PWA manifest for Add to Home Screen. |
 | `THEMING.md` | Theme object reference: all token keys, motion presets, adding a new theme. |
 | `PHOTOS.md` | Step-by-step guide for adding real photos. |
@@ -51,11 +51,11 @@ HTML parsed
                     ├─ initReveal()           IntersectionObserver for .reveal elements
                     ├─ initHeart()            SVG draw + fill + confetti + dedication reveal
                     ├─ initTypewriter()       poem character animation
-                    ├─ initChapterNav()       12 fixed dot nav buttons
+                    ├─ initChapterNav()       20 fixed dot nav buttons (overflow scrollable on mobile)
                     ├─ initFloats()           desktop-only floating SVGs (skipped on mobile)
                     ├─ initChapterHeader()    scroll-direction chapter header
                     ├─ initTOCSheet()         bottom sheet + long-press to open
-                    ├─ initHiddenChapter()    triple-tap easter egg on ch12 ornament
+                    ├─ initHiddenChapter()    triple-tap easter egg on ch20 ornament
                     ├─ initOrnamentsObserver()  chapter-complete particle pop
                     ├─ initDoubleTapLove()    double-tap image → floating heart
                     ├─ initClosingSignoff()   SVG underline on signoff
@@ -65,6 +65,7 @@ HTML parsed
 showJourneyUI() (fires after portal transition):
   └─ unlockScroll()
   └─ journey fade-in
+  └─ #mobile-dock shown (share, sound, image-mode, chapters buttons) on mobile
   └─ setTimeout(initThemeAmbientEffects, 1800)   per-theme ambient effects start
 ```
 
@@ -116,7 +117,7 @@ Motion tokens are per-theme — `Moonlight Mithai` uses 1.2s cinematic reveals, 
 ```
 content.js (SITE)
   → buildOpeningPanels()  → DOM article.opening-panel × 2
-  → buildChapters()       → DOM article.chapter × 12 + #chapter-hidden
+  → buildChapters()       → DOM article.chapter × 20 + #chapter-hidden
   → buildClosing()        → DOM with closing message / signoff / .closing-author (Animesh)
   → IMAGE_SLOTS           → buildPlaceholder(imageId) → figure.image-placeholder
 
@@ -157,7 +158,7 @@ Each chapter entry triggers a two-note arpeggio using the active theme's `scale`
 
 ### Per-Theme Ambient Effects
 
-Effect modules registered in `EFFECT_MODULES` dispatch table (18 modules):
+Effect modules registered in `EFFECT_MODULES` dispatch table (21 modules):
 
 | Module name | What it does |
 |---|---|
@@ -179,10 +180,31 @@ Effect modules registered in `EFFECT_MODULES` dispatch table (18 modules):
 | `yarn-ball` | `.yarn-ball` with `yarnRoll` every 22–40s |
 | `floating-whiskers` | SVG `<line>` elements with `whiskerFloat` |
 | `cat-cameo` | Full sequence: Mishti or Barfi SVG enters, blinks, pops a heart, exits |
+| `marigold-garland` | Marigold dots drift downward with sway; continuous respawn |
+| `mint-leaves` | Mint-coloured leaf elements float up from bottom |
+| `elephant` | Single elephant silhouette emoji walks across bottom of screen |
 
 All modules follow the signature `function initX(layer) { if (reducedMotion) return function(){}; ... return function cleanup() {}; }`.
 
 `clearThemeEffects()` runs all cleanup functions, clears `#theme-effects-layer innerHTML`, and removes any firework sparks appended directly to `<body>`.
+
+### Mobile Helpers
+
+- `getIsMobile()` — live dynamic check: `window.matchMedia('(max-width: 768px)').matches`. Never called at parse time. Used to branch behaviour at runtime.
+- `mobileCount(desktop)` — returns `Math.max(1, Math.round(desktop * 0.7))` on mobile, else `desktop`. Used to reduce particle counts and spawn frequencies.
+- `markPhotoLoaded(img)` — adds `ph-loaded` class to an image immediately if already cached (`img.complete && img.naturalWidth > 0`), otherwise waits for the `load` event. Prevents the blur-to-sharp animation from sticking on cached images.
+
+### Mobile Dock (`#mobile-dock`)
+
+A single unified bottom bar shown on mobile during the journey. Contains four buttons: share (Web Share API), sound toggle, image-mode toggle (AI/real), and chapters (opens TOC sheet). Shown via `showJourneyUI()` when `getIsMobile()` is true. Desktop shows individual fixed-position buttons instead.
+
+### Photo Stage Overlay (`openPhotoStage()` / `closePhotoStage()`)
+
+Tap any chapter image wrap to open the full-screen photo stage:
+- `openPhotoStage(imageId, sourceRect)` — lazy-builds `#photo-stage` HTML on first call, sets img src and caption from the active slot, adds a per-theme accent strip, adds `body.photo-stage-open`, and adds CSS class `open` to animate in.
+- `closePhotoStage()` — removes the `open` class and `body.photo-stage-open`.
+- Closed by tapping the backdrop, pressing Escape, or swipe-down gesture.
+- Accent strip uses `photo-stage-accent--<themeId>` class for per-theme tint.
 
 ### Image Placeholders (`buildPlaceholder()`)
 
@@ -215,7 +237,7 @@ The portal background uses a radial gradient from `--gold-light` through `--rose
 
 Cache strategy: **network-first for HTML navigation** (hard reload always gets fresh page), **cache-first for static assets**.
 
-- Cache name: `anniversary-v10` — bump this on every deploy
+- Cache name: `anniversary-v13` — bump this on every deploy
 - Cached assets: `./`, `./index.html`, `./style.css`, `./main.js`, `./themes.js`, `./content.js`, `./theme-controller.js`, `./manifest.json`
 - Photos are NOT pre-cached — they load from network and get cached on first view.
 

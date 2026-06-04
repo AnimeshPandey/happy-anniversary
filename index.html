@@ -9,12 +9,12 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Anniversary">
   <title>Happy Anniversary — A Journey Through Our First Year Together</title>
-  <meta name="description" content="An intimate digital journey through one beautiful year together. Twelve chapters, one love story.">
+  <meta name="description" content="An intimate digital journey through one beautiful year together. Twenty chapters, one love story.">
   <link rel="canonical" href="https://anmshpndy.com/happy-anniversary/">
   <!-- Open Graph — rich social link previews -->
   <meta property="og:site_name"    content="Happy Anniversary">
   <meta property="og:title"        content="Happy Anniversary — One Beautiful Year">
-  <meta property="og:description"  content="An intimate journey through our first year together. Twelve chapters. One love story.">
+  <meta property="og:description"  content="An intimate journey through our first year together. Twenty chapters. One love story.">
   <meta property="og:type"         content="website">
   <meta property="og:url"          content="https://anmshpndy.com/happy-anniversary/">
   <meta property="og:locale"       content="en_GB">
@@ -41,7 +41,7 @@
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "Happy Anniversary",
-    "description": "An intimate digital journey through one beautiful year together. Twelve chapters, one love story.",
+    "description": "An intimate digital journey through one beautiful year together. Twenty chapters, one love story.",
     "url": "https://anmshpndy.com/happy-anniversary/",
     "author": {
       "@type": "Person",
@@ -267,28 +267,35 @@
   <!-- ── Fixed UI ─────────────────────────────────────────────────── -->
   <nav id="chapter-nav" aria-label="Chapter navigation" hidden></nav>
 
-  <button id="sound-toggle" type="button" aria-label="Play ambient music" hidden>
-    <!-- Speaker: muted state shows X lines; playing state shows wave arcs -->
-    <svg class="sound-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
-         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <polygon class="sound-body" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"
-               fill="currentColor" stroke="none"/>
-      <path class="sound-wave sound-wave-1" d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-      <path class="sound-wave sound-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
-      <line class="sound-muted" x1="15" y1="9"  x2="21" y2="15"/>
-      <line class="sound-muted" x1="21" y1="9"  x2="15" y2="15"/>
-    </svg>
-  </button>
+  <div id="mobile-dock" class="mobile-dock" hidden aria-label="Journey controls">
+    <button id="share-btn" type="button" aria-label="Share this experience" hidden>
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+        <polyline points="16 6 12 2 8 6"/>
+        <line x1="12" y1="2" x2="12" y2="15"/>
+      </svg>
+    </button>
+    <button id="sound-toggle" type="button" aria-label="Play ambient music" hidden>
+      <svg class="sound-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
+           xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <polygon class="sound-body" points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"
+                 fill="currentColor" stroke="none"/>
+        <path class="sound-wave sound-wave-1" d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+        <path class="sound-wave sound-wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+        <line class="sound-muted" x1="15" y1="9"  x2="21" y2="15"/>
+        <line class="sound-muted" x1="21" y1="9"  x2="15" y2="15"/>
+      </svg>
+    </button>
+    <button id="image-mode-btn" type="button" class="image-mode-btn" aria-label="Switch image mode" hidden></button>
+    <button id="dock-chapters-btn" type="button" class="dock-chapters-btn" aria-label="Open chapter list">
+      <span id="dock-chapters-label">Chapters</span>
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  </div>
 
-  <button id="share-btn" type="button" aria-label="Share this experience" hidden>
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-         stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-      <polyline points="16 6 12 2 8 6"/>
-      <line x1="12" y1="2" x2="12" y2="15"/>
-    </svg>
-  </button>
+  <div id="photo-stage" hidden aria-hidden="true"></div>
 
   <!-- TOC bottom sheet -->
   <div id="toc-sheet" hidden>

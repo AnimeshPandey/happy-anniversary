@@ -80,7 +80,7 @@ once even if both fire simultaneously.
 |-------------|---------|--------|
 | Double-tap image | Double-tap any `.chapter-image-wrap`, `.panel-image`, or `.closing-image-wrap` within 300ms | Floating `♥` heart animates up and fades. `initDoubleTapLove()`. |
 | Tap heart | Tap `.heart-wrap` at bottom of closing | Confetti burst + chime. |
-| Triple-tap ch12 ornament | Three taps within 650ms on the ornament at bottom of chapter 12 | Reveals hidden chapter `infinity`, confetti, scroll to it. `initHiddenChapter()`. |
+| Triple-tap ch20 ornament | Three taps within 650ms on the ornament at bottom of chapter 20 | Reveals hidden chapter `infinity`, confetti, scroll to it. `initHiddenChapter()`. |
 | Pull to restart | Pull down from top (>= 90px, mobile only) | Reloads page. Indicator appears during pull. `initPullToRestart()`. |
 | Shake | Shake device (accelerometer delta > 25) | Confetti burst at top-centre. Throttled to once per 1.5s. `initShakeDetection()`. iOS 13+ requires permission — silently skipped if not granted. |
 | Long-press nav bar | Hold chapter nav bar (>= 500ms) | Opens TOC bottom sheet. `initTOCSheet()`. |
@@ -88,15 +88,44 @@ once even if both fire simultaneously.
 
 ---
 
+## Mobile Dock (`#mobile-dock`)
+
+A unified bottom action bar that appears on mobile (max-width 768px) after the journey begins. Contains:
+
+| Button | Icon | Behaviour |
+|--------|------|-----------|
+| Share | `↑` | Web Share API — shares URL with page title |
+| Sound | `♩` / `♪` | Toggles ambient audio on/off, same as desktop sound button |
+| Image mode | `🎨` / `📷` | Toggles between AI illustrated and real photos; persists to `localStorage('image-mode')` |
+| Chapters | `ch N` | Opens TOC sheet; label updates to current chapter number |
+
+On desktop, these controls appear as individual fixed-position buttons (bottom-right).
+
+---
+
+## Photo Stage Overlay (`#photo-stage`)
+
+Tap any chapter image wrap to expand the photo full-screen:
+- Backdrop and close via tap, Escape key, or swipe-down
+- Image animates from source position (FLIP) to centre of screen
+- Caption drawn from the slot's `placeholder` text
+- Per-theme accent strip tinted by `photo-stage-accent--<themeId>` class
+- Double-tap still triggers floating heart (captured before stage open)
+- `openPhotoStage(imageId, sourceRect)` / `closePhotoStage()`
+
+---
+
 ## Fixed UI
 
 | Element | Visibility | Behaviour |
 |---------|-----------|-----------|
-| Sound toggle (`note` symbol) | Appears after Begin, bottom-right | Starts/stops synthesised Web Audio ambient (two sine oscillators, per-theme pitch + gain). Also unlocks AudioContext for chimes. |
-| Share button | Appears after Begin if `navigator.share` available | Calls Web Share API. |
-| Chapter nav dots | Visible while scrolling through chapters | Tap to jump to chapter. Long-press to open TOC. Hides when outside chapters section. |
+| Sound toggle (`note` symbol) | Desktop only, appears after Begin, bottom-right | Starts/stops synthesised Web Audio ambient (two sine oscillators, per-theme pitch + gain). Also unlocks AudioContext for chimes. |
+| Share button | Desktop only, appears after Begin if `navigator.share` available | Calls Web Share API. |
+| Image mode button | Desktop only, appears after Begin | Toggles AI/real photos. |
+| Mobile dock | Mobile only, appears after Begin | See Mobile Dock section above. |
+| Chapter nav dots | Visible while scrolling through chapters | Tap to jump to chapter. Long-press to open TOC. Hides when outside chapters section. Nav is horizontally scrollable on mobile. |
 | Chapter header | Visible while scrolling down through chapters | Shows `chapter number + title`. Hides on scroll-up or outside chapters. |
-| TOC sheet | Opens on long-press nav, closes on backdrop tap | Lists all 12 chapters with mood emoji. Active chapter highlighted. |
+| TOC sheet | Opens on long-press nav or dock chapters button, closes on backdrop tap | Lists all 20 chapters with mood emoji. Active chapter highlighted. |
 | Orientation overlay | Auto-shown in landscape on small screens (< 500px height) | Asks user to rotate. |
 | Pull-to-restart indicator | Shown during downward pull at top of page | Shows `Release to restart`. |
 | Sound hint toast | Appears once, 2s after journey starts | Bottom-right overlay reading "tap the note for music". Shown only once per device (keyed by `localStorage('sound-hint-shown')`). Auto-dismisses after 3.5s. |
@@ -180,4 +209,4 @@ When `prefers-reduced-motion: reduce` is set:
 - `initTypewriter()`, `animateTitleWords()`, `fireCrescendoBurst()`, `fireChapterCompletionPop()`, `fireConfetti()`, `flashThemeTransition()` all exit early
 - Days counter shows final value instantly (no count-up)
 - Slow petal cascade is skipped
-- All 18 ambient effect modules check `reducedMotion` as their first line and return an empty cleanup function immediately — no elements are created
+- All 21 ambient effect modules check `reducedMotion` as their first line and return an empty cleanup function immediately — no elements are created

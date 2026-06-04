@@ -91,9 +91,11 @@ Run this before every deploy. Check off items as you go.
 - [ ] Sound toggle button appears (bottom-right), hidden attribute removed
 - [ ] Share button appears if `navigator.share` is available (bottom-right)
 - [ ] Chapter nav dots appear (20 dots, hidden until in chapter section)
-- [ ] Image mode toggle button appears (bottom-right, above sound toggle) — shows 📷 in AI mode, 🎨 in real mode
-- [ ] Tapping image mode toggle switches all chapter images between illustrated and real photos
-- [ ] Image mode persists across page refreshes (check `localStorage.getItem('image-mode')`)
+- [ ] Mobile action dock visible: Share, Sound, Photo mode, Chapters (opens TOC)
+- [ ] Tap chapter image opens photo stage; Escape or swipe down closes
+- [ ] Real photos default (`localStorage` empty → `real`); illustrated toggle swaps AI-ready slots
+- [ ] Chapter nav dots on desktop; mobile uses dock Chapters button (20-dot strip hidden ≤768px)
+- [ ] Image mode toggle in dock — SVG icons (not emoji)
 - [ ] Sound hint toast appears 2 seconds after journey starts ("tap the note for music")
 - [ ] Sound hint toast auto-dismisses after 3.5s
 - [ ] Sound hint toast does NOT appear on second visit (check `localStorage.getItem('sound-hint-shown')`)
@@ -307,10 +309,10 @@ Run this before every deploy. Check off items as you go.
 
 ## Pre-Deploy Checklist
 
-- [ ] `CACHE` version bumped in `sw.js` (currently `anniversary-v10`, bump to v11 on next deploy)
+- [ ] `CACHE` version bumped in `sw.js` (currently `anniversary-v13`, bump to v14 on next deploy)
 - [ ] `git config user.name` returns `AnimeshPandey` before committing
 - [ ] All 9 themes verified visually in theme selector
 - [ ] No console errors in Chrome, Safari, Firefox
 - [ ] Lighthouse accessibility score >= 90
 - [ ] Deploy pushed to `gh-pages` branch or `main` (per hosting setup)
-- [ ] Run `npx playwright test` — all 150 tests should pass
+- [ ] Run `npx playwright test` — all 160 tests should pass
