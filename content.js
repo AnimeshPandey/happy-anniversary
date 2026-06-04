@@ -344,7 +344,7 @@ var IMAGE_SLOTS = {
   },
   'ch20-main': {
     aspectRatio: '16/9',
-    placeholder: 'One year, the two of you at Mysore',
+    placeholder: 'One year, the two of us at Mysore',
     src:    'assets/images/real/ch20-main.jpg',
     aiSrc:  ''
   },

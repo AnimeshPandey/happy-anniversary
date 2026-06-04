@@ -616,9 +616,30 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   line-height: 1.5;
   transition: color 0.55s ease;
 }
-.image-placeholder img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
-.image-placeholder--loaded { border-style: solid; border-color: transparent; }
+.image-placeholder img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  /* Blur-to-sharp reveal on load */
+  filter: blur(18px);
+  transform: scale(1.04);
+  transition: filter 0.7s ease, transform 0.7s ease;
+}
+.image-placeholder img.ph-loaded {
+  filter: none;
+  transform: scale(1);
+}
+.image-placeholder--loaded {
+  border-style: solid;
+  border-color: transparent;
+  box-shadow: 0 6px 28px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07);
+}
 .image-placeholder--loaded::before { display: none; }
+/* Kill shimmer on loaded photos — ::after is the shimmer layer */
+.image-placeholder--loaded::after  { display: none; }
 
 /* Reveal animations */
 .reveal { opacity: 0; transform: translateY(30px); transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out); }
@@ -953,6 +974,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   position: fixed;
   bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
   right: 1.25rem;
+  /* Ensure it's always above any overlay elements that might cover it */
+  z-index: 55 !important;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -1035,7 +1058,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ── Image mode toggle button ────────────────────────────────────── */
 .image-mode-btn {
   position: fixed;
-  bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
+  /* Sit cleanly above the sound button (48px height + 0.75rem gap) */
+  bottom: calc(1.5rem + 48px + 0.75rem + env(safe-area-inset-bottom, 0px));
   right: 1.25rem;
   width: 44px;
   height: 44px;
@@ -1049,11 +1073,12 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 50;
+  z-index: 55;
   box-shadow: 0 4px 16px rgba(0,0,0,0.10);
   cursor: pointer;
   touch-action: manipulation;
   user-select: none;
+  -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   opacity: 0;
   transform: scale(0.8) translateY(8px);
@@ -1085,7 +1110,15 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s ease, transform 0.4s var(--ease-spring), border-color 0.55s ease;
+  /* Prevent nav from growing wide enough to overlap the sound/share buttons */
+  max-width: calc(100vw - 160px);
+  overflow-x: auto;
+  overflow-y: visible;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE */
+  scroll-behavior: smooth;
 }
+#chapter-nav::-webkit-scrollbar { display: none; }
 #chapter-nav.visible {
   opacity: 1;
   pointer-events: auto;

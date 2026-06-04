@@ -471,6 +471,9 @@
       if (newSrc) {
         fig.classList.add('image-placeholder--loaded');
         if (existing) {
+          /* Blur-to-sharp crossfade on mode switch */
+          existing.classList.remove('ph-loaded');
+          existing.onload = function () { existing.classList.add('ph-loaded'); };
           existing.src = newSrc;
         } else {
           /* Replace placeholder icon/text with real image */
@@ -479,10 +482,11 @@
           if (phIcon) phIcon.remove();
           if (phText) phText.remove();
           var img = document.createElement('img');
-          img.src    = newSrc;
-          img.alt    = slot.placeholder;
+          img.alt       = slot.placeholder;
           img.className = 'ph-photo';
           img.loading   = 'lazy';
+          img.onload = function () { img.classList.add('ph-loaded'); };
+          img.src = newSrc;
           fig.insertBefore(img, fig.firstChild);
         }
       } else {
@@ -529,8 +533,15 @@
     }
     if (navEl) navEl.removeAttribute('hidden');
 
-    /* Image mode toggle button */
+    /* Image mode toggle button — guard against duplicates on replay */
     (function () {
+      if (document.getElementById('image-mode-btn')) {
+        /* Button already exists (replay path) — just re-show it */
+        var existing = document.getElementById('image-mode-btn');
+        existing.classList.remove('visible');
+        setTimeout(function () { existing.classList.add('visible'); }, 600);
+        return;
+      }
       var modeBtn = document.createElement('button');
       modeBtn.id = 'image-mode-btn';
       modeBtn.className = 'image-mode-btn';
@@ -634,10 +645,12 @@
     if (imgSrc) {
       fig.classList.add('image-placeholder--loaded');
       var img = document.createElement('img');
-      img.src       = imgSrc;
       img.alt       = slot.placeholder;
       img.className = 'ph-photo';
       img.loading   = 'lazy';
+      /* Blur-to-sharp reveal — class 'ph-loaded' applied by onload handler */
+      img.onload = function () { img.classList.add('ph-loaded'); };
+      img.src = imgSrc;   /* set src AFTER onload to avoid race on cached images */
       fig.appendChild(img);
     } else {
       var ns  = 'http://www.w3.org/2000/svg';
@@ -1681,6 +1694,18 @@
         if (idx === -1) return;
         dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
         nav.classList.add('visible');
+
+        /* Scroll active dot into view within the (possibly scrollable) nav pill */
+        var activeDot = dots[idx];
+        if (activeDot) {
+          var scrollTarget = activeDot.offsetLeft - (nav.clientWidth / 2) + (activeDot.clientWidth / 2);
+          if (typeof nav.scrollTo === 'function') {
+            nav.scrollTo({ left: scrollTarget, behavior: 'smooth' });
+          } else {
+            nav.scrollLeft = scrollTarget;
+          }
+        }
+
         if (idx !== lastChimeIdx) {
           lastChimeIdx = idx;
           playChime(idx);
