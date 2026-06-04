@@ -14,7 +14,7 @@ var SITE = {
       },
       {
         id: 'panel-2',
-        text: 'From the outside it looked unremarkable: two people, one quiet start. But something was already different. I already knew.',
+        text: 'From the outside it looked unremarkable: the two of us, one quiet start. But something was already different. I already knew.',
         imageId: 'ceremony-bg'
       }
     ]
@@ -220,25 +220,25 @@ var IMAGE_SLOTS = {
     aspectRatio: '3/4',
     placeholder: 'Wedding portrait under the golden arch',
     src:    'assets/images/real/hero-main.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/hero-main.jpg'
   },
   'ceremony-bg': {
     aspectRatio: '16/9',
     placeholder: 'The sindoor ceremony, warm and intimate',
     src:    'assets/images/real/ceremony-bg.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/ceremony-bg.jpg'
   },
   'ch1-main': {
     aspectRatio: '4/3',
     placeholder: 'How it started, a park afternoon',
     src:    'assets/images/real/ch1-main.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/ch1-main.jpg'
   },
   'ch2-main': {
     aspectRatio: '16/9',
     placeholder: 'That smile in the garden',
     src:    'assets/images/real/ch2-main.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/ch2-main.jpg'
   },
   'ch3-main': {
     aspectRatio: '4/3',
@@ -256,19 +256,19 @@ var IMAGE_SLOTS = {
     aspectRatio: '16/9',
     placeholder: 'The sacred fire, the seven circles',
     src:    'assets/images/real/ch5-main.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/ch5-main.jpg'
   },
   'ch6-main': {
     aspectRatio: '16/9',
     placeholder: 'The sindoor, that sacred moment',
     src:    'assets/images/real/ch6-main.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/ch6-main.jpg'
   },
   'ch7-main': {
     aspectRatio: '3/4',
     placeholder: 'In wedding white and red, the chandelier above',
     src:    'assets/images/real/ch7-main.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/ch7-main.jpg'
   },
   'ch8-main': {
     aspectRatio: '16/9',
@@ -286,7 +286,7 @@ var IMAGE_SLOTS = {
     aspectRatio: '4/3',
     placeholder: 'Above the clouds, the crochet jacket',
     src:    'assets/images/real/ch10-main.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/ch10-main.jpg'
   },
   'ch11-main': {
     aspectRatio: '4/3',
@@ -322,7 +322,7 @@ var IMAGE_SLOTS = {
     aspectRatio: '3/4',
     placeholder: 'Dressed in matching red, the mirror',
     src:    'assets/images/real/ch16-main.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/ch16-main.jpg'
   },
   'ch17-main': {
     aspectRatio: '3/4',
@@ -334,7 +334,7 @@ var IMAGE_SLOTS = {
     aspectRatio: '4/3',
     placeholder: 'In the dark together, the cinema',
     src:    'assets/images/real/ch18-main.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/ch18-main.jpg'
   },
   'ch19-main': {
     aspectRatio: '4/3',
@@ -346,18 +346,18 @@ var IMAGE_SLOTS = {
     aspectRatio: '16/9',
     placeholder: 'One year, the two of us at Mysore',
     src:    'assets/images/real/ch20-main.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/ch20-main.jpg'
   },
   'closing-hero': {
     aspectRatio: '3/4',
     placeholder: 'Walking toward the camera with Mishti and Barfi',
     src:    'assets/images/real/closing-hero.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/closing-hero.jpg'
   },
   'hidden-ch': {
     aspectRatio: '4/3',
     placeholder: 'The one, the only',
     src:    'assets/images/real/hidden-ch.jpg',
-    aiSrc:  ''
+    aiSrc:  'assets/images/ai/hidden-ch.jpg'
   }
 };
