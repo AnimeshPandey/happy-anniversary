@@ -3577,3 +3577,486 @@ body::after {
   #chapter-01 .chapter-body::first-letter { font-size: 4.6em; }
   .chapter:not(#chapter-hidden)::before   { display: none; }
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   PHASE 21 — DEEP THEME DIFFERENTIATION
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── Floral dividers respond to the active theme ──────────────────── */
+.fd-line       { stroke: var(--gold)       !important; transition: stroke 0.55s ease; }
+.fd-petal      { fill:   var(--rose-light) !important; transition: fill   0.55s ease; }
+.fd-center     { fill:   var(--rose)       !important; transition: fill   0.55s ease; }
+.fd-center-dot { fill:   var(--gold)       !important; transition: fill   0.55s ease; }
+.fd-accent     { fill:   var(--gold)       !important; transition: fill   0.55s ease; }
+
+/* ── Orb: give it a stacking context for ::before overlays ────────── */
+.ts-orb { position: relative; overflow: hidden; }
+
+/* ── Per-theme orb gradients ──────────────────────────────────────── */
+
+[data-theme="petalpop"] .ts-orb {
+  background: radial-gradient(circle at 38% 32%,
+    #fff8f0 0%, #FF85C1 28%, #F5547A 58%, #C73870 100%);
+  box-shadow: 0 0 80px 24px rgba(245,84,122,0.55),
+              0 0 160px 60px rgba(245,84,122,0.18);
+}
+
+[data-theme="moonlight-mithai"] .ts-orb {
+  background: radial-gradient(circle at 62% 32%,
+    rgba(220,210,255,0.9) 0%, #8B7DD4 25%, #5E4FA8 60%, #1E1040 100%);
+  box-shadow: 0 0 80px 24px rgba(139,125,212,0.50),
+              0 0 160px 70px rgba(100,80,200,0.15);
+}
+[data-theme="moonlight-mithai"] .ts-orb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(ellipse 55% 40% at 68% 30%,
+    rgba(255,255,255,0.42) 0%, transparent 55%);
+}
+
+[data-theme="candy-cloud"] .ts-orb {
+  background: radial-gradient(circle at 40% 35%,
+    #fff4fe 0%, #FFADD6 35%, #FF85C1 65%, #D45A90 100%);
+  box-shadow: 0 0 70px 20px rgba(255,133,193,0.48),
+              0 0 140px 55px rgba(255,133,193,0.14);
+}
+
+[data-theme="gulabo-garden"] .ts-orb {
+  background: radial-gradient(circle at 42% 30%,
+    #FFE8A0 0%, #FDBA60 30%, #E8850A 58%, #C41E3A 85%, #6B0000 100%);
+  box-shadow: 0 0 90px 28px rgba(196,30,58,0.55),
+              0 0 180px 70px rgba(232,133,10,0.20);
+}
+
+[data-theme="starry-snuggle"] .ts-orb {
+  background: radial-gradient(circle at 50% 45%,
+    #C4B5F4 0%, #7C3AED 30%, #3B1A7A 62%, #0A0418 100%);
+  box-shadow: 0 0 100px 30px rgba(124,58,237,0.55),
+              0 0 200px 80px rgba(90,40,180,0.18);
+}
+[data-theme="starry-snuggle"] .ts-orb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 48%,
+    rgba(196,181,244,0.25) 0%, transparent 50%);
+}
+
+[data-theme="butterfly-blush"] .ts-orb {
+  background: radial-gradient(circle at 40% 36%,
+    #e8fff4 0%, #68D391 30%, #E879A0 65%, #B85080 100%);
+  box-shadow: 0 0 70px 22px rgba(232,121,160,0.44),
+              0 0 150px 60px rgba(104,211,145,0.16);
+}
+
+[data-theme="sangeetspark"] .ts-orb {
+  background: radial-gradient(circle at 42% 36%,
+    #FFFBEB 0%, #FDE68A 18%, #F59E0B 45%, #92400E 72%, #1A0A00 100%);
+  box-shadow: 0 0 100px 32px rgba(245,158,11,0.72),
+              0 0 220px 90px rgba(245,158,11,0.22);
+  animation: orbFloat 3.5s ease-in-out infinite,
+             sangeetspark-pulse 2s ease-in-out infinite;
+}
+@keyframes sangeetspark-pulse {
+  0%, 100% { box-shadow: 0 0 100px 32px rgba(245,158,11,0.72),  0 0 220px 90px  rgba(245,158,11,0.22); }
+  50%       { box-shadow: 0 0 130px 48px rgba(245,158,11,0.88), 0 0 280px 110px rgba(245,158,11,0.30); }
+}
+
+[data-theme="velvet-vows"] .ts-orb {
+  background: radial-gradient(circle at 44% 34%,
+    #F0D8B0 0%, #BF8C5A 30%, #8B1152 62%, #3A0020 88%, #1A000E 100%);
+  box-shadow: 0 0 90px 26px rgba(139,17,82,0.52),
+              0 0 180px 70px rgba(191,140,90,0.18);
+}
+[data-theme="velvet-vows"] .ts-orb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(240,216,176,0.28);
+}
+
+/* ── Per-theme chapter reveal animations ──────────────────────────── */
+
+/* PetalPop — energetic spring bounce */
+[data-theme="petalpop"] .reveal,
+[data-theme="petalpop"] .reveal-left,
+[data-theme="petalpop"] .reveal-right {
+  opacity: 0;
+  transform: translateY(38px) scale(0.96);
+}
+[data-theme="petalpop"] .reveal.visible,
+[data-theme="petalpop"] .reveal-left.visible,
+[data-theme="petalpop"] .reveal-right.visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.55s cubic-bezier(0.34,1.56,0.64,1),
+              transform 0.55s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* Moonlight Mithai — horizontal drift + blur clear */
+[data-theme="moonlight-mithai"] .reveal,
+[data-theme="moonlight-mithai"] .reveal-left,
+[data-theme="moonlight-mithai"] .reveal-right {
+  opacity: 0;
+  transform: translateX(-28px);
+  filter: blur(5px);
+  will-change: opacity, transform, filter;
+}
+[data-theme="moonlight-mithai"] .reveal.visible,
+[data-theme="moonlight-mithai"] .reveal-left.visible,
+[data-theme="moonlight-mithai"] .reveal-right.visible {
+  opacity: 1;
+  transform: none;
+  filter: blur(0);
+  transition: opacity 1.2s ease,
+              transform 1.2s cubic-bezier(0.0,0.0,0.2,1),
+              filter 0.8s ease;
+}
+
+/* CandyCloud — gentle float with scale bounce */
+[data-theme="candy-cloud"] .reveal,
+[data-theme="candy-cloud"] .reveal-left,
+[data-theme="candy-cloud"] .reveal-right {
+  opacity: 0;
+  transform: translateY(22px) scale(0.97);
+}
+[data-theme="candy-cloud"] .reveal.visible,
+[data-theme="candy-cloud"] .reveal-left.visible,
+[data-theme="candy-cloud"] .reveal-right.visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.6s cubic-bezier(0.34,1.56,0.64,1),
+              transform 0.6s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+/* Gulabo Garden — bold fast slide from bottom */
+[data-theme="gulabo-garden"] .reveal,
+[data-theme="gulabo-garden"] .reveal-left,
+[data-theme="gulabo-garden"] .reveal-right {
+  opacity: 0;
+  transform: translateY(44px);
+}
+[data-theme="gulabo-garden"] .reveal.visible,
+[data-theme="gulabo-garden"] .reveal-left.visible,
+[data-theme="gulabo-garden"] .reveal-right.visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.45s cubic-bezier(0.4,0.0,0.2,1),
+              transform 0.45s cubic-bezier(0.4,0.0,0.2,1);
+}
+
+/* Starry Snuggle — deep space zoom from dark */
+[data-theme="starry-snuggle"] .reveal,
+[data-theme="starry-snuggle"] .reveal-left,
+[data-theme="starry-snuggle"] .reveal-right {
+  opacity: 0;
+  transform: scale(0.90);
+}
+[data-theme="starry-snuggle"] .reveal.visible,
+[data-theme="starry-snuggle"] .reveal-left.visible,
+[data-theme="starry-snuggle"] .reveal-right.visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity 1.0s cubic-bezier(0.0,0.0,0.2,1),
+              transform 1.0s cubic-bezier(0.0,0.0,0.2,1);
+}
+
+/* Butterfly Blush — diagonal flutter */
+[data-theme="butterfly-blush"] .reveal,
+[data-theme="butterfly-blush"] .reveal-left,
+[data-theme="butterfly-blush"] .reveal-right {
+  opacity: 0;
+  transform: translate(-18px, 18px) rotate(-1.5deg);
+}
+[data-theme="butterfly-blush"] .reveal.visible,
+[data-theme="butterfly-blush"] .reveal-left.visible,
+[data-theme="butterfly-blush"] .reveal-right.visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.7s cubic-bezier(0.34,1.4,0.64,1),
+              transform 0.7s cubic-bezier(0.34,1.4,0.64,1);
+}
+
+/* SangeetSpark — electric snap-in */
+[data-theme="sangeetspark"] .reveal,
+[data-theme="sangeetspark"] .reveal-left,
+[data-theme="sangeetspark"] .reveal-right {
+  opacity: 0;
+  transform: translateY(30px);
+}
+[data-theme="sangeetspark"] .reveal.visible,
+[data-theme="sangeetspark"] .reveal-left.visible,
+[data-theme="sangeetspark"] .reveal-right.visible {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.32s cubic-bezier(0.4,0.0,0.2,1),
+              transform 0.32s cubic-bezier(0.4,0.0,0.2,1);
+}
+
+/* VelvetVows — cinematic curtain wipe (clip-path top→bottom) */
+[data-theme="velvet-vows"] .reveal,
+[data-theme="velvet-vows"] .reveal-left,
+[data-theme="velvet-vows"] .reveal-right {
+  opacity: 1;
+  clip-path: inset(0 0 100% 0);
+  transform: none;
+  transition: clip-path 1.5s cubic-bezier(0.0,0.0,0.1,1);
+}
+[data-theme="velvet-vows"] .reveal.visible,
+[data-theme="velvet-vows"] .reveal-left.visible,
+[data-theme="velvet-vows"] .reveal-right.visible {
+  opacity: 1;
+  clip-path: inset(0 0 0% 0);
+  transform: none;
+}
+/* Children visible immediately inside the curtain wipe */
+[data-theme="velvet-vows"] .reveal-child {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* ── Per-theme background textures on #chapters ───────────────────── */
+#chapters { position: relative; isolation: isolate; }
+
+[data-theme="petalpop"] #chapters::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--rose-light) 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+  opacity: 0.10;
+  pointer-events: none;
+  z-index: -1;
+}
+
+[data-theme="moonlight-mithai"] #chapters::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, var(--gold) 1px, transparent 1px),
+    radial-gradient(circle, var(--rose-light) 1px, transparent 1px);
+  background-size: 64px 64px, 42px 42px;
+  background-position: 0 0, 22px 32px;
+  opacity: 0.09;
+  pointer-events: none;
+  z-index: -1;
+}
+
+[data-theme="starry-snuggle"] #chapters::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, var(--rose-mid) 1px, transparent 1px),
+    radial-gradient(circle, var(--gold) 1px, transparent 1px);
+  background-size: 48px 48px, 80px 80px;
+  background-position: 0 0, 24px 40px;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: -1;
+}
+
+[data-theme="candy-cloud"] #chapters::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--rose-light) 2px, transparent 2px);
+  background-size: 38px 38px;
+  opacity: 0.09;
+  pointer-events: none;
+  z-index: -1;
+}
+
+[data-theme="sangeetspark"] #chapters::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(45deg,  var(--rose-light) 1px, transparent 1px),
+    linear-gradient(-45deg, var(--rose-light) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: -1;
+}
+
+[data-theme="velvet-vows"] #chapters::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 28px,
+    var(--gold-light) 28px,
+    var(--gold-light) 29px
+  );
+  opacity: 0.055;
+  pointer-events: none;
+  z-index: -1;
+}
+
+[data-theme="gulabo-garden"] #chapters::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 18px,
+    var(--rose-light) 18px,
+    var(--rose-light) 19px
+  );
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: -1;
+}
+
+[data-theme="butterfly-blush"] #chapters::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, var(--gold) 1px, transparent 1px),
+    radial-gradient(circle, var(--rose-light) 1.5px, transparent 1.5px);
+  background-size: 50px 50px, 35px 35px;
+  background-position: 0 0, 17px 25px;
+  opacity: 0.10;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ── Per-theme image frame treatments ─────────────────────────────── */
+
+[data-theme="purrfect-pair"] .image-placeholder {
+  border-radius: 18px !important;
+  border: 1px solid rgba(155,180,220,0.25);
+  box-shadow: 0 6px 32px rgba(155,180,220,0.28), 0 2px 8px rgba(0,0,0,0.06) !important;
+}
+[data-theme="purrfect-pair"] .image-placeholder--loaded {
+  box-shadow: 0 8px 40px rgba(155,180,220,0.36), 0 2px 10px rgba(0,0,0,0.07) !important;
+}
+
+[data-theme="petalpop"] .image-placeholder {
+  border: 2px solid var(--rose-light);
+  box-shadow: 0 6px 28px rgba(245,84,122,0.18), 0 1px 4px rgba(0,0,0,0.05) !important;
+}
+[data-theme="petalpop"] .image-placeholder--loaded {
+  box-shadow: 0 8px 36px rgba(245,84,122,0.25), 0 2px 8px rgba(0,0,0,0.06) !important;
+}
+
+[data-theme="moonlight-mithai"] .image-placeholder {
+  border: 1px solid rgba(180,160,216,0.35);
+  box-shadow: 0 0 40px rgba(139,125,212,0.14), 0 4px 20px rgba(0,0,0,0.08) !important;
+}
+
+[data-theme="starry-snuggle"] .image-placeholder {
+  border: 1.5px solid rgba(124,58,237,0.30);
+  box-shadow: 0 0 36px rgba(124,58,237,0.16), 0 8px 32px rgba(0,0,0,0.18) !important;
+}
+[data-theme="starry-snuggle"] .image-placeholder--loaded {
+  box-shadow: 0 0 48px rgba(124,58,237,0.22), 0 12px 44px rgba(0,0,0,0.22) !important;
+}
+
+[data-theme="sangeetspark"] .image-placeholder {
+  border: 3px solid var(--rose);
+  box-shadow: 0 0 28px rgba(245,158,11,0.38), 0 8px 40px rgba(0,0,0,0.45) !important;
+}
+[data-theme="sangeetspark"] .image-placeholder--loaded {
+  box-shadow: 0 0 40px rgba(245,158,11,0.48), 0 12px 48px rgba(0,0,0,0.50) !important;
+}
+
+[data-theme="velvet-vows"] .image-placeholder {
+  border: 2px solid var(--gold);
+  box-shadow:
+    0 0 0 1px rgba(224,200,160,0.25),
+    0 12px 48px rgba(0,0,0,0.28),
+    inset 0 1px 0 rgba(240,220,176,0.15) !important;
+}
+[data-theme="velvet-vows"] .image-placeholder--loaded {
+  box-shadow:
+    0 0 0 1px rgba(224,200,160,0.32),
+    0 16px 60px rgba(0,0,0,0.32) !important;
+}
+
+/* ── Per-theme typography variations ─────────────────────────────── */
+
+[data-theme="sangeetspark"] .chapter-title {
+  letter-spacing: 0.03em;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--rose-light);
+}
+[data-theme="sangeetspark"] .chapter-body  { font-style: normal; }
+[data-theme="sangeetspark"] .chapter-ornament-dot {
+  background: var(--rose);
+  box-shadow: 0 0 10px var(--rose);
+}
+
+[data-theme="velvet-vows"] .chapter-title {
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  font-style: normal;
+}
+[data-theme="velvet-vows"] .chapter-body {
+  line-height: 2.12;
+  font-style: normal;
+  letter-spacing: 0.005em;
+}
+
+[data-theme="moonlight-mithai"] .chapter-body {
+  opacity: 0.88;
+  letter-spacing: 0.012em;
+}
+
+[data-theme="starry-snuggle"] .chapter:not(#chapter-hidden)::before {
+  font-size: clamp(6rem, 30vw, 14rem);
+  opacity: 0.030;
+}
+
+[data-theme="petalpop"] .chapter-title {
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+/* ── Per-theme scroll progress bar ───────────────────────────────── */
+[data-theme="sangeetspark"] #scroll-progress {
+  width: 4px;
+  box-shadow: 0 0 6px var(--rose-light);
+}
+[data-theme="velvet-vows"] #scroll-progress { width: 4px; }
+[data-theme="starry-snuggle"] #scroll-progress {
+  background: linear-gradient(to bottom, var(--rose-light), var(--rose), var(--rose-dark));
+}
+
+/* ── Prose line-length cap for readability ───────────────────────── */
+.chapter-body { max-width: 65ch; }
+
+/* ── Expanded touch targets on theme dots ────────────────────────── */
+.ts-dot { position: relative; }
+.ts-dot::before {
+  content: '';
+  position: absolute;
+  inset: -10px -6px;
+}
+
+/* ── Orb active spring-back (tactile mobile feel) ────────────────── */
+.ts-orb-wrap:active .ts-orb {
+  transform: scale(0.93) !important;
+  transition: transform 0.12s cubic-bezier(0.0,0.0,0.2,1) !important;
+}
+
+/* ── Phase 21 reduced-motion guards ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme] .reveal,
+  [data-theme] .reveal-left,
+  [data-theme] .reveal-right { filter: none !important; clip-path: none !important; }
+  [data-theme="sangeetspark"] .ts-orb { animation: orbFloat 4s ease-in-out infinite !important; }
+}

@@ -43,6 +43,20 @@
     };
   }
 
+  function wirePhotoLoadFallback(img, fig, fallbackSrc) {
+    img.onload = function () { img.classList.add('ph-loaded'); };
+    img.onerror = function () {
+      if (fallbackSrc && !img.dataset.triedFallback) {
+        img.dataset.triedFallback = '1';
+        img.classList.remove('ph-loaded');
+        img.src = fallbackSrc;
+      } else {
+        img.classList.add('ph-loaded');
+        if (fig) fig.classList.remove('image-placeholder--loaded');
+      }
+    };
+  }
+
   function setPhotoSrc(img, src) {
     if (!src || !img) return;
     img.classList.remove('ph-loaded');
@@ -543,11 +557,12 @@
       var slot = IMAGE_SLOTS[imageId];
       if (!slot) return;
       var newSrc = getSlotSrc(imageId);
+      var fallbackSrc = (_imageMode === 'ai' && (slot.src || '') !== newSrc) ? (slot.src || '') : '';
       var existing = fig.querySelector('img.ph-photo');
       if (newSrc) {
         fig.classList.add('image-placeholder--loaded');
         if (existing) {
-          wirePhotoLoad(existing, fig);
+          wirePhotoLoadFallback(existing, fig, fallbackSrc);
           setPhotoSrc(existing, newSrc);
         } else {
           var phIcon = fig.querySelector('.ph-icon');
@@ -558,7 +573,7 @@
           img.alt       = slot.placeholder;
           img.className = 'ph-photo';
           img.loading   = 'lazy';
-          wirePhotoLoad(img, fig);
+          wirePhotoLoadFallback(img, fig, fallbackSrc);
           fig.insertBefore(img, fig.firstChild);
           setPhotoSrc(img, newSrc);
         }
@@ -728,7 +743,8 @@
       img.alt       = slot.placeholder;
       img.className = 'ph-photo';
       img.loading   = 'lazy';
-      wirePhotoLoad(img, fig);
+      var bpFallback = (_imageMode === 'ai' && (slot.src || '') !== imgSrc) ? (slot.src || '') : '';
+      wirePhotoLoadFallback(img, fig, bpFallback);
       fig.appendChild(img);
       setPhotoSrc(img, imgSrc);
     } else {
@@ -1195,7 +1211,7 @@
           if (chArticle) spawnChapterRevealMark(chArticle);
         }
       });
-    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    }, { threshold: 0.12, rootMargin: '0px 0px -3% 0px' });
 
     document.querySelectorAll('.reveal').forEach(function (el) { observer.observe(el); });
   }
