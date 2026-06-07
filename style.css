@@ -4332,3 +4332,140 @@ body::after {
     animation: none !important;
   }
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   PHASE 23 — Performance · Dark theme fixes · Polish
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── P1. Kill shimmer GPU layer once photos load ─────────────────── */
+.image-placeholder:has(img.ph-loaded)::after {
+  animation: none;
+  display: none;
+}
+
+/* ── P2. Remove backdrop-filter from always-visible mobile elements ── */
+/* #chapter-header blurs over scrolling content every frame; .mobile-dock
+   is always composited. Both gone on mobile, solid opaque backgrounds
+   substituted. Desktop keeps the blur since it has the GPU headroom. */
+@media (max-width: 768px) {
+  #chapter-header {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255,255,255,0.97);
+  }
+  .mobile-dock {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(255,255,255,0.97);
+  }
+  [data-theme="sangeetspark"]     .mobile-dock { background: rgba(42,14,0,0.97); }
+  [data-theme="velvet-vows"]      .mobile-dock { background: rgba(20,0,16,0.97); }
+  [data-theme="moonlight-mithai"] .mobile-dock { background: rgba(12,8,26,0.97); }
+  [data-theme="starry-snuggle"]   .mobile-dock { background: rgba(10,6,28,0.97); }
+}
+
+/* ── P3. Scope moon-glow will-change to visible state only ───────── */
+.moon-glow         { will-change: auto; }
+.moon-glow.visible { will-change: opacity, transform; }
+
+/* ── T1. Dark theme chapter header ───────────────────────────────── */
+/* Hardcoded rgba(255,255,255,0.88) produced a jarring white frosted band
+   while scrolling through VelvetVows / Moonlight / Starry / SangeetSpark. */
+[data-theme="velvet-vows"] #chapter-header {
+  background: rgba(19,0,16,0.94);
+  border-bottom-color: rgba(191,140,90,0.28);
+}
+[data-theme="velvet-vows"] #chapter-header-title { color: var(--rose-light); }
+
+[data-theme="moonlight-mithai"] #chapter-header {
+  background: rgba(10,6,26,0.94);
+  border-bottom-color: rgba(139,125,212,0.28);
+}
+
+[data-theme="starry-snuggle"] #chapter-header {
+  background: rgba(8,4,26,0.94);
+  border-bottom-color: rgba(124,58,237,0.28);
+}
+
+[data-theme="sangeetspark"] #chapter-header {
+  background: rgba(26,10,0,0.94);
+  border-bottom-color: rgba(245,158,11,0.30);
+}
+
+/* ── T2. Chapter separator visibility on dark backgrounds ────────── */
+/* Gold hairline at 0.14 opacity nearly disappears on #0A0614 / #08041A */
+[data-theme="velvet-vows"] .chapter,
+[data-theme="moonlight-mithai"] .chapter,
+[data-theme="starry-snuggle"] .chapter,
+[data-theme="sangeetspark"] .chapter {
+  border-bottom-color: rgba(212,160,23,0.24);
+}
+
+/* ── T3. Text rendering on dark themes ───────────────────────────── */
+/* Phase 18 ink-bleed shadow (dark-on-light) is backwards for light text
+   on dark backgrounds. Replace with a neutral vertical depth shadow. */
+[data-theme="velvet-vows"] .chapter-body,
+[data-theme="velvet-vows"] .panel-text,
+[data-theme="velvet-vows"] .closing-message,
+[data-theme="moonlight-mithai"] .chapter-body,
+[data-theme="moonlight-mithai"] .panel-text,
+[data-theme="moonlight-mithai"] .closing-message,
+[data-theme="starry-snuggle"] .chapter-body,
+[data-theme="starry-snuggle"] .panel-text,
+[data-theme="starry-snuggle"] .closing-message,
+[data-theme="sangeetspark"] .chapter-body,
+[data-theme="sangeetspark"] .panel-text,
+[data-theme="sangeetspark"] .closing-message {
+  text-shadow: 0 1px 10px rgba(0,0,0,0.20);
+}
+
+/* ── E1. Reading-zone glow for dark chapters ─────────────────────── */
+/* Phase 20 warm-cream radial vanishes on dark themes (--cream ≈ --bg).
+   Restore a faint reading-zone depth with a near-white radial. */
+[data-theme="velvet-vows"] #chapters,
+[data-theme="moonlight-mithai"] #chapters,
+[data-theme="starry-snuggle"] #chapters {
+  background-image: radial-gradient(
+    ellipse 100% 22% at 50% 5%,
+    rgba(255,255,255,0.024) 0%,
+    transparent 60%
+  );
+}
+[data-theme="sangeetspark"] #chapters {
+  background-image: radial-gradient(
+    ellipse 100% 22% at 50% 5%,
+    rgba(245,158,11,0.06) 0%,
+    transparent 60%
+  );
+}
+
+/* ── E2. Cursor trail petals glow on dark themes (desktop) ───────── */
+[data-theme="velvet-vows"] .cursor-petal,
+[data-theme="moonlight-mithai"] .cursor-petal,
+[data-theme="starry-snuggle"] .cursor-petal,
+[data-theme="sangeetspark"] .cursor-petal {
+  box-shadow: 0 0 7px 2px var(--rose-light);
+}
+
+/* ── E3. Floral divider ambient pulse on dark themes ─────────────── */
+@keyframes dividerGoldPulse23 {
+  0%, 100% { filter: none; }
+  50%       { filter: drop-shadow(0 0 7px rgba(212,160,23,0.68)); }
+}
+@keyframes dividerPurplePulse23 {
+  0%, 100% { filter: none; }
+  50%       { filter: drop-shadow(0 0 6px rgba(167,139,250,0.62)); }
+}
+[data-theme="velvet-vows"] .floral-divider,
+[data-theme="sangeetspark"] .floral-divider {
+  animation: dividerGoldPulse23 5s ease-in-out infinite;
+}
+[data-theme="moonlight-mithai"] .floral-divider,
+[data-theme="starry-snuggle"] .floral-divider {
+  animation: dividerPurplePulse23 4.5s ease-in-out infinite;
+}
+
+/* ── Phase 23 reduced-motion guards ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .floral-divider { animation: none !important; }
+}
