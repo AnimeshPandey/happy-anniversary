@@ -4060,3 +4060,275 @@ body::after {
   [data-theme] .reveal-right { filter: none !important; clip-path: none !important; }
   [data-theme="sangeetspark"] .ts-orb { animation: orbFloat 4s ease-in-out infinite !important; }
 }
+
+/* ════════════════════════════════════════════════════════════════════
+   PHASE 22 — Shine fix · Performance · Deep theme immersion
+   ════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. Photos above the fixed vignette overlay ───────────────────── */
+#journey {
+  position: relative;
+  z-index: 3;
+  isolation: isolate;
+}
+
+/* Scroll-vignette was overlaying photos — it is now disabled in JS.
+   Hide the element in case any lingering instance remains. */
+#scroll-vignette { display: none !important; }
+
+/* ── 2. Performance — kill Ken Burns + will-change on mobile ─────── */
+@media (max-width: 768px) {
+  .chapter-image-wrap.ken-burns-active .image-placeholder img.ph-loaded {
+    animation: none;
+    will-change: auto;
+  }
+}
+
+/* ── 3. Moonlight Mithai blur — only will-change when animating ──── */
+/* Move will-change to the visible state so it's removed after
+   transition completes (browsers drop it once stable). */
+[data-theme="moonlight-mithai"] .reveal,
+[data-theme="moonlight-mithai"] .reveal-left,
+[data-theme="moonlight-mithai"] .reveal-right {
+  will-change: auto; /* override the Phase 21 persistent will-change */
+}
+[data-theme="moonlight-mithai"] .reveal.visible,
+[data-theme="moonlight-mithai"] .reveal-left.visible,
+[data-theme="moonlight-mithai"] .reveal-right.visible {
+  will-change: opacity, transform, filter;
+}
+
+/* ── 4. Dark-theme vignette — edges look better darker ───────────── */
+[data-theme="velvet-vows"] #vignette-layer,
+[data-theme="moonlight-mithai"] #vignette-layer,
+[data-theme="starry-snuggle"] #vignette-layer,
+[data-theme="sangeetspark"] #vignette-layer {
+  background: radial-gradient(
+    ellipse 90% 90% at 50% 50%,
+    transparent 40%,
+    rgba(0,0,0,0.30) 100%
+  );
+}
+
+/* ── 5. Per-theme photo color-grading ────────────────────────────── */
+/* Subtle filter transform to make photos "belong" to their theme world */
+[data-theme="sangeetspark"] .image-placeholder img.ph-loaded {
+  filter: sepia(0.18) saturate(1.15) brightness(0.92);
+}
+[data-theme="velvet-vows"] .image-placeholder img.ph-loaded {
+  filter: sepia(0.12) hue-rotate(300deg) saturate(1.10) brightness(0.88);
+}
+[data-theme="starry-snuggle"] .image-placeholder img.ph-loaded {
+  filter: sepia(0.10) hue-rotate(220deg) saturate(1.12) brightness(0.90);
+}
+[data-theme="moonlight-mithai"] .image-placeholder img.ph-loaded {
+  filter: sepia(0.08) hue-rotate(240deg) saturate(1.08) brightness(0.92);
+}
+
+/* ── 6. Per-theme mobile dock ─────────────────────────────────────── */
+[data-theme="sangeetspark"] .mobile-dock {
+  background: rgba(42,14,0,0.90);
+  border-color: var(--rose-mid);
+  box-shadow: 0 6px 28px rgba(245,158,11,0.22);
+}
+[data-theme="velvet-vows"] .mobile-dock {
+  background: rgba(20,0,16,0.92);
+  border-color: var(--gold);
+  box-shadow: 0 6px 28px rgba(139,17,82,0.22);
+}
+[data-theme="moonlight-mithai"] .mobile-dock {
+  background: rgba(12,8,26,0.92);
+  border-color: var(--rose-mid);
+  box-shadow: 0 6px 28px rgba(139,125,212,0.22);
+}
+[data-theme="starry-snuggle"] .mobile-dock {
+  background: rgba(10,6,28,0.92);
+  border-color: var(--rose-light);
+  box-shadow: 0 6px 28px rgba(124,58,237,0.22);
+}
+
+/* ── 7. Orb micro-particles (CSS-only) ───────────────────────────── */
+
+/* StarrySnuggle — star field inside the orb */
+[data-theme="starry-snuggle"] .ts-orb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.90) 1px,   transparent 1px),
+    radial-gradient(circle, rgba(196,181,244,0.70) 1.5px, transparent 1.5px),
+    radial-gradient(circle, rgba(255,255,255,0.60) 1px,   transparent 1px),
+    radial-gradient(circle, rgba(167,139,250,0.50) 1px,   transparent 1px);
+  background-size: 22px 22px, 15px 15px, 30px 30px, 18px 18px;
+  background-position: 5px 5px, 11px 7px, 20px 16px, 3px 18px;
+  animation: starTwinkle22 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes starTwinkle22 {
+  0%, 100% { opacity: 0.60; }
+  50%       { opacity: 0.20; }
+}
+
+/* SangeetSpark — radiating gold flare lines */
+[data-theme="sangeetspark"] .ts-orb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 3px 38% at 50% 50%, rgba(255,240,180,0.65) 0%, transparent 60%),
+    radial-gradient(ellipse 3px 38% at 50% 50%, rgba(255,220,120,0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 3px 38% at 50% 50%, rgba(255,255,200,0.50) 0%, transparent 60%),
+    radial-gradient(ellipse 3px 38% at 50% 50%, rgba(255,200,80,0.45)  0%, transparent 60%);
+  transform-origin: center;
+  transform: rotate(0deg) rotate(10deg) rotate(0deg) rotate(55deg);
+  animation: sparkFlare22 5s linear infinite;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+@keyframes sparkFlare22 {
+  to { transform: rotate(360deg); }
+}
+
+/* VelvetVows — soft gold shimmer sweep */
+[data-theme="velvet-vows"] .ts-orb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    rgba(240,216,176,0.18) 20%,
+    transparent 40%,
+    rgba(240,216,176,0.10) 60%,
+    transparent 80%
+  );
+  animation: velvetSweep22 6s linear infinite;
+  pointer-events: none;
+}
+@keyframes velvetSweep22 {
+  to { transform: rotate(360deg); }
+}
+
+/* MoonlightMithai — crescent highlight arc */
+[data-theme="moonlight-mithai"] .ts-orb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse 45% 65% at 72% 28%,
+    rgba(220,210,255,0.55) 0%,
+    rgba(180,160,232,0.20) 40%,
+    transparent 65%
+  );
+  animation: moonShimmer22 4s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+@keyframes moonShimmer22 {
+  from { opacity: 0.7; transform: scale(1); }
+  to   { opacity: 1.0; transform: scale(1.04); }
+}
+
+/* ── 8. Per-theme drop cap accent ────────────────────────────────── */
+[data-theme="velvet-vows"] #chapter-01 .chapter-body::first-letter {
+  color: var(--gold);
+  font-size: 5.2em;
+  text-shadow: 0 2px 12px rgba(191,140,90,0.45);
+}
+[data-theme="moonlight-mithai"] #chapter-01 .chapter-body::first-letter {
+  color: var(--gold-light);
+  font-size: 4.8em;
+  text-shadow: 0 2px 16px rgba(180,160,216,0.50);
+}
+[data-theme="starry-snuggle"] #chapter-01 .chapter-body::first-letter {
+  color: var(--rose-light);
+  font-size: 5.0em;
+  text-shadow: 0 2px 18px rgba(124,58,237,0.55);
+}
+[data-theme="sangeetspark"] #chapter-01 .chapter-body::first-letter {
+  color: var(--gold);
+  font-size: 5.4em;
+  font-weight: 700;
+  text-shadow: 0 2px 16px rgba(245,158,11,0.60);
+}
+[data-theme="petalpop"] #chapter-01 .chapter-body::first-letter {
+  color: var(--rose);
+  font-size: 4.8em;
+}
+[data-theme="candy-cloud"] #chapter-01 .chapter-body::first-letter {
+  color: var(--gold);
+  font-size: 4.8em;
+}
+
+/* ── 9. Per-theme chapter ghost number variations ─────────────────── */
+@media (min-width: 481px) {
+  [data-theme="velvet-vows"] .chapter:not(#chapter-hidden)::before {
+    font-size: clamp(7rem, 14vw, 15rem);
+    opacity: 0.028;
+    color: var(--gold);
+  }
+  [data-theme="moonlight-mithai"] .chapter:not(#chapter-hidden)::before {
+    font-size: clamp(6rem, 13vw, 13rem);
+    opacity: 0.040;
+    color: var(--rose-light);
+  }
+  [data-theme="sangeetspark"] .chapter:not(#chapter-hidden)::before {
+    font-size: clamp(7rem, 13vw, 14rem);
+    opacity: 0.045;
+    color: var(--rose);
+  }
+  [data-theme="petalpop"] .chapter:not(#chapter-hidden)::before {
+    opacity: 0.055;
+  }
+  [data-theme="butterfly-blush"] .chapter:not(#chapter-hidden)::before {
+    color: var(--gold);
+    opacity: 0.045;
+  }
+}
+
+/* ── 10. Per-theme scroll progress bar (complete set) ────────────── */
+[data-theme="moonlight-mithai"] #scroll-progress {
+  background: linear-gradient(to bottom, var(--gold-light), var(--rose-light), var(--rose));
+  width: 3px;
+  box-shadow: 0 0 8px var(--rose-light);
+}
+[data-theme="velvet-vows"] #scroll-progress {
+  background: linear-gradient(to bottom, var(--gold-light), var(--gold), var(--rose));
+  box-shadow: 0 0 6px var(--gold);
+}
+[data-theme="purrfect-pair"] #scroll-progress {
+  background: linear-gradient(to bottom, var(--gold-light), var(--rose-light), var(--rose));
+}
+[data-theme="petalpop"] #scroll-progress {
+  background: linear-gradient(to bottom, var(--rose-light), var(--rose), var(--rose-dark));
+}
+[data-theme="candy-cloud"] #scroll-progress {
+  background: linear-gradient(to bottom, var(--gold-light), var(--rose-light), var(--rose));
+}
+[data-theme="gulabo-garden"] #scroll-progress {
+  background: linear-gradient(to bottom, var(--gold-light), var(--gold), var(--rose));
+  width: 4px;
+}
+[data-theme="butterfly-blush"] #scroll-progress {
+  background: linear-gradient(to bottom, var(--gold-light), var(--rose-light), var(--rose));
+}
+
+/* ── 11. Dark-theme opening poem text – ensure legibility ─────────── */
+[data-theme="velvet-vows"] .opening-poem,
+[data-theme="moonlight-mithai"] .opening-poem,
+[data-theme="starry-snuggle"] .opening-poem {
+  color: var(--text);
+}
+
+/* ── 12. Phase 22 reduced-motion guards ──────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  [data-theme="starry-snuggle"]  .ts-orb::after,
+  [data-theme="sangeetspark"]    .ts-orb::before,
+  [data-theme="velvet-vows"]     .ts-orb::after,
+  [data-theme="moonlight-mithai"] .ts-orb::after {
+    animation: none !important;
+  }
+}

@@ -120,7 +120,7 @@
   function initPetals() {
     var container = document.getElementById('petals-layer');
     if (!container) return;
-    var count = mobileCount(28);
+    var count = mobileCount(18);
     for (var i = 0; i < count; i++) {
       var petal    = document.createElement('div');
       var colorIdx = (i % 6) + 1;
@@ -2540,23 +2540,7 @@
       imgObs.observe(el);
     });
 
-    if (!getIsMobile() || reducedMotion) return;
-    var ticking = false;
-    window.addEventListener('scroll', function () {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(function () {
-        ticking = false;
-        var y = window.scrollY || window.pageYOffset;
-        document.querySelectorAll('.chapter-image-wrap').forEach(function (wrap, i) {
-          var rect = wrap.getBoundingClientRect();
-          if (rect.top < window.innerHeight && rect.bottom > 0) {
-            var offset = Math.sin((y + i * 120) * 0.002) * 8;
-            wrap.style.transform = 'translateY(' + offset.toFixed(1) + 'px)';
-          }
-        });
-      });
-    }, { passive: true });
+    /* Sinusoidal bob removed — was causing a shine/shimmer artifact on photos */
   }
 
   /* ── Web Share ───────────────────────────────────────────────────── */
@@ -3635,24 +3619,7 @@
 
   /* ── Warm amber vignette on fast scroll ─────────────────────────────── */
   function initScrollVignette() {
-    if (reducedMotion) return;
-    var vig = document.createElement('div');
-    vig.id = 'scroll-vignette';
-    document.body.appendChild(vig);
-    var lastY = window.scrollY, lastT = Date.now(), hideTimer = null;
-    window.addEventListener('scroll', function () {
-      var now = Date.now();
-      var dt = now - lastT;
-      if (dt < 16) return;
-      var velocity = Math.abs(window.scrollY - lastY) / dt;
-      if (velocity > 1.4) {
-        vig.classList.add('active');
-        clearTimeout(hideTimer);
-        hideTimer = setTimeout(function () { vig.classList.remove('active'); }, 340);
-      }
-      lastY = window.scrollY;
-      lastT = now;
-    }, { passive: true });
+    /* Removed — amber overlay was appearing over photos as a "shine" on scroll */
   }
 
   /* ── Candle flame cursor (desktop only) ─────────────────────────────── */
